@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2016-02-22T05:35:13.902Z</updated>
+  <updated>2016-03-24T03:15:15.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,11 +15,1006 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title></title>
+    <link href="http://yoursite.com/2016/04/02/%E7%AB%AF%E5%8F%A3%E5%8F%B7/"/>
+    <id>http://yoursite.com/2016/04/02/端口号/</id>
+    <published>2016-04-02T04:24:33.000Z</published>
+    <updated>2016-03-24T03:15:15.000Z</updated>
+    <content type="html"><![CDATA[<p>假如我们需要确定谁占用了我们的9050端口 </p>
+<p>1、Windows平台<br>在windows命令行窗口下执行：<br>1.查看所有的端口占用情况<br>C:>netstat -ano<br>  协议    本地地址                     外部地址               状态                   PID<br>  TCP    127.0.0.1:1434         0.0.0.0:0              LISTENING       3236<br>  TCP    127.0.0.1:5679         0.0.0.0:0              LISTENING       4168<br>  TCP    127.0.0.1:7438         0.0.0.0:0              LISTENING       4168<br>  TCP    127.0.0.1:8015         0.0.0.0:0              LISTENING       1456<br>  TCP    192.168.3.230:139      0.0.0.0:0              LISTENING       4<br>  TCP    192.168.3.230:1957     220.181.31.225:443     ESTABLISHED     3068<br>  TCP    192.168.3.230:2020     183.62.96.189:1522     ESTABLISHED     1456<br>  TCP    192.168.3.230:2927     117.79.91.18:80        ESTABLISHED     4732<br>  TCP    192.168.3.230:2929     117.79.91.18:80        ESTABLISHED     4732<br>  TCP    192.168.3.230:2930     117.79.91.18:80        ESTABLISHED     4732<br>  TCP    192.168.3.230:2931     117.79.91.18:80        ESTABLISHED     4732</p>
+<p>2.查看指定端口的占用情况<br>C:>netstat -aon|findstr “9050”<br>  协议    本地地址                     外部地址               状态                   PID<br>  TCP    127.0.0.1:9050         0.0.0.0:0              LISTENING       2016<br>P: 看到了吗，端口被进程号为2016的进程占用，继续执行下面命令： （也可以去任务管理器中查看pid对应的进程）<br>3.查看PID对应的进程<br>C:>tasklist|findstr “2016”<br> 映像名称                       PID 会话名              会话#       内存使用<br> ========================= ======== ================<br>  tor.exe                     2016 Console                 0     16,064 K </p>
+<p>P:很清楚吧，tor占用了你的端口。</p>
+<p>4.结束该进程<br>C:>taskkill /f /t /im tor.exe</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>假如我们需要确定谁占用了我们的9050端口 </p>
+<p>1、Windows平台<br>在windows命令行窗口下执行：<br>1.查看所有的端口占用情况<br>C:>netstat -ano<br>  协议    本地地址                     外部]]>
+    </summary>
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="http://yoursite.com/2016/03/31/android%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5/"/>
+    <id>http://yoursite.com/2016/03/31/android代码片段/</id>
+    <published>2016-03-31T12:52:55.000Z</published>
+    <updated>2016-03-31T12:52:55.000Z</updated>
+    <content type="html"><![CDATA[<p>1、获取电源锁</p>
+<pre><code>public static void acquireWakeLock() {
+    unlockKeyBoard();
+    try {
+        if (null == mWakeLock) {
+            PowerManager pm = (PowerManager) BaseApplication.getInstance()
+                    .getSystemService(Context.POWER_SERVICE);
+            try {
+                mWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
+                        | PowerManager.ACQUIRE_CAUSES_WAKEUP
+                        | PowerManager.ON_AFTER_RELEASE, &quot;PushMessageReceiver&quot;); // |
+                                                                                    // PowerManager.ON_AFTER_RELEASE
+            } catch (Exception e) {
+                DbUtils.exceptionHandler(e);
+            }
+        }
+        if (null != mWakeLock) {
+            mWakeLock.acquire();
+        }
+    } catch (Exception e) {
+        DbUtils.exceptionHandler(e);
+    }
+}
+</code></pre><p>2、释放设备电源锁</p>
+<pre><code>public static void releaseWakeLock() {
+    try {
+        if (null != mWakeLock) {
+            mWakeLock.release();
+            mWakeLock = null;
+        }
+    } catch (Exception e) {
+        DbUtils.exceptionHandler(e);
+    }
+}
+</code></pre><p>3、解锁键盘</p>
+<pre><code>public static void unlockKeyBoard () {
+    KeyguardManager km = (KeyguardManager)ApplicationContext.getInstance().getContext().getSystemService(Context.KEYGUARD_SERVICE);
+    km.newKeyguardLock(&quot;Tag For Debug&quot;).disableKeyguard();
+}
+</code></pre><p>4、获取当前程序版本名</p>
+<pre><code>/**  
+* 返回当前程序版本名  
+*/    
+public static String getAppVersionName(Context context) {    
+    String versionName = &quot;&quot;;    
+    try {    
+        // ---get the package info---    
+        PackageManager pm = context.getPackageManager();    
+
+        PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);    
+        versionName = pi.versionName;    //版本名称
+        versioncode = pi.versionCode;  //版本号
+        if (versionName == null || versionName.length() &lt;= 0) {    
+            return &quot;&quot;;    
+        }    
+    } catch (Exception e) {    
+        Log.e(&quot;VersionInfo&quot;, &quot;Exception&quot;, e);    
+    }    
+    return versionName;    
+} 
+</code></pre><p>5、获取当前应用的版本号</p>
+<pre><code>public static String getVersionName() throws Exception  
+{  
+        // 获取packagemanager的实例  
+        PackageManager packageManager = getPackageManager();  
+        // getPackageName()是你当前类的包名，0代表是获取版本信息  
+        PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);  
+        String version = packInfo.versionName;  
+        return version;  
+}
+</code></pre><p>6、获取当前系统的版本号</p>
+<pre><code>/** 
+ * 手机系统版本 
+ */  
+ public static String getSdkVersion() {  
+     return android.os.Build.VERSION.RELEASE;  
+ }  
+</code></pre><p>7、当我们点击某个话题的选项卡，会弹出一个popupwindow，里面有诸如 评论、回复的选项，你点击这个选项的时候，需要定位到EditText编辑框，并且自动弹出输入法。可以考虑如下方法：</p>
+<pre><code>// 获取编辑框焦点
+editText.setFocusable(true);
+//打开软键盘
+InputMethodManager imm = (InputMethodManager) ctx
+.getSystemService(Context.INPUT_METHOD_SERVICE);
+imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+//关闭软键盘
+imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+</code></pre><p>8、EditText软键盘</p>
+<pre><code>//打开软键盘
+et_feedback_content.setFocusable(true);
+getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//关闭软键盘
+((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(input.getWindowToken(), 0); 
+</code></pre><p>9、设置全屏的Dialog</p>
+<pre><code>//在代码里设置Dialog的Theme
+Dialog dialog = new Dialog(this, R.style.Dialog_Fullscreen);  
+dialog.setContentView(R.layout.main);  
+dialog.show(); 
+
+//设置style
+ &lt;style name=&quot;Dialog_Fullscreen&quot;&gt; 
+   &lt;item name=&quot;android:windowFullscreen&quot;&gt;true&lt;/item&gt; 
+   &lt;item name=&quot;android:windowNoTitle&quot;&gt;true&lt;/item&gt;  
+&lt;/style&gt;   
+</code></pre><p>10、设置全屏的Dialog（二）</p>
+<p>我们也可以自定义Dialog，首先继承Dialig，然后再构造函数中添加</p>
+<pre><code>super(context, android.R.style.Theme); 
+setOwnerActivity((Activity)context);  
+</code></pre><p>11、设置全屏Dialog（三）</p>
+<p>首先介绍一个方法：getDecorView()</p>
+<p>decorView是window中的最顶层view，可以从window中获取到decorView，然后decorView有个getWindowVisibleDisplayFrame方法可以获取到程序显示的区域，包括标题栏，但不包括状态栏。 于是，我们就可以算出状态栏的高度了。</p>
+<pre><code>Rect frame = new Rect();
+getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+int statusBarHeight = frame.top;
+</code></pre><p>同样我们获取标题栏的高度</p>
+<pre><code>getWindow().findViewById(Window.ID_ANDROID_CONTENT)这个方法获取到的view就是程序不包括标题栏的部分，然后就可以知道标题栏的高度了，代码如下：
+int contentTop = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();         
+int titleBarHeight = contentTop - statusBarHeight; //statusBarHeight是上面所求的状态栏的高度
+</code></pre><p>最后：知道上述原理，我们就可以设置我们的Dialog和activity一样大了，Java代码如下：</p>
+<pre><code>final Dialog dialog = new Dialog(WenDetailActivity.this, R.style.popupDialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.wen_cover_pager);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        WindowManager.LayoutParams lay = dialog.getWindow().getAttributes();
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Rect rect = new Rect();
+        View view = getWindow().getDecorView();//decorView是window中的最顶层view，可以从window中获取到decorView
+        view.getWindowVisibleDisplayFrame(rect);
+        lay.height = dm.heightPixels - rect.top;
+        lay.width = dm.widthPixels;
+</code></pre><p>style.xml如下：</p>
+<pre><code>&lt;style name=&quot;popupDialog&quot; parent=&quot;@android:style/Theme.Dialog&quot;&gt;
+        &lt;item name=&quot;android:windowBackground&quot;&gt;@drawable/filled_activity_bg&lt;/item&gt;
+        &lt;item name=&quot;android:backgroundDimEnabled&quot;&gt;false&lt;/item&gt;
+        &lt;item name=&quot;android:windowIsFloating&quot;&gt;true&lt;/item&gt;
+        &lt;item name=&quot;android:windowIsTranslucent&quot;&gt;true&lt;/item&gt;
+        &lt;item name=&quot;android:windowNoTitle&quot;&gt;true&lt;/item&gt;
+        &lt;item name=&quot;android:windowContentOverlay&quot;&gt;@null&lt;/item&gt;
+        &lt;!--&lt;item name=&quot;android:windowAnimationStyle&quot;&gt;@style/dialog_animation&lt;/item&gt;--&gt;
+        &lt;item name=&quot;android:colorBackgroundCacheHint&quot;&gt;@null&lt;/item&gt;
+        &lt;item name=&quot;android:backgroundDimAmount&quot;&gt;0.6&lt;/item&gt;&lt;!-- 灰度 --&gt;
+        &lt;!--&lt;item name=&quot;android:windowFullscreen&quot;&gt;true&lt;/item&gt;--&gt;
+ &lt;/style&gt;
+</code></pre><p> 12、利用代码清除App的数据<br>    /** </p>
+<pre><code>* 利用代码清除App的数据 
+* 平常我们在清除App的数据时,多半在设置中找到对应的App 
+* 然后选择其清除数据.下面给出代码实现. 
+*  
+* 注意事项: 
+* 1 设备需要root 
+* 2 该示例中删除的是系统级应用 
+* 2 注意在命令的末尾需要加上换行\n 
+*   这就相当于我们平时在Dos中输入命令后再换行一样. 
+*   否则命令不会被执行. 
+*/  
+private void cleanData(String packageName){  
+    try {  
+        Process su= Runtime.getRuntime().exec(&quot;su&quot;);  
+        String cmd = &quot;cd /data/data/&quot;+packageName+&quot;;&quot;+&quot;rm -r `ls|grep -v lib`&quot;;  
+        System.out.println(&quot;------cmd=&quot;+cmd);  
+        cmd = cmd + &quot;\n exit\n&quot;;  
+        su.getOutputStream().write(cmd.getBytes());  
+        if ((su.waitFor() != 0)) {  
+            throw new SecurityException();  
+        }  
+    } catch (Exception e) {  
+        System.out.println(&quot;---&gt; 9527 清除数据时 e=&quot;+e.toString());  
+    }  
+
+} 
+</code></pre><p> 13、清除内/外缓存，清除数据库，清除sharedPreference，清除files和清除自定义目录</p>
+<pre><code>/** 文 件 名:  DataCleanManager.java  * 描    述:  主要功能有清除内/外缓存，清除数据库，清除sharedPreference，清除files和清除自定义目录  */
+import java.io.File;
+import android.content.Context;
+import android.os.Environment;
+
+/** * 本应用数据清除管理器 */
+public class DataCleanManager {
+/** * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache) * * @param context */
+public static void cleanInternalCache(Context context) {
+    deleteFilesByDirectory(context.getCacheDir());
+}
+
+/** * 清除本应用所有数据库(/data/data/com.xxx.xxx/databases) * * @param context */
+public static void cleanDatabases(Context context) {
+    deleteFilesByDirectory(new File(&quot;/data/data/&quot;
+            + context.getPackageName() + &quot;/databases&quot;));
+}
+
+/**
+ * * 清除本应用SharedPreference(/data/data/com.xxx.xxx/shared_prefs) * * @param
+ * context
+ */
+public static void cleanSharedPreference(Context context) {
+    deleteFilesByDirectory(new File(&quot;/data/data/&quot;
+            + context.getPackageName() + &quot;/shared_prefs&quot;));
+}
+
+/** * 按名字清除本应用数据库 * * @param context * @param dbName */
+public static void cleanDatabaseByName(Context context, String dbName) {
+    context.deleteDatabase(dbName);
+}
+
+/** * 清除/data/data/com.xxx.xxx/files下的内容 * * @param context */
+public static void cleanFiles(Context context) {
+    deleteFilesByDirectory(context.getFilesDir());
+}
+
+/**
+ * * 清除外部cache下的内容(/mnt/sdcard/android/data/com.xxx.xxx/cache) * * @param
+ * context
+ */
+public static void cleanExternalCache(Context context) {
+    if (Environment.getExternalStorageState().equals(
+            Environment.MEDIA_MOUNTED)) {
+        deleteFilesByDirectory(context.getExternalCacheDir());
+    }
+}
+
+/** * 清除自定义路径下的文件，使用需小心，请不要误删。而且只支持目录下的文件删除 * * @param filePath */
+public static void cleanCustomCache(String filePath) {
+    deleteFilesByDirectory(new File(filePath));
+}
+
+/** * 清除本应用所有的数据 * * @param context * @param filepath */
+public static void cleanApplicationData(Context context, String... filepath) {
+    cleanInternalCache(context);
+    cleanExternalCache(context);
+    cleanDatabases(context);
+    cleanSharedPreference(context);
+    cleanFiles(context);
+    for (String filePath : filepath) {
+        cleanCustomCache(filePath);
+    }
+}
+
+/** * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 * * @param directory */
+private static void deleteFilesByDirectory(File directory) {
+    if (directory != null &amp;&amp; directory.exists() &amp;&amp; directory.isDirectory()) {
+        for (File item : directory.listFiles()) {
+            item.delete();
+        }
+    }
+}
+}
+</code></pre><p>14、Listview测量高度 （放在设置完适配器之后进行测量，放在之前，没有效果）</p>
+<pre><code>/**
+ * 设置高度
+ */
+ private void setHeight(ListView listView) {
+     // 获取listView的适配器
+     ListAdapter adapter = listView.getAdapter();
+     // 获取视图的个数
+     int count = adapter.getCount();
+     // 总高度
+     int totalHeight = 0;
+     // 循环获取视图
+     for (int i = 0; i &lt; count; i++) {
+         // 通过i获取每个视图
+         View view = adapter.getView(i, null, listView);
+         // 重新测量view的高度
+         view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+         // 获取测量后的高度添加到总高度
+         totalHeight += view.getMeasuredHeight();
+     }
+     // 总高度加上所有分割线的总高度
+     totalHeight += listView.getDividerHeight() * (count - 1);
+     // 获取listView的布局属性
+     LayoutParams params = listView.getLayoutParams();
+     // 设置高度
+     params.height = totalHeight;
+     // 重新设置布局属性
+     listView.setLayoutParams(params);
+ }
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>1、获取电源锁</p>
+<pre><code>public static void acquireWakeLock() {
+    unlockKeyBoard();
+    try {
+        if (null == mWakeLock) {
+          ]]>
+    </summary>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Android开发工作中的细节]]></title>
+    <link href="http://yoursite.com/2016/03/02/Android%E5%BC%80%E5%8F%91%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E7%BB%86%E8%8A%82/"/>
+    <id>http://yoursite.com/2016/03/02/Android开发工作中的细节/</id>
+    <published>2016-03-01T18:33:45.000Z</published>
+    <updated>2016-03-09T06:34:30.000Z</updated>
+    <content type="html"><![CDATA[<ol>
+<li><p>全部 Activity 可继承自 BaseActivity，便于统一风格与处理公共事件，构建对话框统一构建器的建立，万一需要整体变动，一处修改到处有效。</p>
+</li>
+<li><p>数据库表段字段常量和 SQL 逻辑分离，更清晰，建议使用 Lite 系列框架 LiteOrm 库，超级清晰且重心可以放在业务上不用关心数据库细节。</p>
+</li>
+<li><p>全局变量放全局类中，模块私有放自己的管理类中，让常量清晰且集中.</p>
+</li>
+<li><p>不要相信庞大的管理类的东西会带来什么好处，可能是一场灾难，而要时刻注意单一职责原则，一个类专心做好一件事情更为清晰。</p>
+</li>
+<li><p>如果数据没有必要加载，数据请务必延迟初始化，谨记为用户节省内存，总不会有坏处。</p>
+</li>
+<li><p>异常抛出，在合适的位置处理或者集中处理，不要搞的到处是 catch，混乱且性能低，尽量不要在循环体中捕获异常，以提升性能。</p>
+</li>
+<li><p>地址引用链长时（3 个以上指向）小心内存泄漏，和警惕堆栈地址指向，典型的易发事件是：数据更新了，ListView 视图却没有刷新，这时 Adapter 很可能指向并的并不是你更新的数据容器地址（一般为 List）。</p>
+</li>
+<li><p>信息同步：不管是数据库还是网网络操作，新插入的数据注意返回 ID（如果没有赋予唯一 ID），否则相当于没有同步。</p>
+</li>
+<li><p>多线程操作数据库时，db 关闭了会报错，也很可能出现互锁的问题，推荐使用事务，推荐使用自动化的 LiteOrm 库操作。</p>
+</li>
+<li><p>做之前先考虑那些可以公用，资源，layout，类，做一个结构、架构分析以加快开发，提升代码可复用度。</p>
+</li>
+<li><p>有序队列操作 add、delete 操作时注意保持排序，否则你会比较难堪喔。</p>
+</li>
+<li><p>数据库删除数据时，要注意级联操作避免出现永远删不掉的脏数据喔。</p>
+</li>
+<li><p>关于形参实参：调用函数时参数为基本类型传的是值，即传值；参数为对象传递的是引用，即传址。</p>
+</li>
+<li><p>listview 在数据未满一屏时，setSelection 函数不起作用；ListView 批量操作时各子项和视图正确对应，可见即所选。</p>
+</li>
+</ol>
+<p>15 控制 Activity 的代码量，保持主要逻辑清晰。其他类遵守 SRP（单一职能），ISP（接口隔离）原则。</p>
+<ol>
+<li><p>arraylist 执行 remove 时注意移除 int 和 Integer 的区别。你懂得。</p>
+</li>
+<li><p>Log 请打上 Tag，调试打印一定要做标记，能定位打印位置，否则尴尬是：不知道是哪里在打印。</p>
+</li>
+<li><p>码块/常量/资源可以集中公用的一定共用，即使共用逻辑稍复杂一点也会值得，修改起来很轻松，修改一种，到处有效。</p>
+</li>
+<li><p>setSelection 不起作用，尝试 smoothScrollToPosition。ListView 的 LastVisiblePosition（最后一个可见子项）会随着 getView 方法执行位置不同变动而变。</p>
+</li>
+<li><p>与 Activity 通讯使用 Handler 更方便； 如果你的框架回调链变长，考虑监听者模式简化回调。</p>
+</li>
+<li><p>监听者模式不方便使用时，推荐 EventBus 框架库，使用时间总线，没接触过的同学可以自行脑补一下哦。</p>
+</li>
+<li><p>Handler 在子线程线程使用 Looper.prepare，或者 new 的时候给构造函数传入 MainLooper 来确保在主线程 run。</p>
+</li>
+<li><p>timepicker 点击确定后需要 clearFocus 才能获取手动输入的时间。</p>
+</li>
+<li><p>构造函数里面极度不推荐启动异步线程，会埋下隐患。比如：异步线程调用了本例的示例，就会悲剧等着崩溃吧。</p>
+</li>
+<li><p>千万不要理所当然的以为一个对象不会为空，充分的做好容错处理；另外注意 null 也可以插入 ArrayList 等容器中。</p>
+</li>
+<li><p>ExpandableListView 的子列表不能点击（禁用）要把 Adapter 的 isChildSelectable 方法返回 true。</p>
+</li>
+<li><p>UI 显示注意内容过长的情形要提前使用 ScrollView 否则在小手机上尴尬你懂得。</p>
+</li>
+<li><p>注意按钮的感应范围不小于 9mm 否则不易点击；输入框注意光标的位置更易用户输入。</p>
+</li>
+<li><p>服务器和客户端尽量统一唯一标识（有可能是 ID），否则多少会有歧义和问题。</p>
+</li>
+<li><p>注释，尽量去写足够的注释，去描述一下思路，达到看了可以明白某一块代码的效果。</p>
+</li>
+<li><p>完整型数据一定要用 Sqlite 的 Transaction，大数据一定要用。粗略测试插入 100 个数据有 20 倍的提速，插入 1000 个数据就有 100 多倍的提速。</p>
+</li>
+<li><p>避免 String=”null”的情况出现 String = null,=””都可以。避免出现 title=”无主题”这样的数据提交到数据库浪费空间。</p>
+</li>
+<li><p>存在多个不同的 dbhelper 实例情况下，sqlitedatabase 对象必然存在不同的实例，多线程同时写入数据，轮流写入数据时会不定时的报 db is locked，引起崩溃，不管是操作同张表还是异表。读和写可以同时并发，轮流无规律的交替执行。同时写入数据时解决方案是用并发的每个线程都用事 务，db 则不会 lock，按次整体写入。</p>
+</li>
+<li><p>建议整个应用维护一个 dbhelper 实例，只要 db 没有关闭，全局就只有一个 db 实例，多线程并发写入 db 不会 lock，严格交替进行写入：123123123。。。（123 代表不同线程，轮流插入一个记录），读和写均不会锁住 db，读写交替并没有规律，执行次数和程度看 cpu 分配给哪个线程的时间片长。</p>
+</li>
+<li><p>一个任务使用事务嵌套N个事务，N个事务中有一个失败，这个任务整体失败，全部成功后，数据才写入，具有安全性，整体性。并且事务写入大批量数据的效率经 实际测试成百上千倍的高于一般的单个写入。数据库大量数据、多线程操作建议使用 LiteOrm 数据库框架，更稳定简单。</p>
+</li>
+<li><p>经常需要用 ListView 或者其它显示大量 Items 的控件实时跟踪或者查看信息，并且希望最新的条目可以自动滚动到可视范围内。通过设置的控件 transcriptMode 属性可以将 Android 平台的控件（支持 ScrollBar）自动滑动到最底部。</p>
+</li>
+<li><p>Long a; 判断a有没有赋值，if (a == 0) 在a没有赋值情况下会报错。应该 if (a == null)，Integer、Floag 等也一样，原因你懂，只是提醒你要小心喔。</p>
+</li>
+<li><p>编码遇到读写、出入等逻辑要双向考虑，文件导入导出，字符字节相互转换都要两边转码。</p>
+</li>
+<li><p>一个 int 值与一个 Integer 对象（能包含 int 值的最小对象）的大小比率约为 1:4（32 位和 64 位机器有不同）。额外的开销源于 JVM 用于描述 Java 对象的元数据也就是 Integer，（Long、Double 等也是）。</p>
+</li>
+<li><p>对象由元数据和数据组成。元数据包括类（指向类的指针，描述了类的类型），标记（描述了对象状态，如散列码、形状等），锁（对象同步信息）。数组对象还包括大小的元数据。</p>
+</li>
+<li><p>一个在 32 位 Java 运行时中使用 1GB  Java 堆的 Java 应用程序在迁移到 64 位 Java 运行时之后，通常需要使用 1.7GB 的 Java 堆。</p>
+</li>
+<li><p>Hash 集合的访问性能比任何 List 的性能都要高，但每条目的成本也要更高。由于访问性能方面的原因，如果您正在创建大集合（例如，用于实现缓存），那么最好使用基于 Hash 的集合，而不必考虑额外的开销。</p>
+</li>
+<li><p>对于并不那么注重访问性能的较小集合而言，List 则是合理的选择。ArrayList 和 LinkedList 集合的性能大体相同，但其内存占用完全不同：ArrayList 的每条目大小要比 LinkedList 小得多，但它不是准确设置大小的。List 要使用的正确实现是 ArrayList 还是 LinkedList 取决于 List 长度的可预测性。如果长度未知，那么正确的选择可能是 LinkedList，因为集合包含的空白空间更少。如果大小已知或可预知或比较小，那么 ArrayList 的内存开销会更低一些。</p>
+</li>
+<li><p>选择正确的集合类型使你能够在集合性能与内存占用之间达到合理的平衡。除此之外，你可以通过正确调整集合大小来最大化填充率、最小化未得到利用的空间，从而最大限度地减少内存占用。</p>
+</li>
+<li><p>充分利用封装（提供接口类来控制访问数据）和委托（helper 对象来实施任务）两种理念。</p>
+</li>
+<li><p>延迟分配 Hashtable：如果 Hashtable 为空是经常发生的普遍现象，那么仅在存在需要存储的数据时分配 Hashtable 应该是一种合理的做法。将 Hashtable 分配为准确的大小：虽然会有默认大小，但建议使用更为准确的初始大小。</p>
+</li>
+<li><p>EditText 在 setText 时不要忘记是否需要 setSelection。在大多数情况下是需要设置的。</p>
+</li>
+<li><p>XML 两种情况要注意：1 属性名字时候有重复；2 注意文本是否包含非法字符，注意使用 CDATA 包裹。</p>
+</li>
+<li><p>当逻辑没有明显问题时考虑对象属性、函数参数、网络传输参数是否全部了解，是否设置正确。</p>
+</li>
+<li><p>当出现编译或者运行时错误，别人那没问题时，考虑你的编译环境和环境版本是否有问题。</p>
+</li>
+<li><p>由于 String 类的 immutable 性质，当 String 变量需要经常变换其值时，应该考虑使用 StringBuilder 提升性能，多线程使用 StringBuffer 操作 string 提高程序效率。</p>
+</li>
+<li><p>java 栈的优势是比堆速度快，可共享，主要存放临时变量、参数等，堆的优势是可动态分配内存大小。</p>
+</li>
+<li><p>只要是用 new ()来新建对象的，都会在堆中创建，而且其数据是单独存值的，即使与栈中的数据（值）相同，也不会与栈中的数据共享。</p>
+</li>
+<li><p>基本数据类型定义的变量称自动变量，存的是‘字面值’，存在于栈中，可共享（存在即不新建）。</p>
+</li>
+<li><p>多个 RandomAccessFile 对象指向同一个文件，可使用多个线程一起写入无需再自己加锁，经试验结论：三个线程分别写入 100 万次数据，使用锁约 12 秒，不使用约 8.5 秒。100 个线程分别写入 1 万次数据使用锁耗时约 4.2 秒，不使用锁耗时约 3 秒。</p>
+</li>
+<li><p>XmlPullParser 解析慎用 nextText ()方法，xml 比较复杂，含有空标签、重复名字标签时容易出现异常问题；TEXT 中使用 getText ()方法代替 START_TAG 中使用 nextText ()方法；START_TAG，TEXT，END_TAG 三个事件配合使用。注意每个 xml 节点之间（不管是开始节点还是结束节点）都会出现 TEXT 事件。</p>
+</li>
+<li><p>改变逻辑的时候考虑全部用到这项功能的地方，分散的地方多了，容易大意。</p>
+</li>
+<li><p>当系统原生组件出现问题时，查看错误栈信息，自己写一个该组件的子类，并在合适的地方将出错方法复写一下，加上 try catch 保证不崩溃掉。不要扰乱了该系统控件的正常逻辑。</p>
+</li>
+<li><p>输入控件注意对空格、换行等符号的控制；输入框里内容注意和左右控件的空间，防止误点击。</p>
+</li>
+<li><p>注意函数参数里的++或者–操作。是++c 还是 c++，区别很大。</p>
+</li>
+<li><p>各种地方、永远的不要小看 null 指针问题，甚至有些场合宁可错杀（try catch），不可放过。</p>
+</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<ol>
+<li><p>全部 Activity 可继承自 BaseActivity，便于统一风格与处理公共事件，构建对话框统一构建器的建立，万一需要整体变动，一处修改到处有效。</p>
+</li>
+<li><p>数据库表段字段常量和 SQL 逻辑分离，更清晰，建议使用 Lite ]]>
+    </summary>
+    
+      <category term="知识库" scheme="http://yoursite.com/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
+    
+      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[日常使用到的梯子]]></title>
+    <link href="http://yoursite.com/2016/03/01/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E5%88%B0%E7%9A%84%E6%A2%AF%E5%AD%90/"/>
+    <id>http://yoursite.com/2016/03/01/日常使用到的梯子/</id>
+    <published>2016-03-01T04:33:45.000Z</published>
+    <updated>2016-03-01T06:05:04.000Z</updated>
+    <content type="html"><![CDATA[<p>日常生活中,由于天朝的局域网的限制,很多网站都无法进行使用,虽然国内也有替代的网站,但是作为开发人员来讲,这些事远远不够的,现在就讲我个人在生活工作中使用到梯子,进行总结一下</p>
+<h2 id="PC_u7AEF"><a href="#PC_u7AEF" class="headerlink" title="PC端"></a>PC端</h2><p>##全局梯子<br>目前在PC上(window)使用到的全局的梯子 就是 赛风和VPN Gate</p>
+<h3 id="u8D5B_u98CE"><a href="#u8D5B_u98CE" class="headerlink" title="赛风"></a>赛风</h3><p>如果能够直接访问 <a herf="http://www.psiphon3.net/zh/index.html"> 直达</a></p>
+<h4 id="u7B80_u5355_u4ECB_u7ECD"><a href="#u7B80_u5355_u4ECB_u7ECD" class="headerlink" title="简单介绍"></a>简单介绍</h4><p>赛风是赛风公司的一款新翻墙工具，利用VPN, SSH和HTTP代理软件提供未经审查的访问互联网。赛风的客户端将自动寻找新的接入点，力求最大限度的绕过网络审查。</p>
+<p>赛风旨在为您提供在线内容的开放访问。赛风不会增加暴露您的在线隐私，也不应被用作是在线安全工具。</p>
+<p><a herf="https://github.com/Psiphon-Labs">源码地址</a></p>
+<h3 id="VPN_Gate"><a href="#VPN_Gate" class="headerlink" title="VPN Gate"></a>VPN Gate</h3><h4 id="u7EFC_u8FF0"><a href="#u7EFC_u8FF0" class="headerlink" title="综述"></a>综述</h4><p>VPN Gate 学术实验项目是一个在线服务，由日本国立筑波大学研究生院为学术研究目的运营。本研究的目的是推广 “全球分布式公共 VPN 中继服务器” 的知识。</p>
+<h4 id="u4EAE_u70B9"><a href="#u4EAE_u70B9" class="headerlink" title="亮点"></a>亮点</h4><p>VPN 可以绕过防火墙。VPN 可以隐藏你的真实 IP 地址。VPN 可以防止在本地网络上的窃听</p>
+<h4 id="u4F7F_u7528"><a href="#u4F7F_u7528" class="headerlink" title="使用"></a>使用</h4><p>这里提供一个<a herf="http://39.118.148.162:33281/cn/">daily链接</a>,不能保证能否使用,如果不能使用,自己又搜索不到,可以邮件给我</p>
+<p>##浏览器梯子 </p>
+<h3 id="Lantern"><a href="#Lantern" class="headerlink" title="Lantern"></a>Lantern</h3><p>自己用的 最出名的就是<a href="https://getlantern.org/" target="_blank" rel="external">Lantern</a>,配合Chrome使用,安装完成,打开lantern即可访问Google<br><a herf="https://github.com/getlantern">源码地址</a></p>
+<h3 id="u4E09_u65B9_u5C01_u88C5_u7684"><a href="#u4E09_u65B9_u5C01_u88C5_u7684" class="headerlink" title="三方封装的"></a>三方封装的</h3><p><a href="http://www.ccav1.me/chromegae.html" target="_blank" rel="external">ChromeGAE</a></p>
+<h4 id="u4ECB_u7ECD"><a href="#u4ECB_u7ECD" class="headerlink" title="介绍"></a>介绍</h4><p>ChromeGAE 是基于 Google Chrome 制作的免费浏览器。</p>
+<p>集成多个实用的扩展，可以过滤 视频广告、网页广告 等等。</p>
+<p>内置科学上网工具，可畅游 Youtube Facebook Twitter 等网站！</p>
+<h2 id="u624B_u673A_u68AF_u5B50"><a href="#u624B_u673A_u68AF_u5B50" class="headerlink" title="手机梯子"></a>手机梯子</h2><p>赛风 lantern</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>日常生活中,由于天朝的局域网的限制,很多网站都无法进行使用,虽然国内也有替代的网站,但是作为开发人员来讲,这些事远远不够的,现在就讲我个人在生活工作中使用到梯子,进行总结一下</p>
+<h2 id="PC_u7AEF"><a href="#PC_u7AEF" class="]]>
+    </summary>
+    
+      <category term="VPN" scheme="http://yoursite.com/tags/VPN/"/>
+    
+      <category term="随笔" scheme="http://yoursite.com/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Android小知识库]]></title>
+    <link href="http://yoursite.com/2016/03/01/Android%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
+    <id>http://yoursite.com/2016/03/01/Android开发中的小知识点汇总/</id>
+    <published>2016-02-29T18:33:45.000Z</published>
+    <updated>2016-03-09T06:34:07.000Z</updated>
+    <content type="html"><![CDATA[<p>这份是我工作以来，总结的小知识库，有些知识点现在看来太LOW了，把还觉得有用的分享出来！</p>
+<h3 id="Genymotion_u4E0B_u8F7D_u865A_u62DF_u955C_u50CFConnection_timeout"><a href="#Genymotion_u4E0B_u8F7D_u865A_u62DF_u955C_u50CFConnection_timeout" class="headerlink" title="Genymotion下载虚拟镜像Connection timeout"></a>Genymotion下载虚拟镜像Connection timeout</h3><p>Add new device出现的问题：</p>
+<p>Failed to deploy virtual device.<br>Unable to create virtual device.Connection timeout occurred.</p>
+<p>解决方案：</p>
+<p>当选择Google Nexus 5 - 6.0.0 - API 23 - 1080x1920下载device失败后，到C:\Users\用户主目录\AppData\Local\Genymobile\Genymotion\ova下看到genymotion_vbox86p_6.0_160114_090449.ova，大小却是0KB，在C:\Users\用户主目录\AppData\Local\Genymobile\genymotion.log，打开该文件，找到类似“<a href="http://files2.genymotion.com/dists/6.0.0/ova/genymotion_vbox86p_6.0_160114_090449.ova”路径，即您想要下载的镜像文件URL；" target="_blank" rel="external">http://files2.genymotion.com/dists/6.0.0/ova/genymotion_vbox86p_6.0_160114_090449.ova”路径，即您想要下载的镜像文件URL；</a><br>用迅雷去下载，下载完成后放到C:\Users\用户主目录\AppData\Local\Genymobile\Genymotion\ova；<br>重新点击Google Nexus 5 - 6.0.0 - API 23 - 1080x1920去下载，验证安装后即会显示在设备列表中。</p>
+<h3 id="Android_Studio__u5982_u4F55Debug"><a href="#Android_Studio__u5982_u4F55Debug" class="headerlink" title="Android Studio 如何Debug"></a>Android Studio 如何Debug</h3><p>单击F5(Step Over)，单行一个个方法执行<br>单击F6(Step Into)，单行执行<br>单击F7(Step Out)，不往下执行，回到上一行<br>单击F8(Resume Program)，跳出当前断点</p>
+<h3 id="Android_Studio_u8BBE_u7F6E_u9ED8_u8BA4_u7684_u7B7E_u540D_u6587_u4EF6"><a href="#Android_Studio_u8BBE_u7F6E_u9ED8_u8BA4_u7684_u7B7E_u540D_u6587_u4EF6" class="headerlink" title="Android Studio设置默认的签名文件"></a>Android Studio设置默认的签名文件</h3><p>新浪微博SSO登录，微信分享这些都需要签名打包，才能看到效果，设置默认签名文件为自己的签名jks，这样就不需要打包了。<br>在app目录下添加你的.jks，然后app的build.gradle文件中的增加以下内容：<br>第一种：</p>
+<pre><code>android {  
+    signingConfigs {  
+        debug {  
+            storeFile file(&quot;你的.jks&quot;)
+            storePassword &apos;android&apos;
+            keyAlias &apos;android&apos;
+            keyPassword &apos;android&apos;
+        }          
+    }      
+}
+</code></pre><p>第二种：</p>
+<pre><code>android {  
+    signingConfigs {  
+        release {  
+            storeFile file(&quot;你的.jks&quot;)
+            storePassword &apos;android&apos;
+            keyAlias &apos;android&apos;
+            keyPassword &apos;android&apos;
+        }          
+    }  
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }        
+    }
+}
+</code></pre><p>这样编译出来的debug版本直接用的是你的正式签名</p>
+<h3 id="Fragment_u61D2_u52A0_u8F7D"><a href="#Fragment_u61D2_u52A0_u8F7D" class="headerlink" title="Fragment懒加载"></a>Fragment懒加载</h3><pre><code>protected boolean isVisible;
+
+@Override
+public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
+    if (getUserVisibleHint()) {
+        isVisible = true;
+        onVisible();
+    } else {
+        isVisible = false;
+        onInvisible();
+    }
+}
+
+protected void onVisible() {
+    lazyLoad();
+}
+
+protected void lazyLoad() {
+    if (!isVisible) {
+        return;
+    }
+    getData();
+}
+
+protected void onInvisible() {
+}
+</code></pre><h3 id="Android_studio_u5934_u6CE8_u91CA_u548C_u65B9_u6CD5_u6CE8_u91CA"><a href="#Android_studio_u5934_u6CE8_u91CA_u548C_u65B9_u6CD5_u6CE8_u91CA" class="headerlink" title="Android studio头注释和方法注释"></a>Android studio头注释和方法注释</h3><blockquote>
+<p>File | Settings | Editor|File and Code Templates|Includes|File Header</p>
+</blockquote>
+<pre><code>/**
+* Created by ${USER} on ${DATE}.
+*/
+</code></pre><p>输入我们想要设置的注释模板</p>
+<pre><code>adapter.getPositionForSelection()和getSectionForPosition()
+getPositionForSection()根据分类列的索引号获得该序列的首个位置
+getSectionForPosition()通过该项的位置，获得所在分类组的索引号
+
+getResources().getColor(R.color.color_name) is deprecated和drawableTop
+
+textView.setTextColor(Color.parseColor(&quot;#FFFFFF&quot;));
+//或者
+ContextCompat.getColor(context, R.color.color_name)
+
+private void showPopupMenu(View v) {
+    final View bgView = View.inflate(DemoApplication.getContext(), R.layout.demo_popup_window_bg, null);
+    bgView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            hidePopupWindow();
+        }
+    });
+    if (mPopupBackground == null) {
+        mPopupBackground = new PopupWindow(bgView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    }
+    mPopupBackground.showAtLocation(v, Gravity.BOTTOM, 0, 0);
+}
+</code></pre><p>v：父布局<br>    demo_popup_window_bg.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:background=&quot;@color/aliwx_common_alpha_black&quot;&gt;
+
+&lt;/LinearLayout&gt;
+</code></pre><h3 id="onFinishInflate_28_29"><a href="#onFinishInflate_28_29" class="headerlink" title="onFinishInflate()"></a>onFinishInflate()</h3><p>view的onFinishInflate()何时调用的？</p>
+<p>当View中所有的子控件均被映射成xml后触发；</p>
+<pre><code>MyView mv = (MyView)View.inflate (context,R.layout.my_view,null);
+</code></pre><p>当加载完成xml后，就会执行那个方法；</p>
+<p>我们一般使用View的流程是在onCreate中使用setContentView来设置要显示Layout文件或直接创建一个View，在当设置了ContentView之后系统会对这个View进行解析，然后回调当前视图View中的onFinishInflate方法。只有解析了这个View我们才能在这个View容器中获取到拥有Id的组件，同样因为系统解析完View之后才会调用onFinishInflate方法，所以我们自定义组件时可以onFinishInflate方法中获取指定子View的引用。</p>
+<h3 id="Fragment_u8BBE_u7F6E_u9690_u85CF_u6216_u663E_u793A_u67D0_u4E2AFragment"><a href="#Fragment_u8BBE_u7F6E_u9690_u85CF_u6216_u663E_u793A_u67D0_u4E2AFragment" class="headerlink" title="Fragment设置隐藏或显示某个Fragment"></a>Fragment设置隐藏或显示某个Fragment</h3><h4 id="MainFragment_u70B9_u51FB"><a href="#MainFragment_u70B9_u51FB" class="headerlink" title="MainFragment点击"></a>MainFragment点击</h4><pre><code>public void onItemClick(AdapterView&lt;?&gt; adapterView, View view,
+                            int position, long id) {
+
+        ((MainActivity) getActivity()).showImageFragment(true, mData.get(position).get(&quot;title&quot;).toString(), mData.get(position).get(&quot;imgUrl&quot;).toString());
+
+    }
+</code></pre><h4 id="MainActivity"><a href="#MainActivity" class="headerlink" title="MainActivity"></a>MainActivity</h4><pre><code>public void showImageFragment(boolean show, String imgTxt, String imgUrl) {
+        // showActionbarWithTabs(!show);
+        if (show) {
+            getSupportFragmentManager().beginTransaction()
+                    .show(imageDetailFragment).commit();
+            imageDetailFragment.setImgData(imgTxt, imgUrl);
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .hide(imageDetailFragment).commit();
+        }
+
+    }
+</code></pre><h3 id="u83B7_u53D6arrt_u7684_u503C"><a href="#u83B7_u53D6arrt_u7684_u503C" class="headerlink" title="获取arrt的值"></a>获取arrt的值</h3><p>不同主题下需要把颜色，数值写成attr属性<br>xml里，我们可以简单的引用attr属性值</p>
+<pre><code>android:background=&quot;?attr/colorPrimary&quot;
+</code></pre><h4 id="u4EE3_u7801_u83B7_u53D6"><a href="#u4EE3_u7801_u83B7_u53D6" class="headerlink" title="代码获取"></a>代码获取</h4><pre><code>TypedValue typedValue = new TypedValue();
+mContext.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+int colorPrimary = typedValue.data;//value.data里面存储着的就是获取到的colorPrimary的值
+</code></pre><h3 id="u62E8_u53F7_u76D8_u62E8_u6253_u7535_u8BDD"><a href="#u62E8_u53F7_u76D8_u62E8_u6253_u7535_u8BDD" class="headerlink" title="拨号盘拨打电话"></a>拨号盘拨打电话</h3><pre><code>Intent intent = new Intent(Intent.ACTION_CALL,
+Uri.parse(&quot;tel:&quot; + &quot;400-036-1977&quot;));
+// intent.setAction(Intent.ACTION_CALL);// 直接拨号
+intent.setAction(Intent.ACTION_DIAL);// 拨号盘
+startActivity(intent);
+</code></pre><h3 id="Drawable_/Bitmap_u3001String/InputStream_u3001Bitmap/byte_5B_5D_u4E92_u8F6C"><a href="#Drawable_/Bitmap_u3001String/InputStream_u3001Bitmap/byte_5B_5D_u4E92_u8F6C" class="headerlink" title="Drawable /Bitmap、String/InputStream、Bitmap/byte[]互转"></a>Drawable /Bitmap、String/InputStream、Bitmap/byte[]互转</h3><pre><code>http://wuxiaolong.me/2015/08/10/Drawable-to-Bitmap/
+</code></pre><h3 id="ProgressDialog"><a href="#ProgressDialog" class="headerlink" title="ProgressDialog"></a>ProgressDialog</h3><pre><code>final ProgressDialog progress = new ProgressDialog(LoginActivity.this);
+        progress.setMessage(&quot;请稍等...&quot;);
+        progress.setCanceledOnTouchOutside(false);
+        progress.show();
+progress.dismiss();
+</code></pre><p>毫秒<br>毫秒Calendar.getInstance().getTimeInMillis()和System.currentTimeMillis()</p>
+<p>Fragment setUserVisibleHint(boolean isVisibleToUser)<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>@Override<br>   public void setUserVisibleHint(boolean isVisibleToUser) {<br>       super.setUserVisibleHint(isVisibleToUser);<br>       if (isVisibleToUser) {<br>           //相当于Fragment的onResume<br>       } else {<br>           //相当于Fragment的onPause<br>       }<br>   }<br>Fragment onActivityResult<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>public void onActivityResult(int requestCode, int resultCode, Intent data) {<br>        super.onActivityResult(requestCode, resultCode, data);<br>        getActivity();<br>        if (resultCode == Activity.RESULT_OK<br>                &amp;&amp; requestCode == AppUtils.REQUEST_CODE_ISLOGIN) {<br>            // 检查是否完善资料</p>
+<pre><code>        if (AppUtils.getSharedPreferences(getActivity()).getBoolean(
+                &quot;hasPersonalData&quot;, false)) {
+            // 取本地存取是否完善资料,完善直接提示咨询对话框
+            consultationDialog();
+        } else {
+            getCheckPersonalData();
+        }
+
+    }
+} 
+</code></pre><p>startActivityForResult(intent,<br>                            AppConfig.REQUEST_CODE_DIALOGUE);// 不是调用 getActivity().startActivityForResult()。<br>dimen代码取值<br>getDimension方法获取到资源文件中定义的dimension值。</p>
+<p>1<br>2<br>Resources res = getResources();<br>float fontSize = res.getDimension(R.dimen.font_size);<br>数组初始化赋值<br>1、创建数组后，通过循环对数组赋值。<br>例如代码：<br>int [] nums = new int [100];<br>for(int i=0;i&lt;10;i++){<br>nums[i] = i;<br>}<br>2、例如代码：<br>int [] nums = {0,1,2,3,4,5,6,7,8,9};<br>3、int [] nums = new int[]{0,1,2,3,4,5,6,7,8,9};</p>
+<p>Fragment.isAdded()<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>Fragment mBeforeFragment = new Fragment();<br>public void switchFragment(Fragment currentFragment) {<br>if (currentFragment.isAdded()) {<br>getSupportFragmentManager().beginTransaction().hide(mBeforeFragment).show(currentFragment).commit();<br>} else {<br>getSupportFragmentManager().beginTransaction().hide(mBeforeFragment).add(R.id.container, currentFragment).commit();<br>}<br>mBeforeFragment = currentFragment;<br>}<br>调用：</p>
+<p>1<br>switchFragment(HomeFragment.newInstance());<br>HomeFragment</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>public static HomeFragment homeFragment = null;</p>
+<p>public static HomeFragment newInstance() {<br>if (homeFragment == null) {<br>homeFragment = new HomeFragment();<br>}<br>return homeFragment;<br>}<br>android之inputType属性<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34</p>
+<p><edittext android:layout_width="fill_parent" android:layout_height="wrap_content" android:inputtype="phone"><br>//文本类型，多为大写、小写和数字符号。<br>    android:inputType=”none”<br>    android:inputType=”text”<br>    android:inputType=”textCapCharacters” 字母大写<br>    android:inputType=”textCapWords” 首字母大写<br>    android:inputType=”textCapSentences” 仅第一个字母大写<br>    android:inputType=”textAutoCorrect” 自动完成<br>    android:inputType=”textAutoComplete” 自动完成<br>    android:inputType=”textMultiLine” 多行输入<br>    android:inputType=”textImeMultiLine” 输入法多行（如果支持）<br>    android:inputType=”textNoSuggestions” 不提示<br>    android:inputType=”textUri” 网址<br>    android:inputType=”textEmailAddress” 电子邮件地址<br>    android:inputType=”textEmailSubject” 邮件主题<br>    android:inputType=”textShortMessage” 短讯<br>    android:inputType=”textLongMessage” 长信息<br>    android:inputType=”textPersonName” 人名<br>    android:inputType=”textPostalAddress” 地址<br>    android:inputType=”textPassword” 密码<br>    android:inputType=”textVisiblePassword” 可见密码<br>    android:inputType=”textWebEditText” 作为网页表单的文本<br>    android:inputType=”textFilter” 文本筛选过滤<br>    android:inputType=”textPhonetic” 拼音输入<br>//数值类型<br>    android:inputType=”number” 数字<br>    android:inputType=”numberSigned” 带符号数字格式<br>    android:inputType=”numberDecimal” 带小数点的浮点格式<br>    android:inputType=”phone” 拨号键盘<br>    android:inputType=”datetime” 时间日期<br>    android:inputType=”date” 日期键盘<br>android:inputType=”time” 时间键盘<br>ImageView.ScaleType<br>（1）ImageView.ScaleType.center:图片位于视图中间，但不执行缩放。<br>（2）ImageView.ScaleType.CENTER_CROP 按统一比例缩放图片（保持图片的尺寸比例）便于图片的两维（宽度和高度）等于或者大于相应的视图的维度<br>（3）ImageView.ScaleType.CENTER_INSIDE按统一比例缩放图片（保持图片的尺寸比例）便于图片的两维（宽度和高度）等于或者小于相应的视图的维度<br>（4）ImageView.ScaleType.FIT_CENTER缩放图片使用center<br>（5）ImageView.ScaleType.FIT_END缩放图片使用END<br>（6）ImageView.ScaleType.FIT_START缩放图片使用START<br>（7）ImageView.ScaleType.FIT_XY缩放图片使用XY<br>（8）ImageView.ScaleType.MATRIX当绘制时使用图片矩阵缩放</edittext></p>
+<p>调用系统发送短信界面<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>/**</p>
+<ul>
+<li>发送短信</li>
+<li>@param smsBody<br>*/<br>private void sendSMS(String smsBody)<br>{<br>//Uri smsToUri = Uri.parse(“smsto:10000”); //如果想指定发送人<br>Uri smsToUri = Uri.parse(“smsto:”);<br>Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);<br>intent.putExtra(“sms_body”, smsBody);<br>startActivity(intent);<br>}<br>跳转市场搜索某款软件<br>1<br>2<br>3<br>4<br>5<br>Intent intent = new Intent(<pre><code>        &quot;android.intent.action.VIEW&quot;);
+intent.setData(Uri
+        .parse(&quot;market://details?id=com.adobe.flashplayer&quot;));
+startActivity(intent);
+</code></pre>检测系统中是否安装某款软件<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>//检测系统中是否已经安装了adobe flash player插件，插件的packageName是com.adobe.flashplayer：<br>private boolean check() {<pre><code>PackageManager pm = getPackageManager();
+List&lt;PackageInfo&gt; infoList = pm
+        .getInstalledPackages(PackageManager.GET_SERVICES);
+for (PackageInfo info : infoList) {
+    if (&quot;com.adobe.flashplayer&quot;.equals(info.packageName)) {
+        return true;
+    }
+}
+return false;
+</code></pre>}</li>
+</ul>
+<p>private void isAvilible(String packageName) {</p>
+<pre><code>PackageInfo packageInfo;
+try {
+    packageInfo = this.getPackageManager().getPackageInfo(packageName,
+            0);
+
+} catch (NameNotFoundException e) {
+    packageInfo = null;
+    e.printStackTrace();
+}
+if (packageInfo != null) {
+</code></pre><p>//1、通过包名<br>            Intent intent = new Intent();<br>            intent = getPackageManager().getLaunchIntentForPackage(packageName);<br>            startActivity(intent);<br>//2、通过类名：<br>Intent intent=new Intent();<br>intent.setComponent(new ComponentName(packageName, “com.joe.internet.Main”));<br>startActivity(intent);<br>        } </p>
+<pre><code>}
+</code></pre><p>对话框菜单<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>new AlertDialog.Builder(this)<br>                        .setTitle(“choice”)<br>                        .setItems(new String[] { “选择1”, “选择2”, “选择3”, “选择4” },<br>                                new DialogInterface.OnClickListener() {</p>
+<pre><code>    @Override
+    public void onClick(DialogInterface dialog,
+            int which) {
+        Toast.makeText(MyContentActivity.this,
+                which + &quot;&quot;, Toast.LENGTH_SHORT)
+                .show();
+
+    }
+}).show();
+</code></pre><p>定义ProgressBar<br>1<br>2<br>3<br>4</p>
+<p><progressbar android:id="@+id/mProgress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:indeterminatedrawable="@drawable/progress_rotate"><br>progress_rotate：</progressbar></p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</p>
+<p><layer-list xmlns:android="http://schemas.android.com/apk/res/android"><br>    <item><br>        <rotate android:drawable="@drawable/progressbar" android:duration="300" android:fromdegrees="0.0" android:pivotx="50.0%" android:pivoty="50.0%" android:todegrees="360.0"><br>    </rotate></item><br></layer-list><br>幻灯片效果<br>xml</p>
+<p>1<br>2<br>3<br>4<br>5<br>6</p>
+<p><progressbar android:id="@+id/ProgressBar01" style="@style/animStyle" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_centerinparent="true"><br>style</progressbar></p>
+<p>1<br>2<br>3</p>
+<p><style name="animStyle" parent="@android:style/Widget.ProgressBar.Large"><br>        <item name="android:indeterminateDrawable">@anim/test</item><br></style><br>anim</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</p>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="false">
+
+<pre><code>&lt;item
+    android:drawable=&quot;@drawable/t1&quot;
+    android:duration=&quot;500&quot;/&gt;
+&lt;item
+    android:drawable=&quot;@drawable/t2&quot;
+    android:duration=&quot;500&quot;/&gt;
+&lt;item
+    android:drawable=&quot;@drawable/t3&quot;
+    android:duration=&quot;500&quot;/&gt;
+&lt;item
+    android:drawable=&quot;@drawable/t4&quot;
+    android:duration=&quot;500&quot;/&gt;
+&lt;item
+    android:drawable=&quot;@drawable/t5&quot;
+    android:duration=&quot;500&quot;/&gt;
+</code></pre><p></p></animation-list><br>MD5加密<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>public String Md5(String plainText) {<br>        String result = “”;<br>        try {<br>            MessageDigest md = MessageDigest.getInstance(“MD5”);<br>            md.update(plainText.getBytes());<br>            byte b[] = md.digest();<p></p>
+<pre><code>        int i;
+
+        StringBuffer buf = new StringBuffer(&quot;&quot;);
+        for (int offset = 0; offset &lt; b.length; offset++) {
+            i = b[offset];
+            if (i &lt; 0)
+                i += 256;
+            if (i &lt; 16)
+                buf.append(&quot;0&quot;);
+            buf.append(Integer.toHexString(i));
+        }
+        result = buf.toString().toUpperCase();// 32位的加密（转成大写）
+
+        buf.toString().substring(8, 24);// 16位的加密
+
+    } catch (NoSuchAlgorithmException e) {
+        e.printStackTrace();
+    }
+    return result;
+}
+</code></pre><p>设置自动跳转页面<br>Timer<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>Timer timer = new Timer();<br>        timer.schedule(new TimerTask() {<br>            @Override<br>            public void run() {<br>                // TODO Auto-generated method stub<br>                Intent goIntent = new Intent();<br>                goIntent.setClass(LauncherActivity.this, DemoActivity.class);<br>                startActivity(goIntent);<br>            }<br>        }, 3 * 1000);<br>    }<br>Handler<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>new Handler().postDelayed(new Runnable() {<br>            @Override<br>            public void run() {<br>                startActivity(new Intent(SplashScreen.this,<br>                        DomobSampleActivity.class));<br>                finish();<br>            }<br>        }, 1000);<br>随机取数<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>List<integer> list = new ArrayList<integer>();<br>        for (int i = 0; i &lt; 10; i++) {<br>            list.add(i);<br>        }<br>        Collections.shuffle(list);<br>        for (int v : list) {<br>            Log.d(“wxl”, “V===” + v);<br>        }<br>或：</integer></integer></p>
+<p>1<br>2<br>3<br>Random random = new Random();<br>int ran = random.nextInt(keywordsList.size());<br>            String tmp = keywordsList.get(ran).get(“keyword”).toString();<br>selector下的属性值<br>android:state_pressed<br>如果是true，当被点击时显示该图片，如果是false没被按下时显示默认。<br>android:state_focused<br>true，获得焦点时显示；false，没获得焦点显示默认。<br>android:state_selected<br>true，当被选择时显示该图片；false，当未被选择时显示该图片。<br>android:state_checkable<br>true，当 能使用时显示该图片；false，当CheckBox不能使用时显示该图片。<br>android:state_checked<br>true，当CheckBox选中时显示该图片；false，当CheckBox为选中时显示该图片。<br>android:state_enabled<br>true，当该组件能使用时显示该图片；false，当该组件不能使用时显示该图片。<br>android:state_window_focused<br>true，当此activity获得焦点在最前面时显示该图片；false，当没在最前面时显示该图片。</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>&lt;?xml version=”1.0” encoding=”utf-8”?&gt;</p>
+<p><selector xmlns:android="http://schemas.android.com/apk/res/android"><br>    <item android:state_pressed="true" android:drawable="@drawable/button_pressed"><!-- pressed --><br>    <item android:state_focused="true" android:drawable="@drawable/button_focused"><!-- focused --><br>    <item android:drawable="@drawable/button_normal"><!-- default --><br></item></item></item></selector><br>带下划线的EditText<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>public class LinedEditText extends EditText {<br>    private Paint linePaint;<br>    private float margin;<br>    private int paperColor;</p>
+<pre><code>public LinedEditText(Context paramContext, AttributeSet paramAttributeSet) {
+    super(paramContext, paramAttributeSet);
+    this.linePaint = new Paint();
+}
+@Override
+protected void onDraw(Canvas paramCanvas) {
+    paramCanvas.drawColor(this.paperColor);
+    int i = getLineCount();// 得到总的行數
+    int j = getHeight();// 获得TextView的高度
+    int k = getLineHeight();// 获得TextView的行高
+    int m = j / k + 1;// 总的线数
+    if (i &lt; m)
+        i = m;
+    int n = getCompoundPaddingTop();
+    Log.d(&quot;wxl&quot;, &quot;n----&quot; + n);
+    paramCanvas.drawLine(0.0F, n, getRight(), n, this.linePaint);
+    for (int i2 = 0;; i2++) {
+        if (i2 &gt;= i) {
+            setPadding(10 + (int) this.margin, 0, 0, 0);
+            super.onDraw(paramCanvas);
+            paramCanvas.restore();
+            return;
+        }
+        n += k;
+        paramCanvas.drawLine(0.0F, n, getRight(), n, this.linePaint);
+        paramCanvas.save();
+    }
+}
+</code></pre><p>}<br>主要工作就是重载onDraw方法，利用从TextView继承下来的getLineCount函数获取文本所占的行数，以及getLineBounds来获取特定行的基准高度值，而且这个函数第二个参数会返回此行的“外包装”值。再利用这些值绘制这一行的线条。为了让界面的View使用自定义的EditText类，必须在配置文件中进行设置</p>
+<p>关闭键盘<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>public static void hideSoftInput(Activity activity) {<br>        if (activity.getCurrentFocus() != null)<br>            ((InputMethodManager) activity<br>                    .getSystemService(Context.INPUT_METHOD_SERVICE))<br>                    .hideSoftInputFromWindow(activity.getCurrentFocus()<br>                            .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);<br>    }<br>界面不被弹出的键盘盖住<br>一进入activity就弹出键盘</p>
+<p>1<br>2<br>android:windowSoftInputMode=”adjustResize”<br>android:windowSoftInputMode=”adjustPan|stateAlwaysVisible”<br>第一个软键盘和输入框会完全分离，而第二个输入框还是会被软键盘盖住一点点<br>而且第二个要把两个属性叠加起来，为什么要叠加起来呢，因为如果只用adjustPan 的话需要点击输入框才会弹出软键盘</p>
+<p>在 AndroidMainfest.xml中选择哪个activity，设置windowSoftInputMode属性为</p>
+<p>1<br>2<br>adjustUnspecified|stateHidden<br>android:windowSoftInputMode=”adjustUnspecified|stateHidden”<br>windowSoftInputMode各值的含义：</p>
+<p>stateUnspecified：软键盘的状态并没有指定，系统将选择一个合适的状态或依赖于主题的设置</p>
+<p>stateUnchanged：当这个activity出现时，软键盘将一直保持在上一个activity里的状态，无论是隐藏还是显示</p>
+<p>stateHidden：用户选择activity时，软键盘总是被隐藏</p>
+<p>stateAlwaysHidden：当该Activity主窗口获取焦点时，软键盘也总是被隐藏的</p>
+<p>stateVisible：软键盘通常是可见的</p>
+<p>stateAlwaysVisible：用户选择activity时，软键盘总是显示的状态</p>
+<p>adjustUnspecified：默认设置，通常由系统自行决定是隐藏还是显示</p>
+<p>adjustResize：该Activity总是调整屏幕的大小以便留出软键盘的空间</p>
+<p>adjustPan：当前窗口的内容将自动移动以便当前焦点从不被键盘覆盖和用户能总是看到输入内容的部分</p>
+<p>控件美化Shape<br><a href="http://wuxiaolong.me/2013/07/09/shape/" target="_blank" rel="external">http://wuxiaolong.me/2013/07/09/shape/</a></p>
+<p>获取版本名称 VersionName<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>public String getVersionName(Context context) {<br>        PackageManager manager = context.getPackageManager();<br>        String packageName = context.getPackageName();<br>        try {<br>            PackageInfo info = manager.getPackageInfo(packageName, 0);<br>            return info.versionName;<br>        } catch (NameNotFoundException e) {<br>            return “1.0”;<br>        }<br>    }<br>获取Android手机设备的IMSI / IMEI 信息<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);<br>String imsi = mTelephonyMgr.getSubscriberId();<br>String imei = mTelephonyMgr.getDeviceId();<br>Log.i(“wxl”, “imsi=”+imsi);为null<br>Log.i(“wxl”, “imei=”+imei);<br>另外不要忘了在AndroidManifest.xml中加上读取手机状态的权限</p>
+<p><uses-permission android:name="android.permission.READ_PHONE_STATE"><br>自定义Log是否显示<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>public class Log {<br>       private static final String TAG = “wxl”;<br>       private static final boolean LOG = true;<br>       public static void i(String msg) {<br>           if (LOG)<br>               android.util.Log.i(TAG , msg);<br>       }<br>       public static void d(String msg) {<br>           if (LOG)<br>               android.util.Log.d(TAG , msg);<br>       }<br>       public static void w(String msg) {<br>           if (LOG)<br>               android.util.Log.w(TAG , msg);<br>       }<br>       public static void w(String msg, Throwable throwable) {<br>           if (LOG)<br>               android.util.Log.w(TAG , msg, throwable);<br>       }<br>       public static void v(String msg) {<br>           if (LOG)<br>               android.util.Log.v(TAG , msg);<br>       }<br>       public static void e(String msg) {<br>           android.util.Log.e(TAG , msg);<br>       }<br>       public static void e(String msg, Throwable throwable) {<br>           android.util.Log.e(TAG , msg, throwable);<br>       }<br>   }<br>异步操作AsyncTask<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>参数1：向后台任务的执行方法传递参数的类型 ；<br>参数2：在后台任务执行过程中，要求主UI线程处理中间状态，通常是一些UI处理中传递的参数类型；<br>参数3：后台任务执行完返回时的参数类型。<br> private class MyAsyncTask extends AsyncTask<integer, string,="" void=""> {</integer,></uses-permission></p>
+<pre><code>    // 实现抽象方法doInBackground()，代码将在后台线程中执行，由execute()触发
+    protected Void doInBackground(Integer... params) {
+        return null;
+    }
+
+    // 任务启动，可以在这里显示一个对话框，这里简单处理
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
+
+    // 取消
+    protected void onCancelled() {
+        super.onCancelled();
+    }
+
+    // 定义后台进程执行完后的处理
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+        Toast.makeText(MainActivity.this, &quot;OK&quot;, Toast.LENGTH_SHORT).show();
+    }
+
+    // 更新进度,在UI主线程执行的内容，将item加入list中。方法中的参数为范式方式，实质为数组，由于我们只传递了item一个String，要获取，为values[0]
+    protected void onProgressUpdate(String... values) {
+        super.onProgressUpdate(values);
+    }
+
+}
+</code></pre><p>调用：</p>
+<p>1<br>new MyAsyncTask().execute(参数1);// 创建后台任务的对象<br>检查网络状态<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>public boolean checkNetworkInfo() {<br>        ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);<br>        // mobile 3G Data Network<br>        State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)<br>                .getState();<br>        // wifi<br>        State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)<br>                .getState();<br>        // 如果3G网络和wifi网络都未连接，且不是处于正在连接状态 则进入Network Setting界面 由用户配置网络连接<br>        if (mobile == State.CONNECTED || mobile == State.CONNECTING)<br>            return true;<br>        if (wifi == State.CONNECTED || wifi == State.CONNECTING)<br>            return true;<br>        AlertDialog.Builder builder = new AlertDialog.Builder(this);<br>        builder.setMessage(getResources().getString(R.string.no_network))<br>                .setCancelable(false)<br>                .setPositiveButton(<br>                        getResources().getString(R.string.configuration),<br>                        new DialogInterface.OnClickListener() {<br>                            public void onClick(DialogInterface dialog, int id) {</p>
+<pre><code>                            // 进入无线网络配置界面
+                            startActivity(new Intent(
+                                    Settings.ACTION_WIRELESS_SETTINGS));
+                            MainActivity.this.finish();
+                        }
+                    })
+            .setNegativeButton(getResources().getString(R.string.quit),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            MainActivity.this.finish();
+                        }
+                    });
+    builder.show();
+    return false;
+}
+</code></pre><p>代码判断调用：</p>
+<p>1<br>2<br>3<br>4<br>// 检查网络状态<br>        if (!checkNetworkInfo()) {<br>            return;<br>        }<br>Html.fromHtml（）<br>让数据接受网页的格式</p>
+<p>1<br>2<br>URLEncoder.encode(String s); 网址请求中文解析<br>&#8230;代表省略号<br>URLEncoder.encode<br>网址请求带中文</p>
+<p>1<br>URLEncoder.encode(content, “utf-8”)<br>Android中字体加粗<br>在xml文件中使用</p>
+<p>1<br>android:textStyle=”bold”<br>Java 代码</p>
+<p>（网上查XML不能将中文设置成粗体，只能通过Java code。Android 2.2 可以通过XML将中文设置成粗体）</p>
+<p>1<br>2<br>3<br>TextView tv = (TextView)findViewById(R.id.TextView01);<br>TextPaint tp = tv.getPaint();<br>tp.setFakeBoldText(true);<br>Html.fromHtml(“\&lt;\b&gt;”)<br>1<br>2<br>3<br>(1)viewHolder.title.setText(Html.fromHtml(“<b>“</b></p>
+<pre><code>+ listTitle.get(position).get(&quot;title&quot;) + &quot;&lt;/b&gt;&quot;));
+</code></pre><p>(2)TextView.setText(Html.fromHtml(“<font color="#FF0000">hello</font>“));<br>代码设置背景图setImageResource/setBackgroundResource<br>1<br>2<br>3<br>4<br>5<br>textView.setBackgroundResource(R.drawable.bg_menu_1);设置背景图片<br>textView.setBackgroundColor(0xffffffff);<br>setImageResource與xml中的src的屬性才是相匹配的，而setBackgroundResource是與xml中的background屬性相匹配<br>的<br>holder.chat_sound_iv_right.setBackgroundResource(0);//没有图片<br>android中的ellipsize<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>用法如下：<br>在xml中<br>android:ellipsize = “end”　　  省略号在结尾<br>android:ellipsize = “start” 　　省略号在开头<br>android:ellipsize = “middle”     省略号在中间<br>android:ellipsize = “marquee”  跑马灯<br>最好加一个约束android:singleline = “true”<br>跑马灯<br>android:singleLine=”true”<br>android:ellipsize=”marquee”<br>android:focusableInTouchMode=”true”<br>android:focusable=”true”<br>android:marqueeRepeatLimit=”marquee_forever”<br>android:singleLine=true 表示使用单行文字，多行文字也就无所谓使用Marquee效果了。<br>android:marqueeRepeatLimit，设置走马灯滚动的次数。<br>android:ellipsize，设置了文字过长时如何切断文字，可以有none, start,middle, end, 如果使用走马灯效果则设为marquee.<br>android:focusable，Android的缺省行为是在控件获得Focus时才会显示走马灯效果<br>控件点击效果<br>1<br>2<br>3<br>4<br>5</p>
+<p><selector xmlns:android="http://schemas.android.com/apk/res/android"><br>    <item android:state_focused="true" android:state_pressed="false" android:drawable="@drawable/professional_1"><br>    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/professional_1"><br>    <item android:drawable="@drawable/professional"><br></item></item></item></selector><br>保留小数点<br>方法一：</p>
+<p>1<br>2<br>3<br>4<br>private DecimalFormat df;<br>df = new DecimalFormat(“0.0”);<br>float data;<br>df.format(data);//返回值<br>方法二：</p>
+<p>1<br>2<br>double juli = 1569;<br>String result = String.format(“%.1f”, juli/1000);<br>RadioGroup<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27</p>
+<radiogroup android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
+
+<pre><code>&lt;RadioButton
+    android:id=&quot;@+id/open&quot;
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:layout_marginLeft=&quot;10dip&quot;
+    android:layout_marginTop=&quot;10dip&quot;
+    android:button=&quot;@drawable/radiobutton&quot;
+    android:checked=&quot;true&quot;
+    android:text=&quot;@string/open_album&quot;
+    android:textColor=&quot;#000000&quot;
+    android:textSize=&quot;16dip&quot; /&gt;
+
+&lt;RadioButton
+    android:id=&quot;@+id/secrecy&quot;
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:layout_marginLeft=&quot;10dip&quot;
+    android:button=&quot;@drawable/radiobutton&quot;
+    android:text=&quot;@string/secrecy_album&quot;
+    android:textColor=&quot;#000000&quot;
+    android:textSize=&quot;16dip&quot; /&gt;
+</code></pre><p>   </p></radiogroup><br>android:button=”@null” 去除RadioButton前面的圆点<br>android:background=”@drawable/radio” 使用定义的样式<p></p>
+<p>占位符%s替换<br>%d （表示整数）<br>%f （表示浮点数）<br>%s （表示字符串）<br>txt.setText(String.format (“被替换%1$s”,”替换内容”));</p>
+<p>TextView中嵌套图片Drawable<br>1<br>2<br>3<br>4<br>5<br>Drawable drawable = getResources().getDrawable(R.drawable.ji_dot_nor);<br>drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());<br>textView.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);<br>说明：setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom)<br>意思是设置Drawable显示在text的左、上、右、下位置。(Textview、Button都可以)<br>TextView做成分割线<br>1<br>2<br>3<br>4<br>5</p>
+<p><textview android:id="@id/textView2" android:layout_width="fill_parent" android:layout_height="2.0px" android:background="@color/orange"><br>SpannableString单击文字链接<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>SpannableString spannableString = new SpannableString(str);<br>        spannableString.setSpan(new ClickableSpan() {<br>            public void onClick(View view) {<br>                // Intent intent = new Intent(ApkTest.this, Apk.class);<br>                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(“tel:”</textview></p>
+<pre><code>                + &quot;15261589767&quot;));
+        startActivity(intent);
+    }
+}, 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+TextView.setText(spannableString);
+TextView.setMovementMethod(LinkMovementMethod.getInstance());
+</code></pre><p>TextView中文字通过SpannableString<br>来设置超链接、颜色、字体等属性</p>
+<p>1<br>2<br>3<br>4<br>5<br>String  title =”123456”;<br>SpannableString titleStr = new SpannableString(title);<br>titleStr.setSpan(new ForegroundColorSpan(Color.RED), 0,<br>                        titleStr.length(), 0);<br>textView.setText(titleStr);<br>android:drawableTop属性<br>写在TextView里，实现图片+文字</p>
+<p>获取分辨率<br>1<br>2<br>3<br>4<br>5<br>DisplayMetrics displayMetrics = new DisplayMetrics();<br>getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);</p>
+<p>displayMetrics.widthPixels + “x”</p>
+<pre><code>+ displayMetrics.heightPixels;
+</code></pre><p>代码完成控件<br>Button</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>linearLayout = (LinearLayout) findViewById(R.id.linearLayout2);<br>LayoutParams layoutParams = new LinearLayout.LayoutParams(0,<br>                LinearLayout.LayoutParams.WRAP_CONTENT, 1);//1均分属性<br>layoutParams.setMargins(10, 10, 10, 10);</p>
+<p>Button button = new Button(MainActivity.this);<br>button.setLayoutParams(layoutParams);<br>linearLayout.addView(button);<br>TextView</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>private TextView overlay;<br>private void initOverlay() {<br>        LayoutInflater inflater = LayoutInflater.from(this);<br>        overlay = (TextView) inflater.inflate(R.layout.overlay, null);<br>        overlay.setVisibility(View.INVISIBLE);<br>        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(<br>                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,<br>                WindowManager.LayoutParams.TYPE_APPLICATION,<br>                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE<br>                        | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,<br>                PixelFormat.TRANSLUCENT);<br>        WindowManager windowManager = (WindowManager) this<br>                .getSystemService(Context.WINDOW_SERVICE);<br>        windowManager.addView(overlay, lp);<br>    }<br>&lt;?xml version=”1.0” encoding=”utf-8”?&gt;</p>
+<textview xmlns:android="http://schemas.android.com/apk/res/android" android:background="#ffffff" android:gravity="center" android:maxwidth="80dip" android:minwidth="80dip" android:padding="5dip" android:textcolor="#3399ff" android:textsize="70sp">
+
+
+<p>private LinearLayout.LayoutParams layoutParams = null;<br>        private LinearLayout.LayoutParams btnParmas;</p>
+<p>layoutParams = new LinearLayout.LayoutParams(<br>                            LinearLayout.LayoutParams.WRAP_CONTENT,<br>                            LinearLayout.LayoutParams.WRAP_CONTENT);<br>                    layoutParams.setMargins(<br>                            (int) getResources().getDimension(<br>                                    R.dimen.lable_left), 0, 0, 0);<br>                    btnParmas = new LinearLayout.LayoutParams(<br>                            LinearLayout.LayoutParams.WRAP_CONTENT,<br>                            (int) getResources().getDimension(<br>                                    R.dimen.lable_height));</p>
+<pre><code>for (int i = 0; i &lt; lables.length; i++) {
+    LinearLayout linearLayout = new LinearLayout(activity);
+    lableColor = random.nextInt(lableColors.length);
+    Button lable = new Button(activity);
+    lable.setText(lables[i]);
+    lable.setGravity(Gravity.CENTER_HORIZONTAL
+            | Gravity.CENTER_VERTICAL);
+    lable.setTextSize(getResources().getDimension(
+            R.dimen.lable));
+    lable.setTextColor(getResources().getColor(
+            R.color.white));
+    lable.setBackgroundResource(lableColors[i]);
+    linearLayout.addView(lable, btnParmas);
+    holder.play_lables.addView(linearLayout, layoutParams);
+}
+</code></pre><p>TextWatcher<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>editText1.addTextChangedListener(watcher);<br>TextWatcher watcher = new TextWatcher() {<br>        public void onTextChanged(CharSequence arg0, int arg1, int arg2,<br>                int arg3) {<br>        }<br>        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,<br>                int arg3) {<br>        }<br>        public void afterTextChanged(Editable arg0) {<br>        }<br>    };<br>屏幕旋转时不销毁<br>1<br>2<br>AndroidManifest加入<br>android:configChanges=”orientation|keyboardHidden”<br>获取屏幕方向</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>Configuration newConfig = getResources().getConfiguration();<br>        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){<br>            //横屏<br>         }else if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){<br>            //竖屏<br>         }else if(newConfig.hardKeyboardHidden == Configuration.KEYBOARDHIDDEN_NO){<br>            //键盘没关闭。屏幕方向为横屏<br>         }else if(newConfig.hardKeyboardHidden == Configuration.KEYBOARDHIDDEN_YES){<br>            //键盘关闭。屏幕方向为竖屏<br>         }<br>List增加数据<br>简单<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>private List<string> getData() {<br>        List<string> data = new ArrayList<string>();<br>        data.add(“123”);<br>        data.add(“345”);<br>        data.add(“456”);<br>        data.add(“567”);<br>        return data;<br>    }<br>键值对<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>private List<map<string, object="">&gt; getData() {<br>        List<map<string, object="">&gt; list = new ArrayList<map<string, object="">&gt;();</map<string,></map<string,></map<string,></string></string></string></p>
+<pre><code>    Map&lt;String, Object&gt; map = new HashMap&lt;String, Object&gt;();
+    map.put(&quot;title&quot;, &quot;G1&quot;);
+    map.put(&quot;info&quot;, &quot;google 1&quot;);
+    map.put(&quot;img&quot;, R.drawable.i1);
+    list.add(map);
+
+    map = new HashMap&lt;String, Object&gt;();
+    map.put(&quot;title&quot;, &quot;G2&quot;);
+    map.put(&quot;info&quot;, &quot;google 2&quot;);
+    map.put(&quot;img&quot;, R.drawable.i2);
+    list.add(map);
+
+    map = new HashMap&lt;String, Object&gt;();
+    map.put(&quot;title&quot;, &quot;G3&quot;);
+    map.put(&quot;info&quot;, &quot;google 3&quot;);
+    map.put(&quot;img&quot;, R.drawable.i3);
+    list.add(map);
+
+    return list;
+}
+</code></pre><p>清除数据：</p>
+<p>1<br>2<br>data.clear();<br>listView.setAdapter(new ArrayAdapter<string>(this, android.R.layout.simple_expandable_list_item_1,getData()));<br>LinkedList<br>1<br>2<br>LinkedList<string> list = new LinkedList<string>();<br>list.addFirst(“000”);<br>验证是否手机号码<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>public boolean isMobileNO(String mobiles) {<br>        String expression = “((^(13|15|18)[0-9]{9}$)|(^0[1,2]{1}\d{1}-?\d{8}$)|(^0[3-9] {1}\d{2}-?\d{7,8}$)|(^0[1,2]{1}\d{1}-?\d{8}-(\d{1,4})$)|(^0[3-9]{1}\d{2}-? \d{7,8}-(\d{1,4})$))”;<br>        Pattern pattern = Pattern.compile(expression);<br>        Matcher matcher = pattern.matcher(mobiles);<br>        Log.d(“wxl”, matcher.matches() + “”);<br>        return matcher.matches();<br>    }<br>正则表达式数字验证<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>public boolean isNumber(String str)<br>    {<br>        java.util.regex.Pattern pattern=java.util.regex.Pattern.compile(“[0-9]*”);<br>        java.util.regex.Matcher match=pattern.matcher(str);<br>        if(match.matches()==false)<br>        {<br>             return false;<br>        }<br>        else<br>        {<br>             return true;<br>        }<br>    }<br>SharedPreferences<br>SharedPreferences存数据<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>SharedPreferences sharedPreferences = getSharedPreferences(“test”, Context.MODE_PRIVATE);<br>Editor editor = sharedPreferences.edit();//获取编辑器<br>editor.putString(“name”, “张三”);<br>editor.putInt(“age”, 24);<br>editor.putBoolean(“AutoLogin”, false);</string></string></string></p>
+<p>editor.commit();//提交修改<br>SharedPreferences取数据<br>1<br>2<br>3<br>4<br>5<br>SharedPreferences sharedPreferences = getSharedPreferences(“test”, Context.MODE_PRIVATE);<br>//getString()第二个参数为缺省值,如果preference中不存在该key,将返回缺省值<br>String name = sharedPreferences.getString(“name”, “”);<br>int age = sharedPreferences.getInt(“age”, 1);<br>boolean autoLogin= sharedPreferences. getBoolean(“AutoLogin”, false);<br>Intent 传值<br>简单传值<br>ActivityPage</p>
+<p>1<br>2<br>3<br>4<br>5<br>Intent intent = new Intent(ActivityPage.this, Player.class);<br>            //保存信息<br>            Bundle mBundle = new Bundle();<br>            mBundle.putString(“realname “, realname);<br>            intent.putExtras(mBundle);<br>Player接受</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>realname = this.getIntent().getStringExtra(“realname”);<br>Intent intent = new Intent();<br>intent.setClass(HomeActivity.this, CompanyActivity.class);<br>intent.putExtra(“mCompanySupply”, mCompanySupply);<br>                startActivity(intent);<br>CompanyActivity.class:<br>ArrayList<classifysub3bean>  mCompanySupply = (ArrayList<classifysub3bean>) getIntent()<br>                .getSerializableExtra(“mCompanySupply”);<br>复杂传值<br>A页面：</classifysub3bean></classifysub3bean></p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>private static final int REQUEST_CODE_A = 0;<br>private static final int RESULT_CODE_B = 0;<br>Intent intent = new Intent();<br>                Bundle bundle = new Bundle();<br>                intent.setClass(MainActivity.this, TestBActivity.class);<br>                bundle.putString(“msg”, textView.getText().toString());<br>                intent.putExtras(bundle);<br>                startActivityForResult(intent, REQUEST_CODE_A);</p>
+<p>protected void onActivityResult(int requestCode, int resultCode, Intent data) {<br>        super.onActivityResult(requestCode, resultCode, data);<br>        if (requestCode == REQUEST_CODE_A &amp;&amp; resultCode == RESULT_OK) {<br>            String str=data.getExtras().getString(“result”);<br>        }<br>    }<br>B页面</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>private static final int RESULT_CODE_B = 0;<br>Intent intent = new Intent();<br>                intent.putExtra(“result”, textView.getText().toString());<br>                setResult(RESULT_OK, intent);<br>                finish();</p>
+<p>public boolean onKeyDown(int keyCode, KeyEvent event) {<br>        if (keyCode == KeyEvent.KEYCODE_BACK) {<br>            Intent intent = new Intent();<br>            intent.putExtra(“result”, “直接返回”);<br>            setResult(RESULT_OK, intent);<br>            this.finish();<br>            return true;<br>        } else {<br>            return super.onKeyDown(keyCode, event);<br>        }<br>    }<br>List<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>Intent intent = new Intent();<br>                    intent.putStringArrayListExtra(“mSelectedPhotos”,<br>                            mSelectedPhotos);<br>                    setResult(RESULT_OK, intent);</p>
+<pre><code>ArrayList&lt;String&gt; mSelectedPhotos = (ArrayList&lt;String&gt;) intent
+    .getStringArrayListExtra(&quot;mSelectedPhotos&quot;);
+</code></pre><p>xml文件中导入另一个xml文件的方法include<br>1<br>2<br>3</p>
+<p><include android:id="@+id/included1" layout="@layout/anotherlayout"><br>单击返回键两次退出<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>private static Boolean isExit = false;<br>        @Override<br>        public boolean onKeyDown(int keyCode, KeyEvent event) {<br>                if (keyCode == KeyEvent.KEYCODE_BACK) {<br>                        if (isExit == false) {<br>                                isExit = true;<br>                                Toast.makeText(this, “再按一次退出程序”, Toast.LENGTH_SHORT).show();<br>                                new Timer().schedule(new TimerTask() {<br>                                        @Override<br>                                        public void run() {<br>                                                isExit = false;<br>                                        }<br>                                }, 2000);<br>                        } else {<br>                                finish();<br>                                System.exit(0);<br>                        }<br>                }<br>                return false;<br>        }<br>或者</include></p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>@Override<br>    public boolean onKeyUp(int keyCode, KeyEvent event) {<br>        if (keyCode == KeyEvent.KEYCODE_BACK) {<br>            long secondTime = System.currentTimeMillis();<br>            if (secondTime - firstTime &gt; 800) {//如果两次按键时间间隔大于800毫秒，则不退出<br>                Toast.makeText(MainActivity.this, “再按一次退出程序…”,<br>                        Toast.LENGTH_SHORT).show();<br>                firstTime = secondTime;//更新firstTime<br>                return true;<br>            } else {<br>                System.exit(0);//否则退出程序<br>            }<br>        }<br>        return super.onKeyUp(keyCode, event);<br>    }<br>图片左右循环移动<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>TranslateAnimation left, right;<br>right = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1f,<br>                Animation.RELATIVE_TO_PARENT, -2f,<br>                Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT,<br>                0f);<br>        left = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, -2f,<br>                Animation.RELATIVE_TO_PARENT, -1f,<br>                Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT,<br>                0f);<br>        right.setDuration(25000);<br>        left.setDuration(25000);<br>        right.setFillAfter(true);<br>        left.setFillAfter(true);</p>
+<pre><code>right.setAnimationListener(new Animation.AnimationListener() {
+    @Override
+    public void onAnimationStart(Animation animation) {
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        runImage.startAnimation(left);
+    }
+});
+left.setAnimationListener(new Animation.AnimationListener() {
+    @Override
+    public void onAnimationStart(Animation animation) {
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        runImage.startAnimation(right);
+    }
+});
+runImage.startAnimation(right);
+</code></pre><p>控件左右抖动<br>res下anim<br>animlayout.xml</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>&lt;?xml version=”1.0” encoding=”utf-8”?&gt;</p>
+<p><translate xmlns:android="http://schemas.android.com/apk/res/android" android:duration="1000" android:fromxdelta="0" android:interpolator="@anim/cycle_7" android:toxdelta="10"><br>cycle_7.xml</translate></p>
+<p>1<br>2<br>3<br>&lt;?xml version=”1.0” encoding=”utf-8”?&gt;</p>
+<p><cycleinterpolator xmlns:android="http://schemas.android.com/apk/res/android" android:cycles="7"><br>(2)java代码</cycleinterpolator></p>
+<p>1<br>2<br>3<br>Animation shake = AnimationUtils.loadAnimation(<br>                        MainActivity.this, R.anim.animlayout);<br>                btn.setAnimation(shake);<br>关于作者<br>点击查看</p>
+<p>#Android<br>Drawable /Bitmap、String/InputStream、Bitmap/byte[]互转  今日情感<br>分享到：<br>QQ好友<br>QQ空间<br>微博<br>腾讯微博<br>微信<br>社交帐号登录:<br>微信<br>微博<br>QQ<br>人人<br>更多»</p>
+<p>说点什么吧…<br>发布<br>6条评论<br>肖昌<br>肖昌Windows 7Chrome|48.0.2564.116<br>很实用啊<br>2小时前回复顶转发<br>hedge<strong>hog<br>hedge</strong>hogMac OS 10.11.3Chrome|48.0.2564.116<br>真实用！<br>4小时前回复顶转发<br>bruce<br>bruceLinux x64Chrome|44.0.2403.130<br>大赞<br>4小时前回复顶转发<br>写代码的猴子<br>写代码的猴子Mac OS 10.11.3Chrome|48.0.2564.116<br>赞<br>5小时前回复顶转发<br>123<br>123Windows 7Chrome|48.0.2564.116<br>很好很强大<br>5小时前回复顶转发<br>AdleyLong<br>AdleyLongWindows 7Chrome|44.0.2403.89<br>xiaolong很有心啊~~<br>2015年8月11日回复顶转发<br>WuXiaolong正在使用多说<br>文章目录 站点概览<br>©   2013 - 2016  吴小龙同學<br>由 Hexo 强力驱动  主题 - NexT.Mist<br>本站总访问量39571次 本站访客数15083人次</p>
+</textview>]]></content>
+    <summary type="html">
+    <![CDATA[<p>这份是我工作以来，总结的小知识库，有些知识点现在看来太LOW了，把还觉得有用的分享出来！</p>
+<h3 id="Genymotion_u4E0B_u8F7D_u865A_u62DF_u955C_u50CFConnection_timeout"><a href="#Geny]]>
+    </summary>
+    
+      <category term="知识库" scheme="http://yoursite.com/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
+    
+      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Webview上传文件的那些坑]]></title>
     <link href="http://yoursite.com/2016/02/22/Webview%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/"/>
     <id>http://yoursite.com/2016/02/22/Webview上传文件的那些坑/</id>
     <published>2016-02-22T13:01:14.000Z</published>
-    <updated>2016-02-22T05:35:13.902Z</updated>
+    <updated>2016-02-22T05:35:13.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>要说Android中最厉害的组件莫过于Webview 了，夸张点说把这个组件放在屏幕上就可以算作一个简单地浏览器应用了。但你若认为这就万事大吉了，可太小看Webview这个磨人的妖精了，下面单就上传文件的这个坑来做展开。</p>
 </blockquote>
@@ -616,7 +1611,7 @@ public class MainActivity extends Activity {
     <link href="http://yoursite.com/2016/02/21/Android%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/"/>
     <id>http://yoursite.com/2016/02/21/Android源码编译/</id>
     <published>2016-02-21T06:33:45.000Z</published>
-    <updated>2016-02-26T07:27:49.473Z</updated>
+    <updated>2016-02-26T07:27:49.000Z</updated>
     <content type="html"><![CDATA[<h2 id="u6E90_u7801_u7F16_u8BD1"><a href="#u6E90_u7801_u7F16_u8BD1" class="headerlink" title="源码编译"></a>源码编译</h2><h4 id="1_u3001_u7CFB_u7EDF_uFF1A_Ubuntu14-04_u4EE5_u4E0A__u6216_u8005_Mac"><a href="#1_u3001_u7CFB_u7EDF_uFF1A_Ubuntu14-04_u4EE5_u4E0A__u6216_u8005_Mac" class="headerlink" title="1、系统： Ubuntu14.04以上 或者 Mac"></a>1、系统： Ubuntu14.04以上 或者 Mac</h4><blockquote>
 <p>下面的介绍都是在ubuntu下进行的</p>
 </blockquote>
@@ -769,7 +1764,7 @@ $ sudo apt-get install sun-java8-jdk
     <link href="http://yoursite.com/2016/02/18/Kotlin1.0%E6%AD%A3%E5%BC%8F%E7%89%88%E5%8F%91%E5%B8%83/"/>
     <id>http://yoursite.com/2016/02/18/Kotlin1.0正式版发布/</id>
     <published>2016-02-18T15:01:14.000Z</published>
-    <updated>2016-02-19T09:12:40.579Z</updated>
+    <updated>2016-02-19T09:12:40.000Z</updated>
     <content type="html"><![CDATA[<p><code>就在昨天，Android领域的Swift--Kotlin 1.0发布了，详细的新版本发布介绍请「阅读原文」查看官方发行说明。</code></p>
 <h3 id="u4F55_u4E3AKotlin_uFF1F"><a href="#u4F55_u4E3AKotlin_uFF1F" class="headerlink" title="何为Kotlin？"></a>何为Kotlin？</h3><p><code>Kotlin 是一门实用的编程语言，可用于 JVM 和 Android 程序开发，Kotlin 结合了面向对象和函数式特性，致力于互操作性，安全，简洁和工具支持。</code><br><a id="more"></a><br><code>Kotlin 是一门通用的语言，只要能用 Java 的地方就能用 Kotlin，包含：服务器程序开发，移动应用开发（Android），桌面客户端程序开发。 Kotlin 支持所有主要的开发工具以及服务，比如：</code></p>
 <pre><code>IntelliJ IDEA，Android Studio 和 Eclipse
@@ -907,7 +1902,7 @@ asyncOperation(5) { result -&gt; println(&quot;result: $result&quot;) }
     <link href="http://yoursite.com/2016/01/25/Ibeacon/"/>
     <id>http://yoursite.com/2016/01/25/Ibeacon/</id>
     <published>2016-01-25T04:01:14.000Z</published>
-    <updated>2016-02-19T09:12:16.473Z</updated>
+    <updated>2016-02-19T09:12:16.000Z</updated>
     <content type="html"><![CDATA[<h3 id="u662F_u4EC0_u4E48_uFF1F"><a href="#u662F_u4EC0_u4E48_uFF1F" class="headerlink" title="是什么？"></a>是什么？</h3><p>iBeacon是apple公司提出的“一种可以让附近手持电子设备检测到的一种新的低功耗、低成本信号传送器”的一套可用于室内定位系统的协议。 这种技术可以使一个智能手机或其他装置在一个iBeacon基站的感应范围内执行相应的命令。</p>
 <p>这是帮助智能手机确定他们大概位置或环境的一个应用程序。在一个iBeacon基站的帮助下，智能手机的软件能大概找到它和这个iBeacon基站的相对位置。iBeacon能让手机收到附近售卖商品的通知，也可以让消费者不用拿出钱包或信用卡就能在销售点的POS机上完成支付。iBeacon技术通过低功耗蓝牙（BLE），也就是我们所说的智能蓝牙来实现。</p>
 <p>iBeacon为利用低功耗蓝牙可以近距离感测的功能来传输通用唯一识别码的一个app或操作系统。 这个识别码可以在网上被查找到用以确定设备的物理位置或者可以在设备上触发一个动作比如在社交媒体签到或者推送通知。</p>
@@ -948,7 +1943,7 @@ asyncOperation(5) { result -&gt; println(&quot;result: $result&quot;) }
     <link href="http://yoursite.com/2015/12/19/React-Native%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/"/>
     <id>http://yoursite.com/2015/12/19/React-Native学习指南/</id>
     <published>2015-12-19T15:32:17.000Z</published>
-    <updated>2016-02-19T09:13:18.282Z</updated>
+    <updated>2016-02-19T09:13:18.000Z</updated>
     <content type="html"><![CDATA[<p>本指南汇集React-Native各类学习资源，给大家提供便利。指南正在不断的更新，大家有好的资源欢迎Pull Requests！</p>
 <p>同时还有Awesome React-Native系列</p>
 <p><a href="https://github.com/jondot/awesome-react-native" target="_blank" rel="external">https://github.com/jondot/awesome-react-native</a></p>
@@ -1260,7 +2255,7 @@ asyncOperation(5) { result -&gt; println(&quot;result: $result&quot;) }
     <link href="http://yoursite.com/2015/12/18/RecyclerView%20%E5%88%97%E8%A1%A8%E6%8E%A7%E4%BB%B6%E4%B8%AD%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%97%B6%E9%97%B4%E7%BA%BF/"/>
     <id>http://yoursite.com/2015/12/18/RecyclerView 列表控件中简单实现时间线/</id>
     <published>2015-12-17T17:01:14.000Z</published>
-    <updated>2016-02-19T09:20:12.990Z</updated>
+    <updated>2016-02-19T09:20:12.000Z</updated>
     <content type="html"><![CDATA[<p>看见很多软件中都有时间线的东西，貌似天气啊，旅游啊什么的最多了；具体实现方式很多，在本篇文章中讲解一种自定义View封装的方式。</p>
 <h3 id="u6548_u679C"><a href="#u6548_u679C" class="headerlink" title="效果"></a>效果</h3><p>先来看看效果。<br><img src="http://www.jcodecraeer.com/uploads/20150825/1440469250572021.png" alt=""><br><a id="more"></a></p>
 <h3 id="u5206_u6790"><a href="#u5206_u6790" class="headerlink" title="分析"></a>分析</h3><p>软件中，可以看见前面的时间线也就是线条加上圆圈组成；当然这里的圆圈与线条也都是可以随意换成其他的，比如图片等等。</p>
@@ -1734,7 +2729,7 @@ private List&lt;TimeLineModel&gt; getData() {
     <link href="http://yoursite.com/2015/11/21/3.5%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E4%BA%AE%E7%82%B9%E5%92%8C%E4%B8%8D%E8%B6%B3/"/>
     <id>http://yoursite.com/2015/11/21/3.5开发中的亮点和不足/</id>
     <published>2015-11-20T18:33:45.000Z</published>
-    <updated>2016-02-19T08:25:42.229Z</updated>
+    <updated>2016-02-19T08:25:42.000Z</updated>
     <content type="html"><![CDATA[<h3 id="1_u3001_u4E00_u952E_u52A0_u6CB9_u7684_u6570_u636E_u7F13_u5B58_u64CD_u4F5C"><a href="#1_u3001_u4E00_u952E_u52A0_u6CB9_u7684_u6570_u636E_u7F13_u5B58_u64CD_u4F5C" class="headerlink" title="1、一键加油的数据缓存操作"></a>1、一键加油的数据缓存操作</h3><ul>
 <li><p>添加缓存</p>
 <pre><code>原因：
@@ -1819,7 +2814,7 @@ private List&lt;TimeLineModel&gt; getData() {
     <link href="http://yoursite.com/2015/10/09/ActionBar%E6%B2%89%E6%B5%B8%E5%BC%8F%E5%AE%9E%E7%8E%B0/"/>
     <id>http://yoursite.com/2015/10/09/ActionBar沉浸式实现/</id>
     <published>2015-10-09T13:56:17.000Z</published>
-    <updated>2016-02-23T04:22:02.190Z</updated>
+    <updated>2016-02-23T04:22:02.000Z</updated>
     <content type="html"><![CDATA[<p>studio，中引入沉浸式兼容库 <code>compile &#39;com.readystatesoftware.systembartint:systembartint:1.0.3&#39;</code><br>eclipse，可以导入相应的那个类。</p>
 <h3 id="u7B2C_u4E00_u7C7B_uFF0C_u517C_u5BB9actionbar"><a href="#u7B2C_u4E00_u7C7B_uFF0C_u517C_u5BB9actionbar" class="headerlink" title="第一类，兼容actionbar"></a>第一类，兼容actionbar</h3><ul>
 <li><p>第一步：设置activity主题android:theme=”@style/ActionBarTheme”</p>
@@ -1936,7 +2931,7 @@ android:clipToPadding=”false
     <link href="http://yoursite.com/2015/07/22/%E6%B3%A8%E8%A7%A3(Annotation)%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%E5%85%A5%E9%97%A8/"/>
     <id>http://yoursite.com/2015/07/22/注解(Annotation)自定义注解入门/</id>
     <published>2015-07-22T15:12:17.000Z</published>
-    <updated>2016-02-19T09:06:01.365Z</updated>
+    <updated>2016-02-19T09:06:01.000Z</updated>
     <content type="html"><![CDATA[<p>要深入学习注解，我们就必须能定义自己的注解，并使用注解，在定义自己的注解之前，我们就必须要了解Java为我们提供的元注解和相关定义注解的语法。</p>
 <p>元注解：<br>元注解的作用就是负责注解其他注解。Java5.0定义了4个标准的<code>meta-annotation</code>类型，它们被用来提供对其它 <code>annotation</code>类型作说明。Java5.0定义的元注解：<a id="more"></a></p>
 <pre><code>1.@Target,
@@ -2189,7 +3184,7 @@ public class Apple {
     <link href="http://yoursite.com/2015/07/21/Android%20OkHttp%E5%AE%8C%E5%85%A8%E8%A7%A3%E6%9E%90/"/>
     <id>http://yoursite.com/2015/07/21/Android OkHttp完全解析/</id>
     <published>2015-07-21T05:56:17.000Z</published>
-    <updated>2016-02-19T09:08:00.429Z</updated>
+    <updated>2016-02-19T09:08:00.000Z</updated>
     <content type="html"><![CDATA[<h2 id="u4E00_u3001_u6982_u8FF0"><a href="#u4E00_u3001_u6982_u8FF0" class="headerlink" title="一、概述"></a>一、概述</h2><blockquote>
 <p>最近在群里听到各种讨论okhttp的话题，可见okhttp的口碑相当好了。再加上Google貌似在6.0版本里面删除了HttpClient相关API，对于这个行为不做评价。为了更好的在应对网络访问，学习下okhttp还是蛮必要的，本篇博客首先介绍okhttp的简单使用，主要包含：</p>
 </blockquote>
@@ -3024,7 +4019,7 @@ String key;
     <link href="http://yoursite.com/2015/07/19/Android%20OkHttp%E5%88%9D%E7%BA%A7%E5%85%A5%E9%97%A8/"/>
     <id>http://yoursite.com/2015/07/19/Android OkHttp初级入门/</id>
     <published>2015-07-19T05:33:17.000Z</published>
-    <updated>2016-02-19T09:07:45.648Z</updated>
+    <updated>2016-02-19T09:07:45.000Z</updated>
     <content type="html"><![CDATA[<p>Android系统提供了两种HTTP通信类，HttpURLConnection和HttpClient。</p>
 <p>尽管Google在大部分安卓版本中推荐使用HttpURLConnection，但是这个类相比HttpClient实在是太难用，太弱爆了。</p>
 <p>OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp实现了。所以我们更有理由相信OkHttp的强大。<br><a id="more"></a><br>OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中自动恢复。如果您的服务器配置了多个IP地址，当第一个IP连接失败的时候，OkHttp会自动尝试下一个IP。OkHttp还处理了代理服务器问题和SSL握手失败问题。</p>
@@ -3586,7 +4581,7 @@ response.body()返回ResponseBody类
     <link href="http://yoursite.com/2015/06/27/EventBus%203.0%E7%9A%84%E7%94%A8%E6%B3%95%E8%AF%A6%E8%A7%A3(%E4%BA%8C)/"/>
     <id>http://yoursite.com/2015/06/27/EventBus 3.0的用法详解(二)/</id>
     <published>2015-06-27T15:59:14.000Z</published>
-    <updated>2016-02-19T09:11:37.585Z</updated>
+    <updated>2016-02-19T09:11:37.000Z</updated>
     <content type="html"><![CDATA[<p>前一篇文章简单介绍了<code>EventBus 3.0</code>的用法，现在是时候详解其用法了。首先声明，<code>EventBus 3.0</code>的改动针对2.4的改动并不是特别大，但是对于其性能的提升是另外一个说法了，所以建议学习EventBus 3.0。<a id="more"></a></p>
 <h4 id="u6CE8_u89E3"><a href="#u6CE8_u89E3" class="headerlink" title="注解"></a>注解</h4><h5 id="u65B0_u589E_u7684_60@Subscribe"><a href="#u65B0_u589E_u7684_60@Subscribe" class="headerlink" title="新增的`@Subscribe"></a>新增的<code>`@Subscribe</code></h5><pre><code>threadMode = ThreadMode.MainThread
 </code></pre><p>用注解的方式代替约定的方法名规范，是其最大的改变。在2.4中，你可能需要这么定义：</p>
@@ -3647,7 +4642,7 @@ EventBus.getDefault().register(this);
     <link href="http://yoursite.com/2015/06/25/EventBus%203.0%E7%9A%84%E7%94%A8%E6%B3%95%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://yoursite.com/2015/06/25/EventBus 3.0的用法详解（一）/</id>
     <published>2015-06-25T14:01:14.000Z</published>
-    <updated>2016-02-19T09:11:57.392Z</updated>
+    <updated>2016-02-19T09:11:57.000Z</updated>
     <content type="html"><![CDATA[<p>看到大家提出的关于Android的问题，有一部分可以用EventBus解决，而也有相当多的人推荐使用<code>EventsBus</code>,因为其和GreenDAO出自一家公司，并且使用它非常的简单，所以现在很多的互联网app都会使用<code>EventsBus</code>来进行消息传递。</p>
 <p>基于此，有很多<code>EventBus</code>的文章，写的非常的好，但是由于<code>EventBus</code>已经出了3.0版本，而国内的大多数翻译只是停留在了2.4版本左右，对于那些刚刚接触<code>EventBus</code>的人，从最新版接触学习，是最理想的学习路线。</p>
 <p>所以，在这儿，我总结下<code>EventBus3.0</code>的用法。<a id="more"></a></p>
@@ -3720,7 +4715,7 @@ public void helloEventBus(MessageEvent message){
     <link href="http://yoursite.com/2015/06/21/%E8%87%AA%E5%AE%9A%E4%B9%89Dialog%E7%9A%84%E5%A4%A7%E5%B0%8F%E3%80%81%E4%BD%8D%E7%BD%AE%E3%80%81%E9%A2%9C%E8%89%B2/"/>
     <id>http://yoursite.com/2015/06/21/自定义Dialog的大小、位置、颜色/</id>
     <published>2015-06-21T14:32:17.000Z</published>
-    <updated>2016-02-19T09:06:22.945Z</updated>
+    <updated>2016-02-19T09:06:22.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>代码:</p>
 </blockquote>
@@ -3922,7 +4917,7 @@ dialog.setTitle(&quot;Custom Dialog&quot;);
     <link href="http://yoursite.com/2014/11/07/Android%20AsyncTask%20%E6%8A%80%E5%B7%A7/"/>
     <id>http://yoursite.com/2014/11/07/Android AsyncTask 技巧/</id>
     <published>2014-11-07T15:23:14.000Z</published>
-    <updated>2016-02-22T05:44:14.472Z</updated>
+    <updated>2016-02-22T05:44:14.000Z</updated>
     <content type="html"><![CDATA[<h4 id="AsyncTask_u7684_u539F_u7406"><a href="#AsyncTask_u7684_u539F_u7406" class="headerlink" title="AsyncTask的原理"></a>AsyncTask的原理</h4><p>其实AsyncTask的原理简单来说，就是：</p>
 <ul>
 <li>一个任务队：用于存放自定义的（WorkerRunnable）。</li>
@@ -4102,586 +5097,6 @@ asyncTask.execute(&quot;%&quot;);
     </summary>
     
       <category term="AsyncTask" scheme="http://yoursite.com/tags/AsyncTask/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[图像、背景、View更新、布局、内存]]></title>
-    <link href="http://yoursite.com/2014/11/05/%E5%9B%BE%E5%83%8F%E3%80%81%E8%83%8C%E6%99%AF%E3%80%81View%E6%9B%B4%E6%96%B0%E3%80%81%E5%B8%83%E5%B1%80%E3%80%81%E5%86%85%E5%AD%98/"/>
-    <id>http://yoursite.com/2014/11/05/图像、背景、View更新、布局、内存/</id>
-    <published>2014-11-05T14:01:14.000Z</published>
-    <updated>2016-02-22T05:43:04.243Z</updated>
-    <content type="html"><![CDATA[<h3 id="u56FE_u50CF"><a href="#u56FE_u50CF" class="headerlink" title="图像"></a>图像</h3><p>选择适当的图像尺寸<br>视图背景图像总会填充整个视图区域</p>
-<pre><code>1.视图背景图像总会填充整个视图区域
-2.避免实时缩放
-3.最好预先缩放到视图大小
-</code></pre><a id="more"></a>
-<hr>
-<pre><code>package com.zyy.android_csdn.skill;
-
-import android.graphics.Bitmap;
-import android.view.View;
-
-/**
- *
- * 精致的图片
- *
- * @author CaMnter
- *
- */
-public class ExquisiteImage {
-
-    // 被缩放的图片
-    private Bitmap originalImage;
-
-    // 视图
-    private View view;
-
-    public ExquisiteImage(Bitmap originalImage, View view) {
-
-        this.originalImage = originalImage;
-
-        this.view = view;
-
-    }
-
-    /**
-     * @return 适应View的Bitmap
-     */
-    public Bitmap getBitmap() {
-
-        /**
-         *
-         * 第一参数：被缩放图像
-         * 第二参数：视图宽度
-         * 第三参数：视图高度
-         * 第四参数：双线性过滤器
-         *
-         */
-        return Bitmap.createScaledBitmap(this.originalImage,
-                this.view.getWidth(), this.view.getHeight(), true);
-
-    }
-
-}
-</code></pre><h3 id="u80CC_u666F"><a href="#u80CC_u666F" class="headerlink" title="背景"></a>背景</h3><pre><code>  默认情况下, 窗口有一个不透明的背景
-
-  有时可以不需要
-1.最高层的视图是不透明的
-   2.最高层的视图覆盖整个窗口
-      &lt;1&gt;.layout_width = fill_parent
-      &lt;2&gt;.layout_height = fill_parent
-   更新看不见的背景是浪费时间
-</code></pre><hr>
-<pre><code>@Override
-protected void onCreate(Bundle savedInstanceState) {
-
-    super.onCreate(savedInstanceState);
-
-    setContentView(R.layout.activity_main);
-
-    // 删除窗口背景
-    getWindow().setBackgroundDrawable(null);
-
-    ...
-
-}
-</code></pre><h3 id="View_u66F4_u65B0"><a href="#View_u66F4_u65B0" class="headerlink" title="View更新"></a>View更新</h3><p>当屏幕需要更新时, 调用 invalidate()</p>
-<pre><code>1.简单方便
-2.但是会更新整个视图, 代价太大了
-</code></pre><p>最好先找到无效的区域，然后调用</p>
-<pre><code>1.invalidate(Rect dirty);
-2.invalidate(int left, int top, int right, int bottom);
-</code></pre><p>优化上：就是 原来的 刷新了整个视图，现在的只是刷新了 改变后的位置和原来的位置 在内存的一块区域。</p>
-<h3 id="u5E03_u5C40"><a href="#u5E03_u5C40" class="headerlink" title="布局"></a>布局</h3><p>越简单越好</p>
-<p>如果一个窗口包含很多视图：</p>
-<pre><code>1.启动时间长
-2.测量时间长
-3.布局时间长
-4.绘制时间长
-</code></pre><p>如果视图树深度太深</p>
-<pre><code>1.StackOverflowException
-2.用户界面反应速度很慢
-</code></pre><p>解决办法：</p>
-<pre><code>1.使用TextView的复合drawables减少层次
-2.使用ViewStub延迟展开视图
-3.使用&lt;merge&gt;合并中间视图
-4.使用RelativeLayout减少层次
-5.使用自定义视图
-6.使用自定义布局
-</code></pre><h4 id="u5185_u5B58"><a href="#u5185_u5B58" class="headerlink" title="内存"></a>内存</h4><p>不要随意创建 Java 对象</p>
-<p>在以下性能敏感的代码中，尽量避免创建Java对象：</p>
-<pre><code>1.测量：onMeasure()
-2.布局：onLayout()
-3.绘图：dispatchDraw(), onDraw()
-4.事件处理：dispatchTouchEvent(), onTouchEvent()
-5.Adapter：getView(), bindView()
-</code></pre><p>GC，垃圾回收</p>
-<pre><code>1.整个程序会暂停
-2.慢（大概好几百个毫秒）
-</code></pre><p>管理好Java对象</p>
-<pre><code>1.使用软引用：内存缓存的最佳选择
-2.使用弱引用：避免内存泄露
-</code></pre><hr>
-<pre><code>private final HashMap&lt;String, SoftReference&lt;T&gt;&gt; mCache;
-
-public void put(String key, T value) {
-    mCache.put(key, new SoftReference&lt;T&gt;(value));
-}
-
-public T get(String key, ValueBuilder builder) {
-    T value = null;
-    SoftReferece&lt;T&gt; reference = mCache.get(key);
-    if (reference != null) {
-        value = reference.get();
-    }
-    if (value == null) {
-        value = builder.build(key);
-        mCache.put(key, new SoftReference&lt;T&gt;(value));
-    }
-    return value;
-}
-</code></pre>]]></content>
-    <summary type="html">
-    <![CDATA[<h3 id="u56FE_u50CF"><a href="#u56FE_u50CF" class="headerlink" title="图像"></a>图像</h3><p>选择适当的图像尺寸<br>视图背景图像总会填充整个视图区域</p>
-<pre><code>1.视图背景图像总会填充整个视图区域
-2.避免实时缩放
-3.最好预先缩放到视图大小
-</code></pre>]]>
-    
-    </summary>
-    
-      <category term="图像、背景、View更新、布局、内存" scheme="http://yoursite.com/tags/%E5%9B%BE%E5%83%8F%E3%80%81%E8%83%8C%E6%99%AF%E3%80%81View%E6%9B%B4%E6%96%B0%E3%80%81%E5%B8%83%E5%B1%80%E3%80%81%E5%86%85%E5%AD%98/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[健身]]></title>
-    <link href="http://yoursite.com/2014/10/08/%E5%81%A5%E8%BA%AB/"/>
-    <id>http://yoursite.com/2014/10/08/健身/</id>
-    <published>2014-10-08T07:13:06.000Z</published>
-    <updated>2016-02-19T09:05:23.442Z</updated>
-    <content type="html"><![CDATA[<p>少年不知精贵，老了望批空流泪。<br><a id="more"></a></p>
-<p>这句话常常都是说给那些爱打飞机的男性朋友了，确实，打飞机在某种程度上真的可以给我们带来一些“快乐时光”。但是，你怎么不想想，如果因为你长期打飞机，导致当有一个美女裸身在你眼前，你却硬不起来时，那该是怎样的一种悲剧呢？<br>  男人怎么让自己更持久一点？来看看真正的锻炼方法！<br>有人会说，那我戒撸就可以了，其实如果你经常打飞机，虽然你可以克制自己，达到戒撸成功，但你的肾已经有亏损了，你还是会早泄。所以就算你不撸了，你的肾功能还是不行，你还是会不持久，你还是不能满足你的女友或老婆。<br>  所以，现在很多男性朋友都想找方法，怎么让自己持久起来呢？下面，给大家分享一下方法。先说一下名字，分别是金刚铁板桥和缩阴功，一听到这两个名字，估计就有人知道了。</p>
-<p>  金刚铁板桥方法：准备两个一样高的椅子，仰卧，将肩膀以上的部位和脚踝以下的部位放在椅子上，身体悬空挺直，一直坚持下去就可，注意屁股不可下垂，身体一定要挺直，如桥一样。双手可以随意放在腹上，由于解放了手，锻练部位即完全集中于腰背部。不用任何的意念，运气之类，坚持下次就见效果，一般刚练习的人一分钟左右就感到腰部酸疼难忍，这证明你练对了。<br>  效果：一般能坚持三十分钟以上，练习两三个月左右，平常有腰酸背痛，遗精早泄毛病的人很容易恢复正常，感觉精力强大，走路轻快，不易疲劳。<br>缩阴功方法：缩阴功练法有两种:一种是用力收缩肛门，如忍便状，能忍十分钟不放松即合格，另一种是一下一下的用力收缩肛门，节奏两秒一次，意识要集中。<br>效果：一般能做到连继收缩三百 下以上，性能力则能做到三十分钟不泄。<br>  解说金刚铁板桥的要点在于每日坚持练习，每一次练习争取比上一次多坚持一段时间，各位则可以计数练习。古人训练时会在屁股下点一根香，当每次坚持不了，屁股下沉时即被香火烧到屁股。这种方法当然不会建议你们模仿，毕竟安全更重要。<br>为了练习安全，建议你们在床上练习，用两个小矮凳架在肩脚两头，没有凳子可另找东西代替，比如箱子，一叠书都行。这样练习的好处时，万一你坚持不住，即可以一屁股掉到床上，没多大的危险。<br>  金刚铁板桥练到高级境界，如能坚持一小时，则可以在腹上放五十斤以上的东西，也可以让一人坐在肚子上。如果你仍能坚持一小时以上，则你的腰肾强壮到极限，真正的如金刚铁板，比吃了任何大补药的人还健壮，就算到老了也如少年人。如果你还能坚持练习了缩阴功，那恭喜你，你已经金枪不倒了。<br>上面两种方法最好是配合起来练习，我让我弟弟试了一下，配合起来练还是很有效果的，一般当天做，当天去啪啪啪，你就能感受到。所以，如果你以前是经常打飞机的话，那么这个方法还是趁早去锻炼吧！</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>少年不知精贵，老了望批空流泪。<br>]]>
-    
-    </summary>
-    
-      <category term="开发规范" scheme="http://yoursite.com/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/"/>
-    
-      <category term="随笔" scheme="http://yoursite.com/categories/%E9%9A%8F%E7%AC%94/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[widget用法]]></title>
-    <link href="http://yoursite.com/2014/09/18/widget%E7%94%A8%E6%B3%95/"/>
-    <id>http://yoursite.com/2014/09/18/widget用法/</id>
-    <published>2014-09-17T18:24:16.000Z</published>
-    <updated>2016-02-19T09:01:18.404Z</updated>
-    <content type="html"><![CDATA[<p>September 23, 2015 8:21 PM</p>
-<p>创建AppWidgetProvider的子类</p>
-<pre><code>public class MyAppWidgetProvider extends AppWidgetProvider {
-@Override
-public void onEnabled(Context context) {
-    // 第一次创建执行
-    // 服务监控进程状态
-    Intent service = new Intent(context,TaskWidgetService.class);
-    context.startService(service);
-    super.onEnabled(context);
-}
-
-@Override
-public void onDisabled(Context context) {
-    //删除最后一个执行
-    Intent service = new Intent(context,TaskWidgetService.class);
-    context.stopService(service);
-    super.onDisabled(context);
-}
-}
-</code></pre><a id="more"></a>
-<p>创建xml文件夹，创建info的xml文件</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;appwidget-provider xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:initialLayout=&quot;@layout/process_widget&quot;
-    android:minHeight=&quot;72.0dip&quot;
-    android:minWidth=&quot;294.0dip&quot;
-    android:updatePeriodMillis=&quot;0&quot; /&gt;
-</code></pre><p>配置清单文件</p>
-<pre><code>&lt;receiver android:name=&quot;ExampleAppWidgetProvider&quot; &gt;
-    &lt;intent-filter&gt;
-    &lt;action android:name=&quot;android.appwidget.action.APPWIDGET_UPDATE&quot; /&gt;
-    &lt;/intent-filter&gt;
-    &lt;meta-data android:name=&quot;android.appwidget.provider&quot;
-    android:resource=&quot;@xml/example_appwidget_info&quot; /&gt;
-&lt;/receiver&gt;
-</code></pre><p>广播一定要在清单文件中注册</p>
-<pre><code> &lt;receiver android:name=&quot;com.itheima.mobilesafe13.receiver.WidgetClearTaskReceiver&quot;&gt;
-    &lt;intent-filter &gt;然后在显示Toast的地方
-        &lt;action android:name=&quot;widget.clear.task&quot;&gt;&lt;/action&gt;
-        &lt;/intent-filter&gt;
-&lt;/receiver&gt;
-&lt;receiver android:name=&quot;com.itheima.mobilesafe13.receiver.MyAppWidgetProvider&quot; &gt;
-    &lt;intent-filter&gt;
-        &lt;action android:name=&quot;android.appwidget.action.APPWIDGET_UPDATE&quot; /&gt;
-    &lt;/intent-filter&gt;
-    &lt;meta-data
-        android:name=&quot;android.appwidget.provider&quot;
-        android:resource=&quot;@xml/process_widget_provider&quot; /&gt;
-    &lt;/receiver&gt;
-</code></pre><p>使用widget</p>
-<pre><code>/**
-* @author Administrator
-* @desc 清理进程的widget的服务
-*/
-public class TaskWidgetService extends Service {
-
-    private AppWidgetManager mAWM;
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        mAWM = AppWidgetManager.getInstance(getApplicationContext());
-        System.out.println(&quot;widget  service create&quot;);
-
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-
-            @Override
-            public void run() {
-                updateWidgetMessage();
-
-            }
-        };
-        timer.schedule(task, 0 , 1000 * 2);
-        super.onCreate();
-    }
-
-    protected void updateWidgetMessage() {
-        ComponentName provider = new ComponentName(getApplicationContext(), MyAppWidgetProvider.class);
-        RemoteViews views = new RemoteViews(getPackageName(), R.layout.process_widget);
-        views.setTextViewText(R.id.tv_process_count, &quot;运行中的软件:&quot; + TaskInfoUtils.getAllRunningAppInfos(getApplicationContext()).size());
-        views.setTextViewText(R.id.tv_process_memory, &quot;可用内存:&quot; + Formatter.formatFileSize(getApplicationContext(),
-                TaskInfoUtils.getAvailMem(getApplicationContext())));
-
-        Intent intent = new Intent();
-        intent.setAction(&quot;widget.clear.task&quot;);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent , 0);
-        views.setOnClickPendingIntent(R.id.btn_clear, pendingIntent );
-        // 更新widget界面
-        mAWM.updateAppWidget(provider, views);
-    }
-
-    @Override
-    public void onDestroy() {
-        // TODO Auto-generated method stub
-        System.out.println(&quot;widget  service stop&quot;);
-        super.onDestroy();
-    }
-
-}
-</code></pre>]]></content>
-    <summary type="html">
-    <![CDATA[<p>September 23, 2015 8:21 PM</p>
-<p>创建AppWidgetProvider的子类</p>
-<pre><code>public class MyAppWidgetProvider extends AppWidgetProvider {
-@Override
-public void onEnabled(Context context) {
-    // 第一次创建执行
-    // 服务监控进程状态
-    Intent service = new Intent(context,TaskWidgetService.class);
-    context.startService(service);
-    super.onEnabled(context);
-}
-
-@Override
-public void onDisabled(Context context) {
-    //删除最后一个执行
-    Intent service = new Intent(context,TaskWidgetService.class);
-    context.stopService(service);
-    super.onDisabled(context);
-}
-}
-</code></pre>]]>
-    
-    </summary>
-    
-      <category term="widget" scheme="http://yoursite.com/tags/widget/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[WebView入门]]></title>
-    <link href="http://yoursite.com/2014/08/08/webview%E5%85%A5%E9%97%A8/"/>
-    <id>http://yoursite.com/2014/08/08/webview入门/</id>
-    <published>2014-08-07T19:01:56.000Z</published>
-    <updated>2016-02-19T09:14:15.816Z</updated>
-    <content type="html"><![CDATA[<blockquote>
-<p>WebView控件可以实现一个浏览器的功能，直接在控件中显示指定的网页</p>
-</blockquote>
-<p>第一种方式</p>
-<p>第一种方式是不需要，在布局文件中，使用WebView控件的</p>
-<p>步骤：<br><a id="more"></a></p>
-<p>1、创建WebView实例</p>
-<pre><code>WebView web= new WebView(Context context);
-</code></pre><p>2、webkit浏览器是支持JavaScript的所以，添加支持</p>
-<pre><code>web.getSetting.setJavaScriptEnabled（true）;
-</code></pre><p>3、添加需要加载的网页地址Uri</p>
-<pre><code>web.loadUri(&quot;http://www.google.com&quot;);
-</code></pre><p>4、为保证能点击加载页面中的超链接是在当前打开，而不是在系统默认的浏览器中打开 ，需要添加支持</p>
-<pre><code>web.setWebViewClient(shouldOverrideUrlLoad(view,url){
-                view.loadUrl(url);
-                return super.shouldOverrideUrlLoad(view,url);   
-});
-</code></pre><p>5、显示页面</p>
-<pre><code>setContentView(web);
-</code></pre><p>6、为了在按系统返回键，出现直接退出app的情况，重写activity的 onkeydown（）方法</p>
-<p>7、添加权限</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
-</code></pre><p>代码实现</p>
-<p>布局文件</p>
-<pre><code>&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    android:orientation=&quot;vertical&quot;&gt;
-
-    &lt;TextView
-        android:layout_width=&quot;fill_parent&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:text=&quot;社会新闻&quot; /&gt;
-
-&lt;/LinearLayout&gt;
-</code></pre><p>实现代码</p>
-<pre><code>public class MainActivity extends Activity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-       WebView webView= new WebView(this);
-        //支持javascript
-        webView.getSettings().setJavaScriptEnabled(true);
-        //触摸焦点
-        webView.requestFocus();
-        //滚动条取消
-        webView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-       //指定网页
-        webView.loadUrl(&quot;http://www.qiushibaike.com&quot;);
-        //显示网页
-        setContentView(webView);
-
-       //保证超链接跳转在当前页面
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return super.shouldOverrideUrlLoading(view, url);
-            }
-        } );
-    }
-       /**
-         * 保证，在按系统返回键的时候，不是退出程序，而是，返回上一个页面
-         * @param keyCode
-         * @param event
-         * @return
-         */
-        @Override
-        public boolean onKeyDown(int keyCode, KeyEvent event) {
-            if((keyCode==KeyEvent.KEYCODE_BACK))
-            {
-                webView.goBack(); //返回上一个页面
-                return true;
-            }
-            return  false;
-        }
-}
-</code></pre><p>清单文件</p>
-<pre><code>&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-          package=&quot;com.kevin.fragmentdemo&quot; &gt;
-        &lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
-&lt;/manifest&gt;
-</code></pre><p>第二种方式</p>
-<p>基本上与第一种方式相同，只是在布局文件中定义了WebView的控件</p>
-<p>步骤</p>
-<p>1、创建WebView实例,通过的是布局文件中的id创建 XX是WebView组件的id</p>
-<pre><code>WebView webView= (WebView) findViewById(R.id.XX);
-</code></pre><p>2、webkit浏览器是支持JavaScript的所以，添加支持</p>
-<pre><code>webView.getSetting.setJavaScriptEnabled（true）;  
-</code></pre><p>3、为保证能点击加载页面中的超链接是在当前打开，而不是在系统默认的浏览器中打开 ，需要添加支持</p>
-<pre><code>web.setWebViewClient(shouldOverrideUrlLoad(view,url){
-                view.loadUrl(url);
-                return super.shouldOverrideUrlLoad(view,url);   
-});
-</code></pre><p>4、添加需要加载的网页地址Uri</p>
-<pre><code>webView.loadUri(&quot;http://www.google.com&quot;);
-</code></pre><p>5、为了在按系统返回键，出现直接退出app的情况，重写activity的 onkeydown（）方法（详见代码）</p>
-<p>6、添加权限、添加权限</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
-</code></pre><p>代码实现</p>
-<p>布局文件</p>
-<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    tools:context=&quot;.MainActivity&quot;&gt;
-    &lt;WebView
-        android:id=&quot;@+id/wv&quot;
-        android:layout_width=&quot;fill_parent&quot;
-        android:layout_height=&quot;fill_parent&quot;&gt;
-    &lt;/WebView&gt;
-&lt;/RelativeLayout&gt;
-</code></pre><p>实现代码</p>
-<pre><code>public class MainActivity extends Activity {
-private WebView webView;
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-    webView = (WebView) findViewById(R.id.web_view);
-    webView.getSettings().setJavaScriptEnabled(true);
-    webView.setWebViewClient(new WebViewClient() {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String
-        url) {
-        view.loadUrl(url); // 根据传入的参数再去加载新的网页
-        return true; // 表示当前WebView可以处理打开新网页的请求,不用借助
-        系统浏览器
-        }
-    });
-    webView.loadUrl(&quot;http://www.baidu.com&quot;);
-}
- /**
-  * 保证，在按系统返回键的时候，不是退出程序，而是，返回上一个页面
-  * @param keyCode
-  * @param event
-  * @return
-  */
- @Override
- public boolean onKeyDown(int keyCode, KeyEvent event) {
- if((keyCode==KeyEvent.KEYCODE_BACK))
-  {
-        webView.goBack(); //返回上一个页面
-         return true;
-  }
-            return  false;
-  }
-}
-</code></pre><p>清单文件</p>
-<pre><code>&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-        package=&quot;com.kevin.fragmentdemo&quot; &gt;
-        &lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
-&lt;/manifest&gt;
-</code></pre>]]></content>
-    <summary type="html">
-    <![CDATA[<blockquote>
-<p>WebView控件可以实现一个浏览器的功能，直接在控件中显示指定的网页</p>
-</blockquote>
-<p>第一种方式</p>
-<p>第一种方式是不需要，在布局文件中，使用WebView控件的</p>
-<p>步骤：<br>]]>
-    
-    </summary>
-    
-      <category term="WebView" scheme="http://yoursite.com/tags/WebView/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[解析：TypedArray 为什么需要调用recycle()]]></title>
-    <link href="http://yoursite.com/2014/07/18/TypedArray/"/>
-    <id>http://yoursite.com/2014/07/18/TypedArray/</id>
-    <published>2014-07-17T18:21:14.000Z</published>
-    <updated>2016-02-19T09:13:59.859Z</updated>
-    <content type="html"><![CDATA[<p>在 Android 自定义 View 的时候，需要使用 TypedArray 来获取 XML layout 中的属性值，使用完之后，需要调用 recyle() 方法将 TypedArray 回收。</p>
-<p>那么问题来了，这个TypedArray是个什么东西？为什么需要回收呢？TypedArray并没有占用IO，线程，它仅仅是一个变量而已，为什么需要 recycle？<br>为了解开这个谜，首先去找官网的 Documentation，到找 TypedArray 方法，得到下面一个简短的回答：</p>
-<p><img src="http://i.imgur.com/0YmjniV.png" alt=""></p>
-<a id="more"></a>
-<p>这里写图片描述</p>
-<p>告诉我们在确定使用完之后调用 recycle() 方法。于是进一步查看该方法的解释，如下：<br>这里写图片描述</p>
-<p>简单翻译下来，就是说：回收 TypedArray,用于后续调用时可复用之。当调用该方法后，不能再操作该变量。</p>
-<p>同样是一个简洁的答复，但没有解开我们心中的疑惑，这个TypedArray背后，到底隐藏着怎样的秘密……</p>
-<p>求之不得，辗转反侧，于是我们决定深入源码，一探其究竟……</p>
-<p>首先，是 TypedArray 的常规使用方法：</p>
-<pre><code>TypedArray array = context.getTheme().obtainStyledAttributes(attrs,
-                R.styleable.PieChart,0,0);
-try {
-    mShowText = array.getBoolean(R.styleable.PieChart_showText,false);
-    mTextPos = array.getInteger(R.styleable.PieChart_labelPosition,0);
-}finally {
-    array.recycle();
-}
-</code></pre><p>可见，TypedArray不是我们new出来的，而是调用了 obtainStyledAttributes 方法得到的对象，该方法实现如下：</p>
-<pre><code>public TypedArray obtainStyledAttributes(AttributeSet set,
-                int[] attrs, int defStyleAttr, int defStyleRes) {
-    final int len = attrs.length;
-    final TypedArray array = TypedArray.obtain(Resources.this, len);
-    // other code .....
-    return array;
-}
-</code></pre><p>我们只关注当前待解决的问题，其他的代码忽略不看。从上面的代码片段得知，TypedArray也不是它实例化的，而是调用了TypedArray的一个静态方法，得到一个实例，再做一些处理，最后返回这个实例。看到这里，我们似乎知道了什么，，，带着猜测，我们进一步查看该静态方法的内部实现：</p>
-<pre><code>/**
- * Container for an array of values that were retrieved with
- * {@link Resources.Theme#obtainStyledAttributes(AttributeSet, int[], int, int)}
- * or {@link Resources#obtainAttributes}.  Be
- * sure to call {@link #recycle} when done with them.
- *
- * The indices used to retrieve values from this structure correspond to
- * the positions of the attributes given to obtainStyledAttributes.
- */
-public class TypedArray {
-
-    static TypedArray obtain(Resources res, int len) {
-        final TypedArray attrs = res.mTypedArrayPool.acquire();
-        if (attrs != null) {
-            attrs.mLength = len;
-            attrs.mRecycled = false;
-
-            final int fullLen = len * AssetManager.STYLE_NUM_ENTRIES;
-            if (attrs.mData.length &gt;= fullLen) {
-                return attrs;
-            }
-
-            attrs.mData = new int[fullLen];
-            attrs.mIndices = new int[1 + len];
-            return attrs;
-        }
-
-        return new TypedArray(res,
-                new int[len*AssetManager.STYLE_NUM_ENTRIES],
-                new int[1+len], len);
-    }
-    // Other members ......
-}
-</code></pre><p>仔细看一下这个方法的实现，我想大部分人都明了了，该类没有公共的构造函数，只提供静态方法获取实例，显然是一个典型的单例模式。在代码片段的第 13 行，很清晰的表达了这个 array 是从一个 array pool的池中获取的。</p>
-<p>因此，我们得出结论：</p>
-<p>程序在运行时维护了一个 TypedArray的池，程序调用时，会向该池中请求一个实例，用完之后，调用 recycle() 方法来释放该实例，从而使其可被其他模块复用。</p>
-<p>那为什么要使用这种模式呢？答案也很简单，TypedArray的使用场景之一，就是上述的自定义View，会随着 Activity的每一次Create而Create，因此，需要系统频繁的创建array，对内存和性能是一个不小的开销，如果不使用池模式，每次都让GC来回收，很可能就会造成OutOfMemory。</p>
-<p>这就是使用池+单例模式的原因，这也就是为什么官方文档一再的强调：使用完之后一定 recycle,recycle,recycle。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>在 Android 自定义 View 的时候，需要使用 TypedArray 来获取 XML layout 中的属性值，使用完之后，需要调用 recyle() 方法将 TypedArray 回收。</p>
-<p>那么问题来了，这个TypedArray是个什么东西？为什么需要回收呢？TypedArray并没有占用IO，线程，它仅仅是一个变量而已，为什么需要 recycle？<br>为了解开这个谜，首先去找官网的 Documentation，到找 TypedArray 方法，得到下面一个简短的回答：</p>
-<p><img src="http://i.imgur.com/0YmjniV.png" alt=""></p>]]>
-    
-    </summary>
-    
-      <category term="TypedArray" scheme="http://yoursite.com/tags/TypedArray/"/>
     
       <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
     
