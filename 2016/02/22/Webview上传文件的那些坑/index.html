@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Webview上传文件的那些坑 | 熊凯的个人博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="要说Android中最厉害的组件莫过于Webview 了，夸张点说把这个组件放在屏幕上就可以算作一个简单地浏览器应用了。但你若认为这就万事大吉了，可太小看Webview这个磨人的妖精了，下面单就上传文件的这个坑来做展开。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webview上传文件的那些坑">
+<meta property="og:url" content="http://yoursite.com/2016/02/22/Webview上传文件的那些坑/index.html">
+<meta property="og:site_name" content="熊凯的个人博客">
+<meta property="og:description" content="要说Android中最厉害的组件莫过于Webview 了，夸张点说把这个组件放在屏幕上就可以算作一个简单地浏览器应用了。但你若认为这就万事大吉了，可太小看Webview这个磨人的妖精了，下面单就上传文件的这个坑来做展开。">
+<meta property="og:updated_time" content="2016-02-22T05:35:13.902Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Webview上传文件的那些坑">
+<meta name="twitter:description" content="要说Android中最厉害的组件莫过于Webview 了，夸张点说把这个组件放在屏幕上就可以算作一个简单地浏览器应用了。但你若认为这就万事大吉了，可太小看Webview这个磨人的妖精了，下面单就上传文件的这个坑来做展开。">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://KevinHero.github.io/images/default_avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">熊凯</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>標籤</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>關於</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/随笔">随笔</a></li>
+				        
+							<li><a href="/categories/技术">技术</a></li>
+				        
+							<li><a href="/instagram">相册</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="weibo" target="_blank" href="http://weibo.com/1743454163/" title="weibo">weibo</a>
+					        
+								<a class="mail" target="_blank" href="mailto:camchin1@msn.cn" title="mail">mail</a>
+					        
+								<a class="facebook" target="_blank" href="https://www.facebook.com/ken.shoaw" title="facebook">facebook</a>
+					        
+								<a class="twitter" target="_blank" href="https://twitter.com/w_0482" title="twitter">twitter</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Annotation/" style="font-size: 10px;">Annotation</a> <a href="/tags/AsyncTask/" style="font-size: 10px;">AsyncTask</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/CountDownTimer/" style="font-size: 10px;">CountDownTimer</a> <a href="/tags/Dialog/" style="font-size: 10px;">Dialog</a> <a href="/tags/EventBus/" style="font-size: 13.33px;">EventBus</a> <a href="/tags/Ibeacon/" style="font-size: 10px;">Ibeacon</a> <a href="/tags/ImageView/" style="font-size: 10px;">ImageView</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/OkHttp/" style="font-size: 13.33px;">OkHttp</a> <a href="/tags/React-Native/" style="font-size: 10px;">React-Native</a> <a href="/tags/ServiceManager/" style="font-size: 10px;">ServiceManager</a> <a href="/tags/String相关类性能测试/" style="font-size: 10px;">String相关类性能测试</a> <a href="/tags/Textview/" style="font-size: 10px;">Textview</a> <a href="/tags/TypedArray/" style="font-size: 10px;">TypedArray</a> <a href="/tags/ViewHolder的作用/" style="font-size: 10px;">ViewHolder的作用</a> <a href="/tags/WebView/" style="font-size: 10px;">WebView</a> <a href="/tags/Webview/" style="font-size: 10px;">Webview</a> <a href="/tags/drawable/" style="font-size: 10px;">drawable</a> <a href="/tags/widget/" style="font-size: 10px;">widget</a> <a href="/tags/下拉刷新/" style="font-size: 10px;">下拉刷新</a> <a href="/tags/写作/" style="font-size: 10px;">写作</a> <a href="/tags/反思/" style="font-size: 10px;">反思</a> <a href="/tags/图像、背景、View更新、布局、内存/" style="font-size: 13.33px;">图像、背景、View更新、布局、内存</a> <a href="/tags/开发规范/" style="font-size: 16.67px;">开发规范</a> <a href="/tags/异步线程的实现（Looper、MessageQueue、Handler）/" style="font-size: 10px;">异步线程的实现（Looper、MessageQueue、Handler）</a> <a href="/tags/快捷键/" style="font-size: 10px;">快捷键</a> <a href="/tags/总结分类/" style="font-size: 20px;">总结分类</a> <a href="/tags/时间轴/" style="font-size: 10px;">时间轴</a> <a href="/tags/沉浸式/" style="font-size: 10px;">沉浸式</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/科学上网/" style="font-size: 10px;">科学上网</a> <a href="/tags/自定义Loader/" style="font-size: 10px;">自定义Loader</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://wsgzao.github.io/">HelloDog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.dearzd.com/DBlog/">咚门</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codingyun.com/">Coding云</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.jobbole.com/">伯乐在线</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">熊凯</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://KevinHero.github.io/images/default_avatar.jpg" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">熊凯</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/随笔">随笔</a></li>
+		        
+					<li><a href="/categories/技术">技术</a></li>
+		        
+					<li><a href="/instagram">相册</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="weibo" target="_blank" href="http://weibo.com/1743454163/" title="weibo">weibo</a>
+			        
+						<a class="mail" target="_blank" href="mailto:camchin1@msn.cn" title="mail">mail</a>
+			        
+						<a class="facebook" target="_blank" href="https://www.facebook.com/ken.shoaw" title="facebook">facebook</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/w_0482" title="twitter">twitter</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Webview上传文件的那些坑" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/22/Webview上传文件的那些坑/" class="article-date">
+  	<time datetime="2016-02-22T13:01:14.000Z" itemprop="datePublished">2016-02-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Webview上传文件的那些坑
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Webview/">Webview</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/技术/">技术</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>要说Android中最厉害的组件莫过于Webview 了，夸张点说把这个组件放在屏幕上就可以算作一个简单地浏览器应用了。但你若认为这就万事大吉了，可太小看Webview这个磨人的妖精了，下面单就上传文件的这个坑来做展开。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="u652F_u6301_u4E0A_u4F20_u6587_u4EF6"><a href="#u652F_u6301_u4E0A_u4F20_u6587_u4EF6" class="headerlink" title="支持上传文件"></a>支持上传文件</h3><p>Webview执行上传操作的逻辑是这样的：首先准备上传时会回调WebChromeClient类下的<code>openFileChooser</code>方法，在这个方法中给我们机会发起Intent来打开支持提供文件的第三方应用，最后在<code>onActivityResult</code>回调中将第三方应用提供的内容通过一个叫做<code>ValueCallback</code>的参数返回给<code>Webview</code>（详细点来说：ValueCallback是在openFileChooser 方法里由webview提供给我们的，里面包裹一个Uri，我们在<code>onActivityResult</code> 里将选中的Uri反馈给<code>ValueCallback</code>，这时候相当于Webview就知道我们选择了什么文件），因此，我们需要为<code>Webview</code>设置一个提供<code>openFileChooser</code>方法的<code>WebChromeClient</code>，这个方法在不同版本的<code>Android</code>中参数是不同的，为此我们一般需要写三个重载函数，大致像这个样子：</p>
+<pre><code>private ValueCallback&lt;Uri&gt; mUploadMessage;
+    //设置`WebChromeClient`:
+webview.setWebChromeClient(new WebChromeClient(){
+     public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg) {
+            Log.d(TAG, &quot;openFileChoose(ValueCallback&lt;Uri&gt; uploadMsg)&quot;);
+            mUploadMessage = uploadMsg;
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            i.setType(&quot;*/*&quot;);
+            MainActivity.this.startActivityForResult(Intent.createChooser(i, &quot;File Chooser&quot;), FILECHOOSER_RESULTCODE);
+      }
+      public void openFileChooser( ValueCallback uploadMsg, String acceptType ) {
+            Log.d(TAG, &quot;openFileChoose( ValueCallback uploadMsg, String acceptType )&quot;);
+            mUploadMessage = uploadMsg;
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            i.setType(&quot;*/*&quot;);
+            MainActivity.this.startActivityForResult(
+                    Intent.createChooser(i, &quot;File Browser&quot;),
+                    FILECHOOSER_RESULTCODE);
+      }
+      public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture){
+            Log.d(TAG, &quot;openFileChoose(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture)&quot;);
+            mUploadMessage = uploadMsg;
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            i.setType(&quot;*/*&quot;);
+            MainActivity.this.startActivityForResult( Intent.createChooser( i, &quot;File Browser&quot; ), MainActivity.FILECHOOSER_RESULTCODE );
+        }
+});
+
+//onActivityResult回调   
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==FILECHOOSER_RESULTCODE)
+         {
+                if (null == mUploadMessage &amp;&amp; null == mUploadCallbackAboveL) return;
+                 Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+                 if (mUploadMessage != null) {
+                    mUploadMessage.onReceiveValue(result);
+                    mUploadMessage = null;
+               }
+          }
+       }
+</code></pre><p>还有重要的一点：如果这个上传操作涉及到JS操作，别忘记对Webview开启对JS的支持：</p>
+<pre><code>WebSettings settings = webview.getSettings();
+settings.setJavaScriptEnabled(true);
+</code></pre><h3 id="u4EE3_u7801_u6DF7_u6DC6"><a href="#u4EE3_u7801_u6DF7_u6DC6" class="headerlink" title="代码混淆"></a>代码混淆</h3><pre><code>-keepclassmembers class * extends android.webkit.WebChromeClient{
+    public void openFileChooser(...);
+}
+</code></pre><h3 id="u517C_u5BB95-0"><a href="#u517C_u5BB95-0" class="headerlink" title="兼容5.0"></a>兼容5.0</h3><pre><code>webview.setWebChromeClient(new WebChromeClient(){
+public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg) {
+     ...
+}
+public void openFileChooser( ValueCallback uploadMsg, String acceptType ) {
+       ...
+}
+public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture){
+                ...
+}
+
+// For Android 5.0+
+public boolean onShowFileChooser (WebView webView, ValueCallback&lt;Uri[]&gt; filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+         mUploadCallbackAboveL = filePathCallback;
+         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+         i.addCategory(Intent.CATEGORY_OPENABLE);
+         i.setType(&quot;*/*&quot;);
+         MainActivity.this.startActivityForResult(
+                    Intent.createChooser(i, &quot;File Browser&quot;),
+                    FILECHOOSER_RESULTCODE);
+         return true;
+        }
+});
+
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if(requestCode==FILECHOOSER_RESULTCODE)
+    {
+        if (null == mUploadMessage &amp;&amp; null == mUploadCallbackAboveL) return;
+        Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+        if (mUploadCallbackAboveL != null) {
+            onActivityResultAboveL(requestCode, resultCode, data);
+        }
+        else  if (mUploadMessage != null) {
+            mUploadMessage.onReceiveValue(result);
+            mUploadMessage = null;
+        }
+    }
+}
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+private void onActivityResultAboveL(int requestCode, int resultCode, Intent data) {
+    if (requestCode != FILECHOOSER_RESULTCODE
+            || mUploadCallbackAboveL == null) {
+        return;
+    }
+    Uri[] results = null;
+    if (resultCode == Activity.RESULT_OK) {
+        if (data == null) {
+        } else {
+            String dataString = data.getDataString();
+            ClipData clipData = data.getClipData();
+            if (clipData != null) {
+                results = new Uri[clipData.getItemCount()];
+                for (int i = 0; i &lt; clipData.getItemCount(); i++) {
+                    ClipData.Item item = clipData.getItemAt(i);
+                    results[i] = item.getUri();
+                }
+            }
+            if (dataString != null)
+                results = new Uri[]{Uri.parse(dataString)};
+        }
+    }
+    mUploadCallbackAboveL.onReceiveValue(results);
+    mUploadCallbackAboveL = null;
+    return;
+}
+</code></pre><blockquote>
+<p>代码转自: <a href="http://blog.saymagic.cn/2015/11/08/webview-upload.html" target="_blank" rel="external">http://blog.saymagic.cn/2015/11/08/webview-upload.html</a></p>
+<p>源码地址: <a href="https://gitcafe.com/saymagic/Webviewdemo" target="_blank" rel="external">https://gitcafe.com/saymagic/Webviewdemo</a></p>
+</blockquote>
+<pre><code>* 说明:实际上我使用了该段代码只能够 完成5.0+的支持,对于5.0以下的机器支持的并不完美,比如说上传完成之后,并不能显示图片到目标位置.
+</code></pre><ul>
+<li>没办法继续爬文 终于发现了</li>
+</ul>
+<pre><code>package com.fuiou.webviewupload;
+import java.io.File;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+public class MainActivity extends Activity {
+    public static final String TAG = &quot;MainActivity&quot;;
+    ValueCallback&lt;Uri&gt; mUploadMessage;
+    private WebView mWebView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();
+    }
+
+    private void initView() {
+        mWebView = (WebView) findViewById(R.id.web_view);
+        mWebView.setWebChromeClient(new MyWebChromeClient());
+
+        mWebView.setWebViewClient(new MyWebViewClient(this));
+//        webView.loadUrl(&quot;file:///android_asset/upload_image.html&quot;);
+        mWebView.loadUrl(&quot;http://192.168.72.62:8080/fileUpload&quot;);
+    }
+
+
+    private class MyWebViewClient extends WebViewClient{
+        private Context mContext;
+        public MyWebViewClient(Context context){
+            super();
+            mContext = context;
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            Log.d(TAG,&quot;URL地址:&quot; + url);
+            super.onPageStarted(view, url, favicon);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            Log.i(TAG, &quot;onPageFinished&quot;);
+            super.onPageFinished(view, url);
+        }
+    }
+
+    public static final int FILECHOOSER_RESULTCODE = 1;
+    private static final int REQ_CAMERA = FILECHOOSER_RESULTCODE+1;
+    private static final int REQ_CHOOSE = REQ_CAMERA+1;
+
+    private class MyWebChromeClient extends WebChromeClient {
+
+        // For Android 3.0+
+           public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType) {  
+               if (mUploadMessage != null) return;
+               mUploadMessage = uploadMsg;   
+               selectImage();
+//               Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+//               i.addCategory(Intent.CATEGORY_OPENABLE);
+//               i.setType(&quot;*/*&quot;);
+//                   startActivityForResult( Intent.createChooser( i, &quot;File Chooser&quot; ), FILECHOOSER_RESULTCODE );
+           }
+            // For Android &lt; 3.0
+            public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg) {
+                   openFileChooser( uploadMsg, &quot;&quot; );
+            }
+            // For Android  &gt; 4.1.1
+          public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture) {
+                  openFileChooser(uploadMsg, acceptType);
+          }
+
+    }
+
+    /**
+     * 检查SD卡是否存在
+     *
+     * @return
+     */
+    public final boolean checkSDcard() {
+        boolean flag = Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED);
+        if (!flag) {
+            Toast.makeText(this, &quot;请插入手机存储卡再使用本功能&quot;,Toast.LENGTH_SHORT).show();
+        }
+        return flag;
+    }
+    String compressPath = &quot;&quot;;
+
+    protected final void selectImage() {
+        if (!checkSDcard())
+            return;
+        String[] selectPicTypeStr = { &quot;camera&quot;,&quot;photo&quot; };
+        new AlertDialog.Builder(this)
+                .setItems(selectPicTypeStr,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                switch (which) {
+                                // 相机拍摄
+                                case 0:
+                                    openCarcme();
+                                    break;
+                                // 手机相册
+                                case 1:
+                                    chosePic();
+                                    break;
+                                default:
+                                    break;
+                                }
+                                compressPath = Environment
+                                        .getExternalStorageDirectory()
+                                        .getPath()
+                                        + &quot;/fuiou_wmp/temp&quot;;
+                                new File(compressPath).mkdirs();
+                                compressPath = compressPath + File.separator
+                                        + &quot;compress.jpg&quot;;
+                            }
+                        }).show();
+    }
+
+    String imagePaths;
+    Uri  cameraUri;
+    /**
+     * 打开照相机
+     */
+    private void openCarcme() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        imagePaths = Environment.getExternalStorageDirectory().getPath()
+                + &quot;/fuiou_wmp/temp/&quot;
+                + (System.currentTimeMillis() + &quot;.jpg&quot;);
+        // 必须确保文件夹路径存在，否则拍照后无法完成回调
+        File vFile = new File(imagePaths);
+        if (!vFile.exists()) {
+            File vDirPath = vFile.getParentFile();
+            vDirPath.mkdirs();
+        } else {
+            if (vFile.exists()) {
+                vFile.delete();
+            }
+        }
+        cameraUri = Uri.fromFile(vFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri);
+        startActivityForResult(intent, REQ_CAMERA);
+    }
+
+    /**
+     * 拍照结束后
+     */
+    private void afterOpenCamera() {
+        File f = new File(imagePaths);
+        addImageGallery(f);
+        File newFile = FileUtils.compressFile(f.getPath(), compressPath);
+    }
+
+    /** 解决拍照后在相册中找不到的问题 */
+    private void addImageGallery(File file) {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+        values.put(MediaStore.Images.Media.MIME_TYPE, &quot;image/jpeg&quot;);
+        getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    }
+
+    /**
+     * 本地相册选择图片
+     */
+    private void chosePic() {
+        FileUtils.delFile(compressPath);
+        Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT); // &quot;android.intent.action.GET_CONTENT&quot;
+        String IMAGE_UNSPECIFIED = &quot;image/*&quot;;
+        innerIntent.setType(IMAGE_UNSPECIFIED); // 查看类型
+        Intent wrapperIntent = Intent.createChooser(innerIntent, null);
+        startActivityForResult(wrapperIntent, REQ_CHOOSE);
+    }
+
+    /**
+     * 选择照片后结束
+     *
+     * @param data
+     */
+    private Uri afterChosePic(Intent data) {
+
+        // 获取图片的路径：
+        String[] proj = { MediaStore.Images.Media.DATA };
+        // 好像是android多媒体数据库的封装接口，具体的看Android文档
+        Cursor cursor = managedQuery(data.getData(), proj, null, null, null);
+        if(cursor == null ){
+            Toast.makeText(this, &quot;上传的图片仅支持png或jpg格式&quot;,Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        // 按我个人理解 这个是获得用户选择的图片的索引值
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        // 将光标移至开头 ，这个很重要，不小心很容易引起越界
+        cursor.moveToFirst();
+        // 最后根据索引值获取图片路径
+        String path = cursor.getString(column_index);
+        if(path != null &amp;&amp; (path.endsWith(&quot;.png&quot;)||path.endsWith(&quot;.PNG&quot;)||path.endsWith(&quot;.jpg&quot;)||path.endsWith(&quot;.JPG&quot;))){
+            File newFile = FileUtils.compressFile(path, compressPath);
+            return Uri.fromFile(newFile);
+        }else{
+            Toast.makeText(this, &quot;上传的图片仅支持png或jpg格式&quot;,Toast.LENGTH_SHORT).show();
+        }
+        return null;
+    }
+
+
+
+    /**
+     * 返回文件选择
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+            Intent intent) {
+    //        if (requestCode == FILECHOOSER_RESULTCODE) {
+    //            if (null == mUploadMessage)
+    //                return;
+    //            Uri result = intent == null || resultCode != RESULT_OK ? null
+    //                    : intent.getData();
+    //            mUploadMessage.onReceiveValue(result);
+    //            mUploadMessage = null;
+    //        }
+
+        if (null == mUploadMessage)
+            return;
+        Uri uri = null;
+        if(requestCode == REQ_CAMERA ){
+            afterOpenCamera();
+            uri = cameraUri;
+        }else if(requestCode == REQ_CHOOSE){
+            uri = afterChosePic(intent);
+        }
+        mUploadMessage.onReceiveValue(uri);
+        mUploadMessage = null;
+        super.onActivityResult(requestCode, resultCode, intent);
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) &amp;&amp; mWebView.canGoBack()) {  
+            mWebView.goBack();  
+            return true;  
+        }else{
+                finish();
+        }
+        return super.onKeyDown(keyCode, event);  
+        }
+}
+</code></pre><p>根据这个哥们的代码进行精简,符合自己的需求,而且发现了这个代码的一个问题,没有能够进行判空操作,如果没有选择图片,直接返回APP会奔溃!</p>
+<p>下面是我的开发源码:</p>
+<pre><code>private class MyWebChromeClient extends WebChromeClient {
+
+
+        // For Android 5.0+
+        public boolean onShowFileChooser(WebView webView, ValueCallback&lt;Uri[]&gt; filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+            mUploadCallbackAboveL = filePathCallback;
+//            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+//            i.addCategory(Intent.CATEGORY_OPENABLE);
+//            i.setType(&quot;*/*&quot;);
+//            HomePageViewActivity.this.startActivityForResult(
+//                    Intent.createChooser(i, &quot;File Browser&quot;),
+//                    FILECHOOSER_RESULTCODE);
+            selectImage();
+            return true;
+        }
+
+
+        //For Android 3.0+
+        public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType) {
+            if (mUploadMessage != null) return;
+            mUploadMessage = uploadMsg;
+            selectImage();
+        }
+
+        // For Android &lt; 3.0
+        public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg) {
+            if (mUploadMessage != null) return;
+            mUploadMessage = uploadMsg;
+            selectImage();
+        }
+
+        // For Android  &gt; 4.1.1
+        public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture) {
+            if (mUploadMessage != null) return;
+            mUploadMessage = uploadMsg;
+            selectImage();
+        }
+
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (null == mUploadMessage &amp;&amp; null == mUploadCallbackAboveL) return;
+            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+            if (mUploadCallbackAboveL != null) {
+                onActivityResultAboveL(requestCode, resultCode, data);
+            } else if (mUploadMessage != null) {
+                mUploadMessage.onReceiveValue(result);
+                mUploadMessage = null;
+            }
+        }
+
+
+        if (null == mUploadMessage)
+            return;
+        Uri uri = null;
+        if (requestCode == REQ_CHOOSE) {
+            uri = afterChosePic(data);
+        }
+        mUploadMessage.onReceiveValue(uri);
+        mUploadMessage = null;
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void onActivityResultAboveL(int requestCode, int resultCode, Intent data) {
+        if (requestCode != FILECHOOSER_RESULTCODE
+                || mUploadCallbackAboveL == null) {
+            return;
+        }
+
+        Uri[] results = null;
+        if (resultCode == Activity.RESULT_OK) {
+            if (data == null) {
+
+            } else {
+                String dataString = data.getDataString();
+                ClipData clipData = data.getClipData();
+
+                if (clipData != null) {
+                    results = new Uri[clipData.getItemCount()];
+                    for (int i = 0; i &lt; clipData.getItemCount(); i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        results[i] = item.getUri();
+                    }
+                }
+
+                if (dataString != null)
+                    results = new Uri[]{Uri.parse(dataString)};
+            }
+        }
+        mUploadCallbackAboveL.onReceiveValue(results);
+        mUploadCallbackAboveL = null;
+        return;
+    }
+
+
+    /**
+     * 检查SD卡是否存在
+     *
+     * @return
+     */
+    public final boolean checkSDcard() {
+        boolean flag = Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED);
+        if (!flag) {
+            Toast.makeText(this, &quot;请插入手机存储卡再使用本功能&quot;, Toast.LENGTH_SHORT).show();
+        }
+        return flag;
+    }
+
+    String compressPath = &quot;&quot;;
+
+    protected final void selectImage() {
+        if (!checkSDcard())
+            return;
+
+        chosePic();
+        compressPath = Environment
+                .getExternalStorageDirectory()
+                .getPath()
+                + &quot;/fuiou_wmp/temp&quot;;
+        new File(compressPath).mkdirs();
+        compressPath = compressPath + File.separator
+                + &quot;compress.jpg&quot;;
+    }
+
+
+    /**
+     * 本地相册选择图片
+     */
+    private void chosePic() {
+        FileUtils.delFile(compressPath);
+        Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT); // &quot;android.intent.action.GET_CONTENT&quot;
+        String IMAGE_UNSPECIFIED = &quot;image/*&quot;;
+        innerIntent.setType(IMAGE_UNSPECIFIED); // 查看类型
+        Intent wrapperIntent = Intent.createChooser(innerIntent, null);
+        startActivityForResult(wrapperIntent, REQ_CHOOSE);
+    }
+
+    /**
+     * 选择照片后结束
+     *
+     * @param data
+     */
+    private Uri afterChosePic(Intent data) {
+
+        if (data != null) {
+            // 获取图片的路径：
+            String[] proj = {MediaStore.Images.Media.DATA};
+            // 好像是android多媒体数据库的封装接口，具体的看Android文档
+            Cursor cursor = managedQuery(data.getData(), proj, null, null, null);
+//        if (cursor == null) {
+//            Toast.makeText(this, &quot;上传的图片仅支持png或jpg格式&quot;, Toast.LENGTH_SHORT).show();
+//            return null;
+//        }
+            // 按我个人理解 这个是获得用户选择的图片的索引值
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            // 将光标移至开头 ，这个很重要，不小心很容易引起越界
+            cursor.moveToFirst();
+            // 最后根据索引值获取图片路径
+            String path = cursor.getString(column_index);
+//            if (path != null &amp;&amp; (path.endsWith(&quot;.png&quot;) || path.endsWith(&quot;.PNG&quot;) || path.endsWith(&quot;.jpg&quot;) || path.endsWith(&quot;.JPG&quot;))) {
+//            } else {
+//                Toast.makeText(this, &quot;上传的图片仅支持png或jpg格式&quot;, Toast.LENGTH_SHORT).show();
+//            }
+            File newFile = FileUtils.compressFile(path, compressPath);
+            return Uri.fromFile(newFile);
+        }
+        return null;
+    }
+</code></pre><p>都目前位置 问题得到完美的解决!!</p>
+<p>参考:<a href="http://blog.isming.me/2015/12/21/android-webview-upload-file/" target="_blank" rel="external">http://blog.isming.me/2015/12/21/android-webview-upload-file/</a><br><a href="http://www.huochai.mobi/p/d/900504/?share_tid=846ea82e2685&amp;fmid=0" target="_blank" rel="external">http://www.huochai.mobi/p/d/900504/?share_tid=846ea82e2685&amp;fmid=0</a><br><a href="http://www.lai18.com/content/1191983.html" target="_blank" rel="external">http://www.lai18.com/content/1191983.html</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/02/21/Android源码编译/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android源码编译和内核编译</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 熊凯
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+  </div>
+</body>
+</html>
