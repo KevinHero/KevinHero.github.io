@@ -1693,6 +1693,139 @@ android:cycles=&quot;7&quot; /&gt;
   </entry>
   
   <entry>
+    <title><![CDATA[Lambda for Android]]></title>
+    <link href="http://yoursite.com/2016/03/01/Lambda%20for%20Android/"/>
+    <id>http://yoursite.com/2016/03/01/Lambda for Android/</id>
+    <published>2016-02-29T18:33:17.000Z</published>
+    <updated>2016-04-06T04:27:22.000Z</updated>
+    <content type="html"><![CDATA[<p>Lambda，它让代码看起来更加简洁，但个人认为代码的可读性差了很多，因此一直没有去深入学习。</p>
+<h3 id="u4EC0_u4E48_u662Flambda"><a href="#u4EC0_u4E48_u662Flambda" class="headerlink" title="什么是lambda"></a>什么是lambda</h3><p>lambda是一种匿名表达式，retrolambda使得Android能使用lambda特性，举个例子：</p>
+<pre><code>view.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;);
+}
+});
+</code></pre><p>使用 lambda</p>
+<pre><code>view.setOnClickListener(
+v -&gt; Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;));
+</code></pre><h3 id="Android_u5982_u4F55_u4F7F_u7528"><a href="#Android_u5982_u4F55_u4F7F_u7528" class="headerlink" title="Android如何使用"></a>Android如何使用</h3><p>这里是使用Retrolambda的gradle插件，这样就可以在代码中使用lambda了。<br><a id="more"></a></p>
+<h4 id="Android_Studio_u914D_u7F6ERetrolambda"><a href="#Android_Studio_u914D_u7F6ERetrolambda" class="headerlink" title="Android Studio配置Retrolambda"></a>Android Studio配置Retrolambda</h4><p>lambda需要安装JDK8，下载最新版本jdk-8u73</p>
+<p>build.gradle</p>
+<pre><code>buildscript {
+    repositories {
+             jcenter()
+        }
+        dependencies {
+            classpath &apos;com.android.tools.build:gradle:1.5.0&apos;
+            classpath &apos;me.tatarka:gradle-retrolambda:3.2.4&apos;//加上这句依赖，这会使用retrolambda来编译Java代码
+    }
+}
+</code></pre><p>app/build.gradle</p>
+<pre><code>apply plugin: &apos;com.android.application&apos;
+apply plugin: &apos;me.tatarka.retrolambda&apos;//加上这句加,入plugin声明
+android {
+……
+compileOptions {//使用JAVA8语法解析
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+    retrolambda {//指定将源码编译的级别，使用下列代码，会将代码编译到兼容1.6的字节码格式
+    javaVersion JavaVersion.VERSION_1_6
+}
+</code></pre><h4 id="Android_Studio_u81EA_u52A8_u751F_u6210lambda"><a href="#Android_Studio_u81EA_u52A8_u751F_u6210lambda" class="headerlink" title="Android Studio自动生成lambda"></a>Android Studio自动生成lambda</h4><p><img src="https://d7.usercdn.com/i/04033/9kdvn64rz5p9.png" alt=""></p>
+<p>当配置Retrolambda成功后，Android Studio会有提示，按Alt+Enter键</p>
+<p><img src="https://d7.usercdn.com/i/04033/8zt63yej4sql.png" alt=""></p>
+<p>点击替换，这样就能自动生成，使用lambda了。到这里我就可以洗洗睡了，也很晚了，但为什么可以这样写呢，还是来简单了解lambda语法吧。<br>lambda语法简介</p>
+<pre><code>input -&gt; body
+</code></pre><h4 id="intput_u79CD_u7C7B"><a href="#intput_u79CD_u7C7B" class="headerlink" title="intput种类"></a>intput种类</h4><h5 id="u65E0_u8F93_u5165_void"><a href="#u65E0_u8F93_u5165_void" class="headerlink" title="无输入 void"></a>无输入 void</h5><pre><code>() -&gt; body
+
+new Thread(new Runnable() {
+@Override
+public void run() {
+Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;);
+}
+});
+</code></pre><p>使用 lambda</p>
+<pre><code>new Thread(() -&gt; Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;));
+</code></pre><h5 id="u4E00_u4E2A_u53C2_u6570_u8F93_u5165"><a href="#u4E00_u4E2A_u53C2_u6570_u8F93_u5165" class="headerlink" title="一个参数输入"></a>一个参数输入</h5><pre><code>x -&gt; body
+
+view.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;);
+}
+});
+</code></pre><p>使用 lambda</p>
+<pre><code>view.setOnClickListener(
+v -&gt; Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;));
+</code></pre><h5 id="u591A_u4E2A_u53C2_u6570_u8F93_u5165"><a href="#u591A_u4E2A_u53C2_u6570_u8F93_u5165" class="headerlink" title="多个参数输入"></a>多个参数输入</h5><pre><code>(x, y) -&gt; x + y;
+
+List&lt;String&gt; names = Arrays.asList(&quot;peter&quot;, &quot;anna&quot;, &quot;mike&quot;, &quot;xenia&quot;);
+Collections.sort(names, new Comparator&lt;String&gt;() {
+    @Override
+    public int compare(String a, String b) {
+        return b.compareTo(a);
+    }
+    });
+    for (String name : names) {
+    Log.d(&quot;wxl&quot;, name);
+}
+</code></pre><p>使用 lambda</p>
+<pre><code>List&lt;String&gt; names = Arrays.asList(&quot;peter&quot;, &quot;anna&quot;, &quot;mike&quot;, &quot;xenia&quot;);
+    Collections.sort(names, (a, b) -&gt; b.compareTo(a));
+     for (String name : names) {
+        Log.d(&quot;wxl&quot;, name);
+}
+</code></pre><h5 id="u4E0D_u7701_u7565_u578B_u5225"><a href="#u4E0D_u7701_u7565_u578B_u5225" class="headerlink" title="不省略型別"></a>不省略型別</h5><pre><code>(int x, int y) -&gt; x + y;
+</code></pre><h4 id="body__u79CD_u7C7B"><a href="#body__u79CD_u7C7B" class="headerlink" title="body 种类"></a>body 种类</h4><h5 id="u4EC0_u9EBC_u90FD_u4E0D_u505A"><a href="#u4EC0_u9EBC_u90FD_u4E0D_u505A" class="headerlink" title="什麼都不做"></a>什麼都不做</h5><pre><code>() -&gt; {}
+</code></pre><h5 id="u5355_u884C_u4E0D_u9700_u8981_u6709_u8FD4_u56DE_u503C_uFF0C_u5355_u884C_u53EF_u7701_u7565_7B_7D"><a href="#u5355_u884C_u4E0D_u9700_u8981_u6709_u8FD4_u56DE_u503C_uFF0C_u5355_u884C_u53EF_u7701_u7565_7B_7D" class="headerlink" title="单行不需要有返回值，单行可省略{}"></a>单行不需要有返回值，单行可省略{}</h5><pre><code>(x, y) -&gt; x + y;
+</code></pre><h5 id="u5355_u884C_u9700_u8981_u6709_u8FD4_u56DE_u503C"><a href="#u5355_u884C_u9700_u8981_u6709_u8FD4_u56DE_u503C" class="headerlink" title="单行需要有返回值"></a>单行需要有返回值</h5><pre><code>(x, y) -&gt; x + y//注意没有分号结尾
+
+Observable.just(&quot;Hello&quot;, &quot;RxJava&quot;)
+.map(new Func1&lt;String, String&gt;() {
+@Override
+    public String call(String s) {
+     return s.toUpperCase();
+    }
+});
+</code></pre><p>使用 lambda</p>
+<pre><code>Observable.just(&quot;Hello&quot;, &quot;RxJava&quot;)
+.map(s -&gt; s.toUpperCase());
+</code></pre><h5 id="u591A_u884C_u4E0D_u9700_u8981_u6709_u8FD4_u56DE_u503C"><a href="#u591A_u884C_u4E0D_u9700_u8981_u6709_u8FD4_u56DE_u503C" class="headerlink" title="多行不需要有返回值"></a>多行不需要有返回值</h5><pre><code>(x, y) -&gt;{
+x x;
+y y;
+}
+</code></pre><h5 id="u591A_u884C_u9700_u8981_u6709_u8FD4_u56DE_u503C"><a href="#u591A_u884C_u9700_u8981_u6709_u8FD4_u56DE_u503C" class="headerlink" title="多行需要有返回值"></a>多行需要有返回值</h5><pre><code>(x, y) -&gt;{
+x x;
+y y;
+return x + y;
+}
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>Lambda，它让代码看起来更加简洁，但个人认为代码的可读性差了很多，因此一直没有去深入学习。</p>
+<h3 id="u4EC0_u4E48_u662Flambda"><a href="#u4EC0_u4E48_u662Flambda" class="headerlink" title="什么是lambda"></a>什么是lambda</h3><p>lambda是一种匿名表达式，retrolambda使得Android能使用lambda特性，举个例子：</p>
+<pre><code>view.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;);
+}
+});
+</code></pre><p>使用 lambda</p>
+<pre><code>view.setOnClickListener(
+v -&gt; Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;));
+</code></pre><h3 id="Android_u5982_u4F55_u4F7F_u7528"><a href="#Android_u5982_u4F55_u4F7F_u7528" class="headerlink" title="Android如何使用"></a>Android如何使用</h3><p>这里是使用Retrolambda的gradle插件，这样就可以在代码中使用lambda了。<br>]]>
+    
+    </summary>
+    
+      <category term="Lambda" scheme="http://yoursite.com/tags/Lambda/"/>
+    
+      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Webview上传文件的那些坑]]></title>
     <link href="http://yoursite.com/2016/02/22/Webview%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/"/>
     <id>http://yoursite.com/2016/02/22/Webview上传文件的那些坑/</id>
@@ -5590,50 +5723,6 @@ dialog.setTitle(&quot;Custom Dialog&quot;);
     </summary>
     
       <category term="Dialog" scheme="http://yoursite.com/tags/Dialog/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android开发常用的adb命令整理]]></title>
-    <link href="http://yoursite.com/2015/03/02/Android%E5%BC%80%E5%8F%91%E5%B8%B8%E7%94%A8%E7%9A%84adb%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/"/>
-    <id>http://yoursite.com/2015/03/02/Android开发常用的adb命令整理/</id>
-    <published>2015-03-02T04:33:45.000Z</published>
-    <updated>2016-04-06T04:01:58.000Z</updated>
-    <content type="html"><![CDATA[<p>adb的全称是Android Debug Bridge</p>
-<p>adb start-server<br>启动adb服务,如果它没启动的话</p>
-<p>adb kill-server<br>关闭服务</p>
-<p>adb devices<br>查看所连接的设备以及设备所对应的序列号<br><a id="more"></a><br>adb install -r xxxx.apk<br>安装app,需要注意的是如果连接了两台设备,则会报错,此时可以添加-s <serialnumber>来处理</serialnumber></p>
-<p>adb unstall packagename<br>卸载app</p>
-<p>adb shell pm clear packagename<br>清除应用的数据,很常用吧?</p>
-<p>adb connect <device-ip-address><br>连接到指定的ip,这个通常配合wifidebug</device-ip-address></p>
-<p>adb shell<br>进入shell环境</p>
-<p>adb shell dumpsys activity top<br>查看栈顶Activity,可以用来获取包名</p>
-<p>adb shell pm list packages -f<br>查看所有已安装的应用的包名</p>
-<p>adb shell dumpsys activity<br>am的状态 Activity Manager State</p>
-<p>adb shell dumpsys package<br>包信息 Package Information</p>
-<p>adb shell dumpsys meminfo<br>内存使用情况Memory Usage</p>
-<p>adb shell dumpsys procstats<br>Memory Use Over Time</p>
-<p>adb shell dumpsys gfxinfo<br>Graphics State</p>
-<p>adb pull <remote> <local><br>从手机复制文件出来</local></remote></p>
-<p>adb push <local> <remote><br>向手机发送文件</remote></local></p>
-<p>eg.  adb push foo.txt /sdcard/foo.txt</p>
-<p>adb shell cat /proc/cpuinfo<br>查看手机CPU,可以看到手机架构(eg.ARMv7) 和几核处理器</p>
-<p>adb version<br>查看adb版本</p>
-<p>adb help<br>进入adb帮助界面</p>
-<p>其实 am,pm 其实还有很多命令,以后有多的再写吧</p>
-<p><a herf="https://developer.android.com/intl/zh-cn/tools/help/adb.html">adb-官方资料</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>adb的全称是Android Debug Bridge</p>
-<p>adb start-server<br>启动adb服务,如果它没启动的话</p>
-<p>adb kill-server<br>关闭服务</p>
-<p>adb devices<br>查看所连接的设备以及设备所对应的序列号<br>]]>
-    
-    </summary>
-    
-      <category term="adb" scheme="http://yoursite.com/tags/adb/"/>
     
       <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
     
