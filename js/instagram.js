@@ -58,7 +58,7 @@ var Instagram = (function(){
 			var m = d.getMonth()+1;
 			var src = replacer(data[i].images.low_resolution.url);
 			var bigSrc = replacer(data[i].images.standard_resolution.url);
-			var text = data[i].caption ? data[i].caption.text : ''; // data[i].caption 有可能为 null
+			var text = data[i].caption ? data[i].caption.text : '';
 			var key = y+"-"+m;
 			if(imgObj[key]){
 				imgObj[key].srclist.push(src);
@@ -119,26 +119,28 @@ var Instagram = (function(){
 
 	return {
 		init:function(){
-		// getList("https://api.instagram.com/v1/users/2723120904/media/recent/?access_token=2723120904.f25912c.e5787853ef834a5c924aca0d6658e45d&count=100");
-            
 			var insid = $(".instagram").attr("data-client-id");
             var userId = $(".instagram").attr("data-user-id");
-
 			if(!insid){
 				alert("Didn't set your instagram client_id.\nPlease see the info on the console of your brower.");
 				console.log("Please open 'http://instagram.com/developer/clients/manage/' to get your client-id.");
 				return;
 			}
-			getList("https://api.instagram.com/v1/users/"+ userId +"/media/recent/?client_id="+insid+"&count=100");
-     //  	 getList("https://api.instagram.com/v1/users/2723120904/media/recent/?client_id=f25912ca9785412193d61bc76025d4de&count=100");
-		
-        
-        //	getList("https://api.instagram.com/v1/users/2723120904/media/recent/?access_token=2723120904.f25912c.e5787853ef834a5c924aca0d6658e45d&count=100");
-        
-        	bind();
+			getList("https://api.instagram.com/v1/users/" + userId + "/media/recent/?client_id="+insid+"&count=100");
+			bind();
 		}
 	}
 })();
 $(function(){
 	Instagram.init();
 })
+
+
+		// getList("https://api.instagram.com/v1/users/2723120904/media/recent/?access_token=2723120904.f25912c.e5787853ef834a5c924aca0d6658e45d&count=100");
+            
+
+     //  	 getList("https://api.instagram.com/v1/users/2723120904/media/recent/?client_id=f25912ca9785412193d61bc76025d4de&count=100");
+		
+       // access_token=2723120904.f686a42.cd584bf27854444db0c658e4dcfc7375
+        //	getList("https://api.instagram.com/v1/users/2723120904/media/recent/?access_token=2723120904.f25912c.e5787853ef834a5c924aca0d6658e45d&count=100");
+        
