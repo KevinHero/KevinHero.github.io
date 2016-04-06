@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2016-04-06T04:04:15.000Z</updated>
+  <updated>2016-04-06T10:31:50.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -13,6 +13,44 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Q2季度目标]]></title>
+    <link href="http://yoursite.com/2016/04/01/Q2%E5%AD%A3%E5%BA%A6%E7%9B%AE%E6%A0%87/"/>
+    <id>http://yoursite.com/2016/04/01/Q2季度目标/</id>
+    <published>2016-04-01T03:33:45.000Z</published>
+    <updated>2016-04-06T10:31:50.000Z</updated>
+    <content type="html"><![CDATA[<p>1、完成GankAPP，并上线</p>
+<pre><code>未完成的部分
+1、上啦下拉更新 
+2、替换历史上今天的API
+3、优化webview的显示
+4、优化代码结构（网络请求**）
+</code></pre>   <a id="more"></a>
+<p>2、阅读《深入理解Android卷I》 并写下不少于10篇的技术读后感</p>
+<p><img src="https://d11.usercdn.com/i/04036/e9v3yp8bx4by.jpg" width="300"></p>
+<p>3、使用RxJava 完成知乎日报客户端，并使用sketch设计原型</p>
+<p>4、攒钱攒钱攒钱 </p>
+<p><img src="http://i.gtimg.cn/open/app_icon/04/72/41/14/1104724114_p1.png" width="300"></p>
+<p>5、戒烟!戒烟!戒烟!</p>
+<p><img src="https://d24.usercdn.com/i/04036/7yqf33h4fw6q.jpeg" width="300"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>1、完成GankAPP，并上线</p>
+<pre><code>未完成的部分
+1、上啦下拉更新 
+2、替换历史上今天的API
+3、优化webview的显示
+4、优化代码结构（网络请求**）
+</code></pre>]]>
+    
+    </summary>
+    
+      <category term="目标" scheme="http://yoursite.com/tags/%E7%9B%AE%E6%A0%87/"/>
+    
+      <category term="随笔" scheme="http://yoursite.com/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Android开发代码片段]]></title>
@@ -5520,208 +5558,6 @@ public void helloEventBus(MessageEvent message){
     </summary>
     
       <category term="EventBus" scheme="http://yoursite.com/tags/EventBus/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android自定义对话框(Dialog)位置,大小]]></title>
-    <link href="http://yoursite.com/2015/06/21/%E8%87%AA%E5%AE%9A%E4%B9%89Dialog%E7%9A%84%E5%A4%A7%E5%B0%8F%E3%80%81%E4%BD%8D%E7%BD%AE%E3%80%81%E9%A2%9C%E8%89%B2/"/>
-    <id>http://yoursite.com/2015/06/21/自定义Dialog的大小、位置、颜色/</id>
-    <published>2015-06-21T14:32:17.000Z</published>
-    <updated>2016-02-19T09:06:22.000Z</updated>
-    <content type="html"><![CDATA[<blockquote>
-<p>代码:</p>
-</blockquote>
-<pre><code>package angel.devil;
-import android.app.Activity;
-import android.app.Dialog;
-import android.os.Bundle;
-import android.view.Gravity;
-import android.view.Window;
-import android.view.WindowManager;
-
-public class DialogDemoActivity extends Activity {
-/** Called when the activity is first created. */
-@Override
-public void onCreate(Bundle savedInstanceState) {
-super.onCreate(savedInstanceState);
-setContentView(R.layout.main);
-Dialog dialog = new Dialog(this);
-
-// setContentView可以设置为一个View也可以简单地指定资源ID
-// LayoutInflater
-// li=(LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-// View v=li.inflate(R.layout.dialog_layout, null);
-// dialog.setContentView(v);
-dialog.setContentView(R.layout.dialog_layout);
-
-dialog.setTitle(&quot;Custom Dialog&quot;);
-</code></pre><hr>
-<a id="more"></a>
-<pre><code>/*
-* 获取圣诞框的窗口对象及参数对象以修改对话框的布局设置,
-* 可以直接调用getWindow(),表示获得这个Activity的Window
-* 对象,这样这可以以同样的方式改变这个Activity的属性.
-*/
-Window dialogWindow = dialog.getWindow();
-WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
-
-/*
-* lp.x与lp.y表示相对于原始位置的偏移.
-* 当参数值包含Gravity.LEFT时,对话框出现在左边,所以lp.x就表示相对左边的偏移,负值忽略.
-* 当参数值包含Gravity.RIGHT时,对话框出现在右边,所以lp.x就表示相对右边的偏移,负值忽略.
-* 当参数值包含Gravity.TOP时,对话框出现在上边,所以lp.y就表示相对上边的偏移,负值忽略.
-* 当参数值包含Gravity.BOTTOM时,对话框出现在下边,所以lp.y就表示相对下边的偏移,负值忽略.
-* 当参数值包含Gravity.CENTER_HORIZONTAL时
-* ,对话框水平居中,所以lp.x就表示在水平居中的位置移动lp.x像素,正值向右移动,负值向左移动.
-* 当参数值包含Gravity.CENTER_VERTICAL时
-* ,对话框垂直居中,所以lp.y就表示在垂直居中的位置移动lp.y像素,正值向右移动,负值向左移动.
-* gravity的默认值为Gravity.CENTER,即Gravity.CENTER_HORIZONTAL |
-* Gravity.CENTER_VERTICAL.
-*
-* 本来setGravity的参数值为Gravity.LEFT | Gravity.TOP时对话框应出现在程序的左上角,但在
-* 我手机上测试时发现距左边与上边都有一小段距离,而且垂直坐标把程序标题栏也计算在内了,
-* Gravity.LEFT, Gravity.TOP, Gravity.BOTTOM与Gravity.RIGHT都是如此,据边界有一小段距离
-*/
-lp.x = 100; // 新位置X坐标
-lp.y = 100; // 新位置Y坐标
-lp.width = 300; // 宽度
-lp.height = 300; // 高度
-lp.alpha = 0.7f; // 透明度
-
-// 当Window的Attributes改变时系统会调用此函数,可以直接调用以应用上面对窗口参数的更改,也可以用setAttributes
-// dialog.onWindowAttributesChanged(lp);
-dialogWindow.setAttributes(lp);
-
-/*
-* 将对话框的大小按屏幕大小的百分比设置
-*/
-//        WindowManager m = getWindowManager();
-//        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
-//        WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
-//        p.height = (int) (d.getHeight() * ); // 高度设置为屏幕的0.6
-//        p.width = (int) (d.getWidth() * 0.65); // 宽度设置为屏幕的0.65
-//        dialogWindow.setAttributes(p);
-
-dialog.show();
-
-}
-}
-</code></pre><blockquote>
-<p>布局文件:<br>main.xml</p>
-</blockquote>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-android:layout_width=&quot;fill_parent&quot;
-android:layout_height=&quot;fill_parent&quot;
-android:background=&quot;#00FF00&quot;
-android:orientation=&quot;vertical&quot; &gt;
-
-&lt;TextView
-android:layout_width=&quot;fill_parent&quot;
-android:layout_height=&quot;wrap_content&quot;
-android:text=&quot;@string/hello&quot; /&gt;
-
-&lt;/LinearLayout&gt;
-
-dialog_layout.xml
-
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-android:id=&quot;@+id/layout_root&quot;
-android:layout_width=&quot;fill_parent&quot;
-android:layout_height=&quot;fill_parent&quot;
-android:orientation=&quot;horizontal&quot;
-android:padding=&quot;10dp&quot; &gt;
-
-&lt;ImageView
-android:id=&quot;@+id/image&quot;
-android:layout_width=&quot;wrap_content&quot;
-android:layout_height=&quot;wrap_content&quot;
-android:layout_marginRight=&quot;10dp&quot;
-android:src=&quot;@drawable/ic_launcher&quot; /&gt;
-
-&lt;TextView
-android:id=&quot;@+id/text&quot;
-android:layout_width=&quot;wrap_content&quot;
-android:layout_height=&quot;wrap_content&quot;
-android:text=&quot;A Dialog&quot;
-android:textColor=&quot;#FFF&quot; /&gt;
-
-&lt;/LinearLayout&gt;
-</code></pre><blockquote>
-<p>取消自定义dialog的标题栏</p>
-</blockquote>
-<p>Android中取消自定义dialog的标题栏, 只需在</p>
-<pre><code>dialog.setContentView(R.layout.popwin_chooseversion);
-</code></pre><p>前面加一句:</p>
-<pre><code>dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-</code></pre><p>加在这句之后会产生异常.</p>
-<p>还要导入</p>
-<pre><code>import android.view.Window;
-</code></pre><p>包.</p>
-<h3 id="android__u5982_u4F55_u8BA9_u81EA_u5B9A_u4E49dialog_u7684_u5BBD_u5EA6_u5145_u6EE1_u6574_u4E2A_u5C4F_u5E55"><a href="#android__u5982_u4F55_u8BA9_u81EA_u5B9A_u4E49dialog_u7684_u5BBD_u5EA6_u5145_u6EE1_u6574_u4E2A_u5C4F_u5E55" class="headerlink" title="android 如何让自定义dialog的宽度充满整个屏幕"></a>android 如何让自定义dialog的宽度充满整个屏幕</h3><h4 id="u65B9_u6848_uFF1A"><a href="#u65B9_u6848_uFF1A" class="headerlink" title="方案："></a>方案：</h4><p>  通过设置Dialog的样式实现</p>
-<h5 id="u6B65_u9AA4_uFF1A"><a href="#u6B65_u9AA4_uFF1A" class="headerlink" title="步骤："></a>步骤：</h5><blockquote>
-<p>1、添加style</p>
-</blockquote>
-<pre><code>&lt;style name=&quot;Dialog_FS&quot;&gt;
-&lt;item name=&quot;android:windowFullscreen&quot;&gt;true&lt;/item&gt; //设置填充父窗体
-&lt;item name=&quot;android:windowNoTitle&quot;&gt;true&lt;/item&gt; //设置隐藏标题栏
-&lt;/style&gt;
-</code></pre><blockquote>
-<p>2、代码里面设置dialog的样式</p>
-</blockquote>
-<pre><code>Dialog dialog = new Dialog(this,R.style.Dialog_FS); //设置全屏样式
-dialog.setContentView(R.layout.main); //设置dialog的布局
-dialog.show();//显示dialog界面
-</code></pre><blockquote>
-<p>3.style文件具体</p>
-</blockquote>
-<pre><code>  &lt;style name=&quot;iphone_progress_dialog&quot; parent=&quot;@android:style/Theme.Dialog&quot;&gt;
-     &lt;item name=&quot;android:windowFrame&quot;&gt;@null&lt;/item&gt; &lt;!--Dialog的windowFrame框为无--&gt; 
-     &lt;item name=&quot;android:windowIsFloating&quot;&gt;true&lt;/item&gt;&lt;!-- 是否漂现在activity上--&gt;
-     &lt;item name=&quot;android:windowIsTranslucent&quot;&gt;true&lt;/item&gt;&lt;!-- 是否半透明 --&gt;
-     &lt;item name=&quot;android:windowNoTitle&quot;&gt;true&lt;/item&gt;
-     &lt;item name=&quot;android:backgroundDimEnabled&quot;&gt;false&lt;/item&gt;&lt;!-- dim:模糊的 阴影效果 --&gt;
-     &lt;item name=&quot;android:windowBackground&quot;&gt;@drawable/load_bg&lt;/item&gt;&lt;!-- 背景图片的大小也影响窗口的大小 --&gt;
-&lt;/style&gt;
-</code></pre>]]></content>
-    <summary type="html">
-    <![CDATA[<blockquote>
-<p>代码:</p>
-</blockquote>
-<pre><code>package angel.devil;
-import android.app.Activity;
-import android.app.Dialog;
-import android.os.Bundle;
-import android.view.Gravity;
-import android.view.Window;
-import android.view.WindowManager;
-
-public class DialogDemoActivity extends Activity {
-/** Called when the activity is first created. */
-@Override
-public void onCreate(Bundle savedInstanceState) {
-super.onCreate(savedInstanceState);
-setContentView(R.layout.main);
-Dialog dialog = new Dialog(this);
-
-// setContentView可以设置为一个View也可以简单地指定资源ID
-// LayoutInflater
-// li=(LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-// View v=li.inflate(R.layout.dialog_layout, null);
-// dialog.setContentView(v);
-dialog.setContentView(R.layout.dialog_layout);
-
-dialog.setTitle(&quot;Custom Dialog&quot;);
-</code></pre><hr>]]>
-    
-    </summary>
-    
-      <category term="Dialog" scheme="http://yoursite.com/tags/Dialog/"/>
     
       <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
     
