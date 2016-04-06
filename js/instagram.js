@@ -38,7 +38,7 @@ var Instagram = (function(){
 		$("a[rel=example_group]").fancybox();
 	}
 
-//这是一个 将图片转到墙内的方法
+    //这是一个 将图片转到墙内的方法
 	var replacer = function(str){
 		if(str.indexOf("outbound-distilleryimage") >= 0 ){
 			var cdnNum = str.match(/outbound-distilleryimage([\s\S]*?)\//)[1];
@@ -116,7 +116,7 @@ var Instagram = (function(){
 
 	var bind = function(){
 		$(window).resize(function(){
-			changeSize();
+		//	changeSize();
 		});
 	}
 
