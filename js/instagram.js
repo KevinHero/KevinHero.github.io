@@ -29,7 +29,7 @@ var Instagram = (function(){
 		}
 
 		$(".instagram").lazyload();
-		changeSize();
+	//	changeSize();
 
 		setTimeout(function(){
 			preLoad(data);
@@ -104,6 +104,7 @@ var Instagram = (function(){
 	}
 	
 
+    //不需要改变大小
 	var changeSize = function(){	
 		if($(document).width() <= 600){
 			$(".img-box").css({"width":"auto", "height":"auto"});
