@@ -119,7 +119,7 @@ var Instagram = (function(){
 
 	return {
 		init:function(){
-			getList("https://api.instagram.com/v1/users/2723120904/media/recent/?access_token=2723120904.f25912c.e5787853ef834a5c924aca0d6658e45d&count=100");
+			getList("https://api.instagram.com/v1/users/2723120904/media/recent/?access_token=2723120904.f25912c.f25912ca9785412193d61bc76025d4de&count=100");
             
 			var insid = $(".instagram").attr("data-client-id");
             var userId = $(".instagram").attr("data-user-id");
