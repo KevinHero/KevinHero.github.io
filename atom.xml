@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2016-04-06T10:31:50.000Z</updated>
+  <updated>2016-04-06T10:49:36.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://yoursite.com/2016/04/01/Q2%E5%AD%A3%E5%BA%A6%E7%9B%AE%E6%A0%87/"/>
     <id>http://yoursite.com/2016/04/01/Q2季度目标/</id>
     <published>2016-04-01T03:33:45.000Z</published>
-    <updated>2016-04-06T10:31:50.000Z</updated>
+    <updated>2016-04-06T10:49:36.000Z</updated>
     <content type="html"><![CDATA[<p>1、完成GankAPP，并上线</p>
 <pre><code>未完成的部分
 1、上啦下拉更新 
@@ -28,7 +28,7 @@
 4、优化代码结构（网络请求**）
 </code></pre>   <a id="more"></a>
 <p>2、阅读《深入理解Android卷I》 并写下不少于10篇的技术读后感</p>
-<p><img src="https://d11.usercdn.com/i/04036/e9v3yp8bx4by.jpg" width="300"></p>
+<p><a href="http://i4.piimg.com/e5dcc5c08841a359.jpg" title="点击显示原始图片" target="_blank" rel="external"><img src="http://i4.piimg.com/e5dcc5c08841a359t.jpg"></a></p>
 <p>3、使用RxJava 完成知乎日报客户端，并使用sketch设计原型</p>
 <p>4、攒钱攒钱攒钱 </p>
 <p><img src="http://i.gtimg.cn/open/app_icon/04/72/41/14/1104724114_p1.png" width="300"></p>
