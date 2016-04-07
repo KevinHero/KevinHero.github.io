@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="中文">
+<html>
 <head>
   <meta charset="utf-8">
   
@@ -25,27 +25,24 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
     <link rel="alternative" href="/atom.xml" title="熊凯的个人博客" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/img/favicon.jpg">
   
   
       <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css" type="text/css">
   
-  
-  
-      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-  
   <link rel="stylesheet" href="/css/style.css" type="text/css">
-  
-  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   
   
-    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
   
-  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
   <script>
       var yiliaConfig = {
+          rootUrl: '/',
           fancybox: true,
           animate: true,
           isHome: false,
@@ -53,19 +50,9 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
           isArchive: false,
           isTag: false,
           isCategory: false,
-          open_in_new: false,
+          open_in_new: false
       }
   </script>
-
-  
-      <script>
-          yiliaConfig.rootUrl = "/";
-      </script>
-  
-
-  
-
-  
 </head>
 <body>
   <div id="container">
@@ -74,16 +61,17 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
 <div class="intrude-less">
     <header id="header" class="inner">
         <a href="/" class="profilepic">
-            <img src="https://d23.usercdn.com/i/03907/herx4n7dz1po.gif" class="animated zoomIn">
+            
+            <img lazy-src="/img/head.jpg" class="js-avatar">
+            
         </a>
+
         <hgroup>
           <h1 class="header-author"><a href="/">熊凯</a></h1>
         </hgroup>
 
         
-                
-
-
+        
         
             <div id="switch-btn" class="switch-btn">
                 <div class="icon">
@@ -113,13 +101,13 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
                 <div class="tips-box hide">
                     <div class="tips-arrow"></div>
                     <ul class="tips-inner">
-                        <li>菜單</li>
-                        <li>標籤</li>
+                        <li>菜单</li>
+                        <li>标签</li>
                         
-                        <li>友情鏈接</li>
+                        <li>友情链接</li>
                         
                         
-                        <li>關於我</li>
+                        <li>关于我</li>
                         
                     </ul>
                 </div>
@@ -132,7 +120,7 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
                     <nav class="header-menu">
                         <ul>
                         
-                            <li><a href="/">主页</a></li>
+                            <li><a href="/Home">主页</a></li>
                         
                             <li><a href="/archives/">所有文章</a></li>
                         
@@ -147,15 +135,15 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
                     <nav class="header-nav">
                         <ul class="social">
                             
-                                <li id="weibo"><a class="weibo" target="_blank" href="http://weibo.com/1743454163/" title="weibo"></a></li>
+                                <a class="fl weibo" target="_blank" href="http://weibo.com/1743454163/" title="weibo">weibo</a>
                             
-                                <li id="mail"><a class="mail" target="_blank" href="mailto:camchin1@msn.cn" title="mail"></a></li>
+                                <a class="fl mail" target="_blank" href="mailto:camchin1@msn.cn" title="mail">mail</a>
                             
-                                <li id="facebook"><a class="facebook" target="_blank" href="https://www.facebook.com/ken.shoaw" title="facebook"></a></li>
+                                <a class="fl facebook" target="_blank" href="https://www.facebook.com/ken.shoaw" title="facebook">facebook</a>
                             
-                                <li id="twitter"><a class="twitter" target="_blank" href="https://twitter.com/w_0482" title="twitter"></a></li>
+                                <a class="fl twitter" target="_blank" href="https://twitter.com/w_0482" title="twitter">twitter</a>
                             
-                                <li id="rss"><a class="rss" target="_blank" href="/atom.xml" title="rss"></a></li>
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
                             
                         </ul>
                     </nav>
@@ -181,6 +169,8 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
                     
                       <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.jobbole.com/">伯乐在线</a>
                     
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.hankin.cn/">hankin技术宅</a>
+                    
                     </div>
                 </section>
                 
@@ -189,7 +179,7 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
                 
                 <section class="switch-part switch-part4">
                 
-                    <div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+                    <div id="js-aboutme">90后，水瓶座普通男青年！爱折腾，爱运动，更爱游离于错综复杂的编码与逻辑中，无法自拔。</div>
                 </section>
                 
             </div>
@@ -206,7 +196,9 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
     <div class="intrude-less">
         <header id="header" class="inner">
             <a href="/" class="profilepic">
-                <img src="https://d23.usercdn.com/i/03907/herx4n7dz1po.gif" class="animated zoomIn">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
             </a>
             <hgroup>
               <h1 class="header-author"><a href="/" title="回到主页">熊凯</a></h1>
@@ -215,7 +207,7 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
             <nav class="header-menu">
                 <ul>
                 
-                    <li><a href="/">主页</a></li>
+                    <li><a href="/Home">主页</a></li>
                 
                     <li><a href="/archives/">所有文章</a></li>
                 
@@ -229,19 +221,19 @@ OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以�
                 </ul>
             </nav>
             <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <li id="weibo"><a class="weibo" target="_blank" href="http://weibo.com/1743454163/" title="weibo"></a></li>
-                            
-                                <li id="mail"><a class="mail" target="_blank" href="mailto:camchin1@msn.cn" title="mail"></a></li>
-                            
-                                <li id="facebook"><a class="facebook" target="_blank" href="https://www.facebook.com/ken.shoaw" title="facebook"></a></li>
-                            
-                                <li id="twitter"><a class="twitter" target="_blank" href="https://twitter.com/w_0482" title="twitter"></a></li>
-                            
-                                <li id="rss"><a class="rss" target="_blank" href="/atom.xml" title="rss"></a></li>
-                            
-                        </ul>
+                <div class="social">
+                    
+                        <a class="weibo" target="_blank" href="http://weibo.com/1743454163/" title="weibo">weibo</a>
+                    
+                        <a class="mail" target="_blank" href="mailto:camchin1@msn.cn" title="mail">mail</a>
+                    
+                        <a class="facebook" target="_blank" href="https://www.facebook.com/ken.shoaw" title="facebook">facebook</a>
+                    
+                        <a class="twitter" target="_blank" href="https://twitter.com/w_0482" title="twitter">twitter</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                </div>
             </nav>
         </header>                
     </div>
@@ -838,45 +830,47 @@ response.body()返回ResponseBody类
   
     
     <div class="copyright">
-        <p><span>本文標題:</span><a href="/2015/07/19/Android OkHttp初级入门/">Android OkHttp使用教程</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主頁">熊凯</a></p>
-        <p><span>發布時間:</span>2015-07-19, 13:33:17</p>
-        <p><span>最後更新:</span>2016-02-19, 17:07:45</p>
+        <p><span>本文标题:</span><a href="/2015/07/19/Android OkHttp初级入门/">Android OkHttp使用教程</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 熊凯 的个人博客">熊凯</a></p>
+        <p><span>发布时间:</span>2015年07月19日 - 13时33分</p>
+        <p><span>最后更新:</span>2016年02月19日 - 17时07分</p>
         <p>
-            <span>原始鏈接:</span><a class="post-url" href="/2015/07/19/Android OkHttp初级入门/" title="Android OkHttp使用教程">http://yoursite.com/2015/07/19/Android OkHttp初级入门/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2015/07/19/Android OkHttp初级入门/　　作者: 熊凯" title="點擊複製文章鏈接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2015/07/19/Android OkHttp初级入门/" title="Android OkHttp使用教程">http://yoursite.com/2015/07/19/Android OkHttp初级入门/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2015/07/19/Android OkHttp初级入门/　　作者: 熊凯" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
-            <span>許可協議:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 轉載請保留原文鏈接及作者。
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
         </p>
     </div>
 
 
 
-    <nav id="article-nav">
+<nav id="article-nav">
+  
+    <a href="/2015/07/21/Android OkHttp完全解析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2015/07/21/Android OkHttp完全解析/">
-                    Android OkHttp完全解析
-                </a>
-            </div>
+          Android OkHttp完全解析
         
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2015/06/27/EventBus 3.0的用法详解(二)/">
-                    EventBus 3.0的用法详解（二）
-                </a>
-            </div>
-        
-    </nav>
+      </div>
+    </a>
+  
+  
+    <a href="/2015/06/27/EventBus 3.0的用法详解(二)/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">EventBus 3.0的用法详解（二）</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
 
   
 </article>
 
     <div id="toc" class="toc-article">
-    <strong class="toc-title">文章目錄</strong>
+    <strong class="toc-title">文章目录</strong>
     <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#u5165_u95E8"><span class="toc-number">1.</span> <span class="toc-text">入门</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u57FA_u672C_u4F7F_u7528"><span class="toc-number">2.</span> <span class="toc-text">基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP_GET"><span class="toc-number">2.1.</span> <span class="toc-text">HTTP GET</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP_POST"><span class="toc-number">2.2.</span> <span class="toc-text">HTTP POST</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">2.3.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u9AD8_u7EA7"><span class="toc-number">3.</span> <span class="toc-text">高级</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#u540C_u6B65get"><span class="toc-number">3.1.</span> <span class="toc-text">同步get</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u5F02_u6B65get"><span class="toc-number">3.2.</span> <span class="toc-text">异步get</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u63D0_u53D6_u54CD_u5E94_u5934"><span class="toc-number">3.3.</span> <span class="toc-text">提取响应头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Post_u65B9_u5F0F_u63D0_u4EA4String"><span class="toc-number">3.4.</span> <span class="toc-text">Post方式提交String</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Post_u65B9_u5F0F_u63D0_u4EA4_u6D41"><span class="toc-number">3.5.</span> <span class="toc-text">Post方式提交流</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Post_u65B9_u5F0F_u63D0_u4EA4_u6587_u4EF6"><span class="toc-number">3.6.</span> <span class="toc-text">Post方式提交文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Post_u65B9_u5F0F_u63D0_u4EA4_u8868_u5355"><span class="toc-number">3.7.</span> <span class="toc-text">Post方式提交表单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Post_u65B9_u5F0F_u63D0_u4EA4_u5206_u5757_u8BF7_u6C42"><span class="toc-number">3.8.</span> <span class="toc-text">Post方式提交分块请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u4F7F_u7528Gson_u6765_u89E3_u6790JSON_u54CD_u5E94"><span class="toc-number">3.9.</span> <span class="toc-text">使用Gson来解析JSON响应</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u54CD_u5E94_u7F13_u5B58"><span class="toc-number">3.10.</span> <span class="toc-text">响应缓存</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u6269_u5C55"><span class="toc-number">4.</span> <span class="toc-text">扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#u8D85_u65F6"><span class="toc-number">4.1.</span> <span class="toc-text">超时</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u6BCF_u4E2Acall_u7684_u914D_u7F6E"><span class="toc-number">4.2.</span> <span class="toc-text">每个call的配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u5904_u7406_u9A8C_u8BC1"><span class="toc-number">4.3.</span> <span class="toc-text">处理验证</span></a></li></ol></li></ol>
 </div>
 <style>
@@ -888,10 +882,12 @@ response.body()返回ResponseBody类
     }
 </style>
 
-<input type="button" id="tocButton" value="隱藏目錄"  title="點擊按鈕隱藏或者顯示文章目錄">
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
 <script>
-    var valueHide = "隱藏目錄";
-    var valueShow = "顯示目錄";
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
 
     if ($(".left-col").is(":hidden")) {
         $("#tocButton").attr("value", valueShow);
@@ -920,35 +916,21 @@ response.body()返回ResponseBody类
 
 
 
-    
-<div class="share">
-    
-        <div class="bdsharebuttonbox">
-            <li id="bds_twi"><a href="#" class="bds_twi" data-cmd="twi" title="分享到推特"></a></li>
-            <li id="bds_tsina"><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a></li>
-            <li id="bds_sqq"><a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a></li>
-            <li id="bds_copy"><a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a></li>
-            <li id="bds_mail"><a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a></li>
-            <li id="bds_weixin"><a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a></li>
-            <li id="bds_more"><a href="#" class="bds_more" data-cmd="more"></i></a></li>
-        </div>
-        <script>
-            window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Android OkHttp使用教程　| 熊凯的个人博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        </script>
-    
-
-    
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
 </div>
-
-
-
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
 
 
 
 
     
-
 
 
 
@@ -958,18 +940,34 @@ response.body()返回ResponseBody类
                 <i class="fa fa-angle-left"></i>
             </a>
         
-
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
         
             <a href="/2015/06/27/EventBus 3.0的用法详解(二)/" title="下一篇: EventBus 3.0的用法详解（二）">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
-
     <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/Q2季度目标/">Q2季度目标</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/25/RxAndroid/">从案例学习RxAndroid</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/android代码片段/">Android开发代码片段</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/02/Android开发工作中的细节/">Android开发工作中的细节</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/01/日常使用到的梯子/">日常使用到的梯子</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/01/Android开发中的小知识点汇总/">Android小知识库</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/01/Lambda for Android/">Lambda for Android</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/25/理解Android的编译命令/">理解Android编译命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/22/Webview上传文件的那些坑/">Webview上传文件的那些坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/21/Android源码编译/">Android源码编译和内核编译</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/18/Kotlin1.0正式版发布/">Kotlin 1.0 正式版发布啦</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/25/Ibeacon/">Ibeacon</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/21/Android MotionEvent详解/">Android MotionEvent详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/React-Native学习指南/">React-Native学习指南</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/18/RecyclerView 列表控件中简单实现时间线/">RecyclerView 列表控件中简单实现时间线</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/11/21/3.5开发中的亮点和不足/">亮点和不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/09/ActionBar沉浸式实现/">ActionBar沉浸式实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/注解(Annotation)自定义注解入门/">Android注解(Annotation)自定义注解入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/21/Android OkHttp完全解析/">Android OkHttp完全解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/Android OkHttp初级入门/">Android OkHttp使用教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/06/27/EventBus 3.0的用法详解(二)/">EventBus 3.0的用法详解（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/06/25/EventBus 3.0的用法详解（一）/">EventBus 3.0的用法详解（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/06/21/自定义Dialog的大小、位置、颜色/">Android自定义对话框(Dialog)位置,大小</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/03/02/Android开发常用的adb命令整理/">Android开发常用的adb命令整理</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/21/端口号/">端口号设置</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/11/07/Android AsyncTask 技巧/">Android AsyncTask 技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/11/05/图像、背景、View更新、布局、内存/">图像、背景、View更新、布局、内存</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/08/健身/">健身</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/09/18/widget用法/">widget用法</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/08/08/webview入门/">WebView入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/07/18/TypedArray/">解析：TypedArray 为什么需要调用recycle()</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/06/15/Android内核 ServiceManager/">Android内核 ServiceManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/06/12/Android内核 Binder/">Android内核 Binder</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/06/08/Android内核 异步线程的实现（Looper、MessageQueue、Handler）/">异步线程的实现（Looper、MessageQueue、Handler）</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/06/01/CountDownTimer（倒数计时器）/">CountDownTimer（倒数计时器）</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/05/19/万能的ViewHolder/">ViewHolder的作用</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/05/17/Android 自定义Loader/">Android 自定义Loader</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/05/17/Android Skill 下拉刷新/">下拉刷新</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/05/15/Android TextView 技巧/">Android Textview 技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/05/13/Android String相关类性能测试/">String相关类性能测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/05/11/Android ImageView ScaleType属性/">ImageView ScaleType属性</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/05/05/Android EditText 技巧/">图像、背景、View更新、布局、内存</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/24/Lantern(灯笼)使用实例/">Lantern(灯笼)使用实例</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/19/Context/">Android Context 到底是什么？</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/17/Android开发中一些被冷落但却很有用的类和方法/">Android开发中一些被冷落但却很有用的类和方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/12/Android Studio的快捷键/">Android Studio 的快捷键</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/08/Android开发规范/">Android 开发规范</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/07/开发规范/">Google Java编程风格指南</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/01/28/40个Java集合面试问题和答案/">40个Java集合面试问题和答案</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/01/23/Android anim drawable color 技巧/">Android anim drawable color技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/01/23/36个Android开发的代码片段/">36个Android开发常用代码片段</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/01/21/生命中的空白/">生命中的空白</a></li></ul>
-
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
 
 
 
@@ -984,14 +982,14 @@ response.body()返回ResponseBody类
                 &copy; 2016 熊凯
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題">Yelee</a> by MOxFIVE
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
             </div>
         </div>
         
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" >本站到訪數: 
+                        <span id="site-visit" >本站到访数: 
                             <span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
@@ -1001,7 +999,7 @@ response.body()返回ResponseBody类
                 
                 
                     <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit">本頁閱讀量: 
+                        <span id="page-visit">本页阅读量: 
                             <span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
@@ -1010,37 +1008,87 @@ response.body()返回ResponseBody类
         
     </div>
 </footer>
+
     </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
 
     <script>
         $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
+            var backgroundnum = 21;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
         })
     </script>
 
 
 
 
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
 <div class="scroll" id="scroll">
-    <a href="#" title="返回頂部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" title="查看評論"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="轉到底部"><i class="fa fa-arrow-down"></i></a>
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
 </div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
 
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
   </div>
 </body>
 </html>
