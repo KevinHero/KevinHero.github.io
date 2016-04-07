@@ -2,6 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2014/02/17/Android%E5%BC%80%E5%8F%91%E4%B8%AD%E4%B8%80%E4%BA%9B%E8%A2%AB%E5%86%B7%E8%90%BD%E4%BD%86%E5%8D%B4%E5%BE%88%E6%9C%89%E7%94%A8%E7%9A%84%E7%B1%BB%E5%92%8C%E6%96%B9%E6%B3%95/</loc>
+    <lastmod>2016-04-07T03:49:30.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2015/10/09/ActionBar%E6%B2%89%E6%B5%B8%E5%BC%8F%E5%AE%9E%E7%8E%B0/</loc>
+    <lastmod>2016-04-07T03:45:54.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/02/18/Kotlin1.0%E6%AD%A3%E5%BC%8F%E7%89%88%E5%8F%91%E5%B8%83/</loc>
+    <lastmod>2016-04-07T03:45:13.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2016/03/25/RxAndroid/</loc>
     <lastmod>2016-04-07T03:37:12.000Z</lastmod>
   </url>
@@ -64,11 +79,6 @@
   <url>
     <loc>http://yoursite.com/2016/02/21/Android%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/</loc>
     <lastmod>2016-02-26T07:27:49.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2015/10/09/ActionBar%E6%B2%89%E6%B5%B8%E5%BC%8F%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2016-02-23T04:22:02.000Z</lastmod>
   </url>
   
   <url>
@@ -177,11 +187,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/02/18/Kotlin1.0%E6%AD%A3%E5%BC%8F%E7%89%88%E5%8F%91%E5%B8%83/</loc>
-    <lastmod>2016-02-19T09:12:40.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2016/01/25/Ibeacon/</loc>
     <lastmod>2016-02-19T09:12:16.000Z</lastmod>
   </url>
@@ -199,11 +204,6 @@
   <url>
     <loc>http://yoursite.com/2014/02/19/Context/</loc>
     <lastmod>2016-02-19T09:10:41.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2014/02/17/Android%E5%BC%80%E5%8F%91%E4%B8%AD%E4%B8%80%E4%BA%9B%E8%A2%AB%E5%86%B7%E8%90%BD%E4%BD%86%E5%8D%B4%E5%BE%88%E6%9C%89%E7%94%A8%E7%9A%84%E7%B1%BB%E5%92%8C%E6%96%B9%E6%B3%95/</loc>
-    <lastmod>2016-02-19T09:08:41.000Z</lastmod>
   </url>
   
   <url>
