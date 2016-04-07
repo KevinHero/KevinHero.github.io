@@ -38,6 +38,7 @@ var Instagram = (function(){
 		$("a[rel=example_group]").fancybox();
 	}
 
+    //这是一个 将图片转到墙内的方法
 	var replacer = function(str){
 		if(str.indexOf("outbound-distilleryimage") >= 0 ){
 			var cdnNum = str.match(/outbound-distilleryimage([\s\S]*?)\//)[1];
@@ -56,9 +57,11 @@ var Instagram = (function(){
 			var d = new Date(data[i].created_time*1000);
 			var y = d.getFullYear();
 			var m = d.getMonth()+1;
-			var src = replacer(data[i].images.low_resolution.url);
-			var bigSrc = replacer(data[i].images.standard_resolution.url);
-			var text = data[i].caption ? data[i].caption.text : ''; // data[i].caption 有可能为 null
+			// var src = replacer(data[i].images.low_resolution.url);
+            	var src = data[i].images.low_resolution.url;
+			// var bigSrc = replacer(data[i].images.standard_resolution.url);
+            	var bigSrc = data[i].images.standard_resolution.url;
+			var text = data[i].caption ? data[i].caption.text : '';
 			var key = y+"-"+m;
 			if(imgObj[key]){
 				imgObj[key].srclist.push(src);
@@ -101,6 +104,7 @@ var Instagram = (function(){
 	}
 	
 
+    //不需要改变大小
 	var changeSize = function(){	
 		if($(document).width() <= 600){
 			$(".img-box").css({"width":"auto", "height":"auto"});
@@ -119,16 +123,15 @@ var Instagram = (function(){
 
 	return {
 		init:function(){
-			//getList("https://api.instagram.com/v1/users/438522285/media/recent/?access_token=438522285.2082eef.ead70f432f444a2e8b1b341617637bf6&count=100");
 			var insid = $(".instagram").attr("data-client-id");
             var userId = $(".instagram").attr("data-user-id");
-
 			if(!insid){
 				alert("Didn't set your instagram client_id.\nPlease see the info on the console of your brower.");
 				console.log("Please open 'http://instagram.com/developer/clients/manage/' to get your client-id.");
 				return;
 			}
-			getList("https://api.instagram.com/v1/users/"+ userId +"/media/recent/?client_id="+insid+"&count=100");
+            	getList("https://api.instagram.com/v1/users/2723120904/media/recent/?access_token=2723120904.f686a42.cd584bf27854444db0c658e4dcfc7375&count=100");
+			// getList("https://api.instagram.com/v1/users/" + userId + "/media/recent/?client_id="+insid+"&count=100");
 			bind();
 		}
 	}
@@ -136,3 +139,13 @@ var Instagram = (function(){
 $(function(){
 	Instagram.init();
 })
+
+
+		// getList("https://api.instagram.com/v1/users/2723120904/media/recent/?access_token=2723120904.f25912c.e5787853ef834a5c924aca0d6658e45d&count=100");
+            
+
+     //  	 getList("https://api.instagram.com/v1/users/2723120904/media/recent/?client_id=f686a421cbfb41bcb96aa2507e09671d&count=100");
+		
+       // access_token=2723120904.f686a42.cd584bf27854444db0c658e4dcfc7375
+        //	getList("https://api.instagram.com/v1/users/2723120904/media/recent/?access_token=2723120904.f25912c.e5787853ef834a5c924aca0d6658e45d&count=100");
+        
