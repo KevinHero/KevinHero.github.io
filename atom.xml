@@ -57,9 +57,10 @@
     <link href="http://yoursite.com/2016/03/25/RxAndroid/"/>
     <id>http://yoursite.com/2016/03/25/RxAndroid/</id>
     <published>2016-03-25T13:01:45.000Z</published>
-    <updated>2016-04-07T03:25:54.000Z</updated>
-    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#21407;&#25991;&#38142;&#25509;&#65306;&#10;https://medium.com/@kurtisnusbaum/rxandroid-basics-part-1-c0d5edcf6850</span><br></pre></td></tr></table></figure>
-<p>如果你在阅读这篇文章，相信你一定很想了解RxJava以及如何在Android应用中使用它。可能你已经见过RxJava的代码了，但仍然有些疑惑，愿你能在这篇文章里找到答案。</p>
+    <updated>2016-04-07T03:35:19.000Z</updated>
+    <content type="html"><![CDATA[<pre><code>原文链接：
+https://medium.com/@kurtisnusbaum/rxandroid-basics-part-1-c0d5edcf6850
+</code></pre><p>如果你在阅读这篇文章，相信你一定很想了解RxJava以及如何在Android应用中使用它。可能你已经见过RxJava的代码了，但仍然有些疑惑，愿你能在这篇文章里找到答案。</p>
 <p>当我第一次使用RxJava的时候我只是在照搬代码，这些代码能跑起来，但是我对RxJava的基础部分仍然存在误解，而且我找不到好的源码来学习。所以为了理解RxJava，我不得不一点一点学习，踩了不少坑。</p>
 <p>为了不让你把我踩过的坑再踩一遍，我会基于我的学习成果写一些例子出来，目的就是让你能够对RxJava有足够的了解，并能在你的Android应用中使用它。</p>
 <p>源码可以在这里找到。在每个例子的开始，我会写清每个代码段是属于哪个Activity的。我会将本文分为两个部分，在前三个例子里，我会着重讲解如何用RxJava异步加载数据；在后三个例子里，我会探索一些更高级的用法。</p>
@@ -261,8 +262,9 @@ public void afterTextChanged(Editable s) { }
 <p>有关RxJava就说这么多了，希望这篇文章能帮你了解RxJava的基础。强烈建议你自己探索有关RxJava的其他方面。如果你有问题或者只是想说点什么，欢迎在下方留言。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#21407;&#25991;&#38142;&#25509;&#65306;&#10;https://medium.com/@kurtisnusbaum/rxandroid-basics-part-1-c0d5edcf6850</span><br></pre></td></tr></table></figure>
-<p>如果你在阅读这篇文章，相信你一定很想了解RxJava以及如何在Android应用中使用它。可能你已经见过RxJava的代码了，但仍然有些疑惑，愿你能在这篇文章里找到答案。</p>
+    <![CDATA[<pre><code>原文链接：
+https://medium.com/@kurtisnusbaum/rxandroid-basics-part-1-c0d5edcf6850
+</code></pre><p>如果你在阅读这篇文章，相信你一定很想了解RxJava以及如何在Android应用中使用它。可能你已经见过RxJava的代码了，但仍然有些疑惑，愿你能在这篇文章里找到答案。</p>
 <p>当我第一次使用RxJava的时候我只是在照搬代码，这些代码能跑起来，但是我对RxJava的基础部分仍然存在误解，而且我找不到好的源码来学习。所以为了理解RxJava，我不得不一点一点学习，踩了不少坑。</p>
 <p>为了不让你把我踩过的坑再踩一遍，我会基于我的学习成果写一些例子出来，目的就是让你能够对RxJava有足够的了解，并能在你的Android应用中使用它。</p>
 <p>源码可以在这里找到。在每个例子的开始，我会写清每个代码段是属于哪个Activity的。我会将本文分为两个部分，在前三个例子里，我会着重讲解如何用RxJava异步加载数据；在后三个例子里，我会探索一些更高级的用法。</p>
