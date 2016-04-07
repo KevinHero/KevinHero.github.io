@@ -335,7 +335,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <p>原文链接：<a href="https://medium.com/@kurtisnusbaum/rxandroid-basics-part-1-c0d5edcf6850">https://medium.com/@kurtisnusbaum/rxandroid-basics-part-1-c0d5edcf6850</a></p>
+              <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#21407;&#25991;&#38142;&#25509;&#65306;&#10;https://medium.com/@kurtisnusbaum/rxandroid-basics-part-1-c0d5edcf6850</span><br></pre></td></tr></table></figure>
 <p>如果你在阅读这篇文章，相信你一定很想了解RxJava以及如何在Android应用中使用它。可能你已经见过RxJava的代码了，但仍然有些疑惑，愿你能在这篇文章里找到答案。</p>
 <p>当我第一次使用RxJava的时候我只是在照搬代码，这些代码能跑起来，但是我对RxJava的基础部分仍然存在误解，而且我找不到好的源码来学习。所以为了理解RxJava，我不得不一点一点学习，踩了不少坑。</p>
 <p>为了不让你把我踩过的坑再踩一遍，我会基于我的学习成果写一些例子出来，目的就是让你能够对RxJava有足够的了解，并能在你的Android应用中使用它。</p>
@@ -641,10 +641,7 @@
               <p>这份是我工作以来，总结的小知识库，有些知识点现在看来太LOW了，把还觉得有用的分享出来！</p>
 <h3 id="Genymotion_u4E0B_u8F7D_u865A_u62DF_u955C_u50CFConnection_timeout"><a href="#Genymotion_u4E0B_u8F7D_u865A_u62DF_u955C_u50CFConnection_timeout" class="headerlink" title="Genymotion下载虚拟镜像Connection timeout"></a>Genymotion下载虚拟镜像Connection timeout</h3><p>Add new device出现的问题：</p>
 <p>Failed to deploy virtual device.<br>Unable to create virtual device.Connection timeout occurred.</p>
-<p>解决方案：</p>
-<p>当选择Google Nexus 5 - 6.0.0 - API 23 - 1080x1920下载device失败后，到C:\Users\用户主目录\AppData\Local\Genymobile\Genymotion\ova下看到genymotion_vbox86p_6.0_160114_090449.ova，大小却是0KB，在C:\Users\用户主目录\AppData\Local\Genymobile\genymotion.log，打开该文件，找到类似</p>
-<pre><code>“http://files2.genymotion.com/dists/6.0.0/ova/genymotion_vbox86p_6.0_160114_090449.ova”路径，即您想要下载的镜像文件URL；`
-</code></pre><p>用迅雷去下载，下载完成后放到C:\Users\用户主目录\AppData\Local\Genymobile\Genymotion\ova；<br>重新点击Google Nexus 5 - 6.0.0 - API 23 - 1080x1920去下载，验证安装后即会显示在设备列表中。<br>
+<p>解决方案：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#24403;&#36873;&#25321;Google Nexus 5 - 6.0.0 - API 23 - 1080x1920&#19979;&#36733;device&#22833;&#36133;&#21518;&#65292;&#21040;C:\Users\&#29992;&#25143;&#20027;&#30446;&#24405;\AppData\Local\Genymobile\Genymotion\ova&#19979;&#30475;&#21040;genymotion_vbox86p_6.0_160114_090449.ova&#65292;&#22823;&#23567;&#21364;&#26159;0KB&#65292;&#22312;C:\Users\&#29992;&#25143;&#20027;&#30446;&#24405;\AppData\Local\Genymobile\genymotion.log&#65292;&#25171;&#24320;&#35813;&#25991;&#20214;&#65292;&#25214;&#21040;&#31867;&#20284;&#10;    &#10;    &#8220;http://files2.genymotion.com/dists/6.0.0/ova/genymotion_vbox86p_6.0_160114_090449.ova&#8221;&#36335;&#24452;&#65292;&#21363;&#24744;&#24819;&#35201;&#19979;&#36733;&#30340;&#38236;&#20687;&#25991;&#20214;URL&#65307;`&#10;&#10;&#29992;&#36805;&#38647;&#21435;&#19979;&#36733;&#65292;&#19979;&#36733;&#23436;&#25104;&#21518;&#25918;&#21040;C:\Users\&#29992;&#25143;&#20027;&#30446;&#24405;\AppData\Local\Genymobile\Genymotion\ova&#65307;&#10;&#37325;&#26032;&#28857;&#20987;Google Nexus 5 - 6.0.0 - API 23 - 1080x1920&#21435;&#19979;&#36733;&#65292;&#39564;&#35777;&#23433;&#35013;&#21518;&#21363;&#20250;&#26174;&#31034;&#22312;&#35774;&#22791;&#21015;&#34920;&#20013;&#12290;</span><br></pre></td></tr></table></figure></p>
           
       
     </div>
