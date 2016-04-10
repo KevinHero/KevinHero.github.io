@@ -1035,6 +1035,229 @@ public void afterTextChanged(Editable s) { }
   </entry>
   
   <entry>
+    <title><![CDATA[Android小经验]]></title>
+    <link href="http://kevinhero.github.io/2016/03/23/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/"/>
+    <id>http://kevinhero.github.io/2016/03/23/小知识点/你应该知道的那些Android小经验/你应该知道的那些Android小经验/</id>
+    <published>2016-03-23T15:33:02.000Z</published>
+    <updated>2016-04-10T10:02:22.000Z</updated>
+    <content type="html"><![CDATA[<p>原文出处：<a href="http://jayfeng.com/2016/03/18/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/" target="_blank" rel="external">http://jayfeng.com/</a> </p>
+<p>做Android久了，就会踩很多坑，被坑的多了就有经验了，闲暇之余整理了部分，现挑选一些重要或者偏门的“小”经验做个记录。</p>
+<h2 id="u67E5_u770BSQLite_u65E5_u5FD7"><a href="#u67E5_u770BSQLite_u65E5_u5FD7" class="headerlink" title="查看SQLite日志"></a>查看SQLite日志</h2><p><code>adb shell setprop log.tag.SQLiteLog V</code></p>
+<p><code>adb shell setprop log.tag.SQLiteStatements V</code></p>
+<p>因为实现里用了Log.isLoggable(TAG, Log.VERBOSE)做了判断，LessCode的LogLess中也参考了这种机制：<a href="https://github.com/openproject/LessCode/blob/master/lesscode-core/src/main/java/com/jayfeng/lesscode/core/LogLess.java" target="_blank" rel="external">LogLess</a>。<br>使用这种方法就可以在Release版本也能做到查看应用的打印日志了。</p>
+<h2 id="PNG_u4F18_u5316"><a href="#PNG_u4F18_u5316" class="headerlink" title="PNG优化"></a>PNG优化</h2><p>APK打包会自动对PNG进行无损压缩，如果自行无损压缩是无效的。<br>当然进行有损压缩是可以的：<a href="https://tinypng.com/" target="_blank" rel="external">https://tinypng.com/</a></p>
+<h2 id="Tcpdump_u6293_u5305"><a href="#Tcpdump_u6293_u5305" class="headerlink" title="Tcpdump抓包"></a>Tcpdump抓包</h2><a id="more"></a>
+<p>有些模拟器比如genymotion自带了tcpdump，如果没有的话，需要下载tcpdump:<br><a href="http://www.strazzere.com/android/tcpdump" target="_blank" rel="external">http://www.strazzere.com/android/tcpdump</a><br>把tcpdump push到/data/local下，抓包命令：</p>
+<p><code>adb shell  /data/local/tcpdump -i any -p -s 0 -w /sdcard/capture.pcap</code></p>
+<p>很多开发者服务都需要绑定签名信息，用下面的命令可以查看签名：</p>
+<p><code>keytool -list -v -keystore release.jks</code></p>
+<p>注意，这个是需要密码的，可以查看MD5, SHA1，SHA256等等。</p>
+<h2 id="u5355_u4F8B_u6A21_u5F0F_28_u61D2_u6C49_u5F0F_29_u7684_u66F4_u597D_u7684_u5199_u6CD5"><a href="#u5355_u4F8B_u6A21_u5F0F_28_u61D2_u6C49_u5F0F_29_u7684_u66F4_u597D_u7684_u5199_u6CD5" class="headerlink" title="单例模式(懒汉式)的更好的写法"></a>单例模式(懒汉式)的更好的写法</h2><p>特别说到这个问题，是因为网上很多这样的代码：</p>
+<p><code>public class Singleton {</code></p>
+<p><code>private static Singleton instance;</code></p>
+<p><code>private Singleton (){}</code></p>
+<p><code>public static Singleton getInstance() {</code></p>
+<p><code>if</code> <code>(instance == ``null``) {</code></p>
+<p><code>instance = ``new</code> <code>Singleton();</code></p>
+<p><code>}</code></p>
+<p><code>return</code> <code>instance;</code></p>
+<p><code>}</code></p>
+<p><code>}</code></p>
+<p>这种写法线程不安全，改进一下，加一个同步锁：</p>
+<p><code>public class Singleton {</code></p>
+<p><code>private static Singleton instance;</code></p>
+<p><code>private Singleton (){}</code></p>
+<p><code>public static synchronized Singleton getInstance() {</code></p>
+<p><code>if</code> <code>(instance == ``null``) {</code></p>
+<p><code>instance = ``new</code> <code>Singleton();</code></p>
+<p><code>}</code></p>
+<p><code>return</code> <code>instance;</code></p>
+<p><code>}</code></p>
+<p><code>}</code></p>
+<p>网上这样的代码更多，可以很好的工作，但是缺点是效率低。<br>实际上，早在JDK1.5就引入volatile关键字，所以又有了一种更好的双重校验锁写法：</p>
+<p><code>public class Singleton {</code></p>
+<p><code>private volatile static Singleton singleton;</code></p>
+<p><code>private Singleton (){}</code></p>
+<p><code>public static Singleton getSingleton() {</code></p>
+<p><code>if</code> <code>(singleton == ``null``) {</code></p>
+<p><code>synchronized (Singleton.class) {</code></p>
+<p><code>if</code> <code>(singleton == ``null``) {</code></p>
+<p><code>singleton = ``new</code> <code>Singleton();</code></p>
+<p><code>}</code></p>
+<p><code>}</code></p>
+<p><code>}</code></p>
+<p><code>return</code> <code>singleton;</code></p>
+<p><code>}</code></p>
+<p><code>}</code></p>
+<p>注意，别忘记volatile关键字哦，否则就是10重，100重也可能还是会出问题。<br>上面是用的最多的，还有一种静态内部类写法更推荐：</p>
+<p><code>publlic class Singleton {</code></p>
+<p><code>private Singleton() {}</code></p>
+<p><code>private static class SingletonLoader {</code></p>
+<p><code>private static final Singleton INSTANCE = ``new</code> <code>Singleton();</code></p>
+<p><code>}</code></p>
+<p><code>public static Singleton getInstance() {</code></p>
+<p><code>return</code> <code>SingletonLoader.INSTANCE;</code></p>
+<p><code>}</code></p>
+<p><code>}</code></p>
+<h2 id="u591A_u8FDB_u7A0BApplication"><a href="#u591A_u8FDB_u7A0BApplication" class="headerlink" title="多进程Application"></a>多进程Application</h2><p>是不是经常发现Application里的方法执行了多次？百思不得其解。<br>因为当有多个进程的时候，Application会执行多次，可以通过pid来判断那些方法只执行一次，避免浪费资源。</p>
+<h2 id="u9690_u5F0F_u542F_u52A8Service"><a href="#u9690_u5F0F_u542F_u52A8Service" class="headerlink" title="隐式启动Service"></a>隐式启动Service</h2><p>这是Android5.0的一个改动，不支持隐式的Service调用。下面的代码在Android 5.0+上会报错：Service Intent must be explicit：</p>
+<p><code>Intent serviceIntent = ``new</code> <code>Intent();</code></p>
+<p><code>serviceIntent.setAction(``&quot;com.jayfeng.MyService&quot;``);</code></p>
+<p><code>context.startService(serviceIntent);</code></p>
+<p>可改成如下：</p>
+<p><code>// 指定具体Service类，或者有packageName也行</code></p>
+<p><code>Intent serviceIntent = ``new</code> <code>Intent(context, MyService.class);</code></p>
+<p><code>context.startService(serviceIntent);</code></p>
+<h2 id="fill_parent_u7684_u5BFF_u547D"><a href="#fill_parent_u7684_u5BFF_u547D" class="headerlink" title="fill_parent的寿命"></a>fill_parent的寿命</h2><p>在Android2.2之后，支持使用match_parent。你的布局文件里是不是既有fill_parent和match_parent显得很乱？<br>如果你现在的minSdkVersion是8+的话，就可以忽略fill_parent，统一使用match_parent了，否则请使用fill_parent。</p>
+<h2 id="ListView_u7684_u5C40_u90E8_u5237_u65B0"><a href="#ListView_u7684_u5C40_u90E8_u5237_u65B0" class="headerlink" title="ListView的局部刷新"></a>ListView的局部刷新</h2><p>有的列表可能notifyDataSetChanged()代价有点高，最好能局部刷新。<br>局部刷新的重点是，找到要更新的那项的View，然后再根据业务逻辑更新数据即可。</p>
+<p><code>private void updateItem(int index) {</code></p>
+<p><code>int visiblePosition = listView.getFirstVisiblePosition();</code></p>
+<p><code>if</code> <code>(index - visiblePosition &gt;= 0) {</code></p>
+<p><code>//得到要更新的item的view</code></p>
+<p><code>View view = listView.getChildAt(index - visiblePosition);</code></p>
+<p><code>// 更新界面（示例参考）</code></p>
+<p><code>// TextView nameView = ViewLess.$(view, R.id.name);</code></p>
+<p><code>// nameView.setText(&quot;update &quot; + index);</code></p>
+<p><code>// 更新列表数据（示例参考）</code></p>
+<p><code>// list.get(index).setName(&quot;Update &quot; + index);</code></p>
+<p><code>}</code></p>
+<p><code>}</code></p>
+<p>强调一下，最后那个列表数据别忘记更新， 不然数据源不变，一滚动可能又还原了。</p>
+<h2 id="u7CFB_u7EDF_u65E5_u5FD7_u4E2D_u51E0_u4E2A_u91CD_u8981_u7684TAG"><a href="#u7CFB_u7EDF_u65E5_u5FD7_u4E2D_u51E0_u4E2A_u91CD_u8981_u7684TAG" class="headerlink" title="系统日志中几个重要的TAG"></a>系统日志中几个重要的TAG</h2><p><code>// 查看Activity跳转</code></p>
+<p><code>adb logcat -v time | grep ActivityManager</code></p>
+<p><code>// 查看崩溃信息</code></p>
+<p><code>adb logcat -v time | grep AndroidRuntime</code></p>
+<p><code>// 查看Dalvik信息，比如GC</code></p>
+<p><code>adb logcat -v time | grep ``&quot;D\/Dalvik&quot;</code></p>
+<p><code>// 查看art信息，比如GC</code></p>
+<p><code>adb logcat -v time | grep ``&quot;I\/art&quot;</code></p>
+<h2 id="u4E00_u884C_u5C45_u4E2D_uFF0C_u591A_u884C_u5C45_u5DE6_u7684TextView"><a href="#u4E00_u884C_u5C45_u4E2D_uFF0C_u591A_u884C_u5C45_u5DE6_u7684TextView" class="headerlink" title="一行居中，多行居左的TextView"></a>一行居中，多行居左的TextView</h2><p>这个一般用于提示信息对话框，如果文字是一行就居中，多行就居左。<br>在TextView外套一层wrap_content的ViewGroup即可简单实现：</p>
+<p><code>&lt;RelativeLayout xmlns:android=``&quot;&lt;http://schemas.android.com/apk/res/android&gt;&quot;</code></p>
+<p><code>android:layout_width=``&quot;match_parent&quot;</code></p>
+<p><code>android:layout_height=``&quot;match_parent&quot;``&gt;</code></p>
+<p><code>&lt;!-- 套一层wrap_content的ViewGroup --&gt;</code></p>
+<p><code>&lt;LinearLayout</code></p>
+<p><code>android:layout_width=``&quot;wrap_content&quot;</code></p>
+<p><code>android:layout_height=``&quot;wrap_content&quot;</code></p>
+<p><code>android:layout_centerInParent=``&quot;true&quot;``&gt;</code></p>
+<p><code>&lt;TextView</code></p>
+<p><code>android:layout_width=``&quot;wrap_content&quot;</code></p>
+<p><code>android:layout_height=``&quot;wrap_content&quot;</code></p>
+<p><code>android:text=``&quot;@string/hello_world&quot;</code> <code>/&gt;</code></p>
+<p><code>&lt;/LinearLayout&gt;</code></p>
+<p><code>&lt;/RelativeLayout&gt;</code></p>
+<h2 id="setCompoundDrawablesWithIntrinsicBounds_28_29"><a href="#setCompoundDrawablesWithIntrinsicBounds_28_29" class="headerlink" title="setCompoundDrawablesWithIntrinsicBounds()"></a>setCompoundDrawablesWithIntrinsicBounds()</h2><p>网上一大堆setCompoundDrawables()方法无效不显示的问题，然后解决方法是setBounds，需要计算大小…<br>不用这么麻烦，用setCompoundDrawablesWithIntrinsicBounds()这个方法最简单！</p>
+<h2 id="u8BA1_u7B97_u7A0B_u5E8F_u8FD0_u884C_u65F6_u95F4"><a href="#u8BA1_u7B97_u7A0B_u5E8F_u8FD0_u884C_u65F6_u95F4" class="headerlink" title="计算程序运行时间"></a>计算程序运行时间</h2><p>为了计算一段代码运行时间，一般的做法是，在代码的前面加个startTime，在代码的后面把当前时间减去startTime，这个时间差就是运行时间。<br>这里提供一种写起来更方便的方法，完全无时间逻辑，只是加一个打印log就够了。</p>
+<p><code>// 测试setContentView()的时间</code></p>
+<p><code>Log.d(``&quot;TAG&quot;``, ``&quot;Start&quot;``);</code></p>
+<p><code>setContentView(R.layout.activity_http);</code></p>
+<p><code>Log.d(``&quot;TAG&quot;``, ``&quot;End&quot;``);</code></p>
+<p>没有计算时间的逻辑，这能测出来？<br>把日志过滤出来，运行命令“adb logcat -v time | grep TAG”：</p>
+<p><code>03-18 14:47:25.477 D/TAG     (14600): Start</code></p>
+<p><code>03-18 14:47:25.478 D/TAG     (14600): End</code></p>
+<p>通过-v time参数，可以比较日志左边的时间来算出中间的代码运行的时间。</p>
+<h2 id="JAVA_u5F15_u7528_u7C7B_u578B_u4E00_u89C8_u8868"><a href="#JAVA_u5F15_u7528_u7C7B_u578B_u4E00_u89C8_u8868" class="headerlink" title="JAVA引用类型一览表"></a>JAVA引用类型一览表</h2><p>对象引用：强引用 > 软引用 > 弱引用 > 虚引用。</p>
+<p>引用类型回收时机用途生存时间强引用从来不会对象的一般状态JVM停止运行时终止软引用在内存不足时对象缓存内存不足时终止弱引用在垃圾回收时对象缓存GC运行后终止虚引用在垃圾回收时对象跟踪GC运行后终止</p>
+<h2 id="Context_u4F7F_u7528_u573A_u666F"><a href="#Context_u4F7F_u7528_u573A_u666F" class="headerlink" title="Context使用场景"></a>Context使用场景</h2><p>为了防止Activity，Service等这样的Context泄漏于一些生命周期更长的对象，可以使用生命周期更长的ApplicationContext，但是不是所有的Context的都能替换为ApplicationContext<br>这是网上流传的一份表格：</p>
+<p>ApplicationActivityServiceContentProviderBroadcastReceiverShow Dialog否是否否否Start Activity否是否否否Layout Inflation否是否否否Start Service是是是是是Bind Service是是是是否Send Broadcast是是是是是Regist BroadcastReceiver是是是是否Load Resource Value是是是是是</p>
+<h2 id="u56FE_u7247_u7F13_u5B58_u5927_u5C0F"><a href="#u56FE_u7247_u7F13_u5B58_u5927_u5C0F" class="headerlink" title="图片缓存大小"></a>图片缓存大小</h2><p>现在很多图片库需要给图片设置一个最大缓存，但是这个值设置多少合适呢？<br>高端机和低端机的配置显然应该不同，可以考虑设置一个动态值。<br>建议设置为应用可用内存的1/8:</p>
+<p><code>int memoryCache = (int) (Runtime.getRuntime().maxMemory() / 8);</code></p>
+<h2 id="u7CFB_u7EDF_u5185_u7F6E_u7684_u4E00_u4E9B_u5DE5_u5177_u7C7B"><a href="#u7CFB_u7EDF_u5185_u7F6E_u7684_u4E00_u4E9B_u5DE5_u5177_u7C7B" class="headerlink" title="系统内置的一些工具类"></a>系统内置的一些工具类</h2><p>在AOSP源码全局搜了一下包含Util关键字的类，整理出这个列表供大家参考：</p>
+<p><code>// 系统</code></p>
+<p><code>./android/database/DatabaseUtils.java</code></p>
+<p><code>./android/transition/TransitionUtils.java</code></p>
+<p><code>./android/view/animation/AnimationUtils.java</code></p>
+<p><code>./android/view/ViewAnimationUtils.java</code></p>
+<p><code>./android/webkit/URLUtil.java</code></p>
+<p><code>./android/bluetooth/le/BluetoothLeUtils.java</code></p>
+<p><code>./android/gesture/GestureUtils.java</code></p>
+<p><code>./android/text/TextUtils.java</code></p>
+<p><code>./android/text/format/DateUtils.java</code></p>
+<p><code>./android/os/FileUtils.java</code></p>
+<p><code>./android/os/CommonTimeUtils.java</code></p>
+<p><code>./android/net/NetworkUtils.java</code></p>
+<p><code>./android/util/MathUtils.java</code></p>
+<p><code>./android/util/TimeUtils.java</code></p>
+<p><code>./android/util/ExceptionUtils.java</code></p>
+<p><code>./android/util/DebugUtils.java</code></p>
+<p><code>./android/drm/DrmUtils.java</code></p>
+<p><code>./android/media/ThumbnailUtils.java</code></p>
+<p><code>./android/media/ImageUtils.java</code></p>
+<p><code>./android/media/Utils.java</code></p>
+<p><code>./android/opengl/GLUtils.java</code></p>
+<p><code>./android/opengl/ETC1Util.java</code></p>
+<p><code>./android/telephony/PhoneNumberUtils.java</code></p>
+<p><code>// 设计和支持库</code></p>
+<p><code>./design/src/android/support/design/widget/ViewGroupUtils.java</code></p>
+<p><code>./design/src/android/support/design/widget/ThemeUtils.java</code></p>
+<p><code>./design/src/android/support/design/widget/ViewUtils.java</code></p>
+<p><code>./design/lollipop/android/support/design/widget/ViewUtilsLollipop.java</code></p>
+<p><code>./design/base/android/support/design/widget/AnimationUtils.java</code></p>
+<p><code>./design/base/android/support/design/widget/MathUtils.java</code></p>
+<p><code>./design/honeycomb/android/support/design/widget/ViewGroupUtilsHoneycomb.java</code></p>
+<p><code>./v7/recyclerview/src/android/support/v7/widget/helper/ItemTouchUIUtil.java</code></p>
+<p><code>./v7/recyclerview/src/android/support/v7/widget/helper/ItemTouchUIUtilImpl.java</code></p>
+<p><code>./v7/recyclerview/src/android/support/v7/util/MessageThreadUtil.java</code></p>
+<p><code>./v7/recyclerview/src/android/support/v7/util/AsyncListUtil.java</code></p>
+<p><code>./v7/recyclerview/src/android/support/v7/util/ThreadUtil.java</code></p>
+<p><code>./v7/recyclerview/tests/src/android/support/v7/widget/AsyncListUtilLayoutTest.java</code></p>
+<p><code>./v7/recyclerview/tests/src/android/support/v7/util/AsyncListUtilTest.java</code></p>
+<p><code>./v7/recyclerview/tests/src/android/support/v7/util/ThreadUtilTest.java</code></p>
+<p><code>./v7/appcompat/src/android/support/v7/graphics/drawable/DrawableUtils.java</code></p>
+<p><code>./v7/appcompat/src/android/support/v7/widget/DrawableUtils.java</code></p>
+<p><code>./v7/appcompat/src/android/support/v7/widget/ThemeUtils.java</code></p>
+<p><code>./v7/appcompat/src/android/support/v7/widget/ViewUtils.java</code></p>
+<p><code>./v4/tests/java/android/support/v4/graphics/ColorUtilsTest.java</code></p>
+<p><code>./v4/jellybean-mr1/android/support/v4/text/TextUtilsCompatJellybeanMr1.java</code></p>
+<p><code>./v4/jellybean/android/support/v4/app/BundleUtil.java</code></p>
+<p><code>./v4/jellybean/android/support/v4/app/NavUtilsJB.java</code></p>
+<p><code>./v4/java/android/support/v4/app/NavUtils.java</code></p>
+<p><code>./v4/java/android/support/v4/database/DatabaseUtilsCompat.java</code></p>
+<p><code>./v4/java/android/support/v4/graphics/ColorUtils.java</code></p>
+<p><code>./v4/java/android/support/v4/text/TextUtilsCompat.java</code></p>
+<p><code>./v4/java/android/support/v4/util/TimeUtils.java</code></p>
+<p><code>./v4/java/android/support/v4/util/DebugUtils.java</code></p>
+<p><code>./v4/java/android/support/v4/content/res/TypedArrayUtils.java</code></p>
+<p>这么多工具类，一定可以找到对你有用的。</p>
+<h2 id="ClipPadding"><a href="#ClipPadding" class="headerlink" title="ClipPadding"></a>ClipPadding</h2><p>这个不多说，ListView的ClipPadding设为false，就能为ListView设置各种padding而不会出现丑陋的滑动“禁区”了。</p>
+<h2 id="u5F3A_u5927_u7684dumpsys"><a href="#u5F3A_u5927_u7684dumpsys" class="headerlink" title="强大的dumpsys"></a>强大的dumpsys</h2><p>dumpsys可以查看系统服务和状态，非常强大，可通过如下查看所有支持的子命令：</p>
+<p><code>dumpsys | grep ``&quot;DUMP OF SERVICE&quot;</code></p>
+<p>这里列举几个稍微常用的：</p>
+<p>子命令备注activity显示所有的activities的信息cpuinfo显示CPU信息window显示键盘，窗口和它们的关系meminfo内存信息（meminfo $package_name or $pid 使用包名或者进程id显示内存信息）alarm显示Alarm信息statusbar显示状态栏相关的信息（找出广告通知属于哪个应用）usagestats每个界面启动的时间</p>
+<h2 id="bugreport_u547D_u4EE4"><a href="#bugreport_u547D_u4EE4" class="headerlink" title="bugreport命令"></a>bugreport命令</h2><p>很多人都用过adb logcat，但是如果想要更详细的信息，logcat则无能为力。<br>所以大多数手机厂商测试更多的是用adb bugreport来抓log给开发人员分析。</p>
+<p><code>// 除了log，还包括启动后的系统状态,包括进程列表，内存信息，VM信息等等</code></p>
+<p><code>// 而且不像logcat是一直打印的，bugreport命令输出到当前时间就停止结束了。</code></p>
+<p><code>adb bugreport &gt; main.log</code></p>
+<h2 id="dpi_u6587_u4EF6_u5939_u7684_u6362_u7B97_u6BD4_u4F8B"><a href="#dpi_u6587_u4EF6_u5939_u7684_u6362_u7B97_u6BD4_u4F8B" class="headerlink" title="dpi文件夹的换算比例"></a>dpi文件夹的换算比例</h2><p>之前的ldpi基本可以抛弃了，主流的dpi已经从很早之前的mdip转移到了xhdpi了，特别提醒。</p>
+<p>PPIRESOLUTIONDPPXmdpi(160dp)320P11hdpi(240dp)480P11.5xhdpi(320dp)720P12xxhdpi(480dpi)1080P13</p>
+<h2 id="u66F4_u65B0_u5A92_u4F53_u5E93_u6587_u4EF6"><a href="#u66F4_u65B0_u5A92_u4F53_u5E93_u6587_u4EF6" class="headerlink" title="更新媒体库文件"></a>更新媒体库文件</h2><p>以前做ROM的时候经常碰到一些第三方软件（某音乐APP）下载了新文件或删除文件之后，但是媒体库并没有更新，因为这个是需要第三方软件主动触发。</p>
+<p><code>// 通知媒体库更新单个文件状态</code></p>
+<p><code>Uri fileUri = Uri.fromFile(file);</code></p>
+<p><code>sendBroadcast(``new</code> <code>Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,fileUri));</code></p>
+<p>媒体库会在手机启动，SD卡插拔的情况下进行全盘扫描，不是实时的而且代价比较大，所以单个文件的刷新很有必要。</p>
+<h2 id="Monkey_u53C2_u6570"><a href="#Monkey_u53C2_u6570" class="headerlink" title="Monkey参数"></a>Monkey参数</h2><p>大家都知道，跑monkey的参数设置有一些要注意的地方，比如太快了不行不切实际，太慢了也不行等等，这里给出一个参考：</p>
+<p><code>adb shell monkey -p &lt;packageName&gt; -s 1000 --ignore-crashes --ignore-timeouts --ignore-security-exceptions  --pct-trackball 0 --pct-nav 0 --pct-majornav 0 --pct-anyevent 0  -v --throttle 300 1200000000</code></p>
+<p>一边跑monkey，一边抓log吧。</p>
+<p>无论是大经验还是小经验，有用就是好经验。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>原文出处：<a href="http://jayfeng.com/2016/03/18/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/">http://jayfeng.com/</a> </p>
+<p>做Android久了，就会踩很多坑，被坑的多了就有经验了，闲暇之余整理了部分，现挑选一些重要或者偏门的“小”经验做个记录。</p>
+<h2 id="u67E5_u770BSQLite_u65E5_u5FD7"><a href="#u67E5_u770BSQLite_u65E5_u5FD7" class="headerlink" title="查看SQLite日志"></a>查看SQLite日志</h2><p><code>adb shell setprop log.tag.SQLiteLog V</code></p>
+<p><code>adb shell setprop log.tag.SQLiteStatements V</code></p>
+<p>因为实现里用了Log.isLoggable(TAG, Log.VERBOSE)做了判断，LessCode的LogLess中也参考了这种机制：<a href="https://github.com/openproject/LessCode/blob/master/lesscode-core/src/main/java/com/jayfeng/lesscode/core/LogLess.java">LogLess</a>。<br>使用这种方法就可以在Release版本也能做到查看应用的打印日志了。</p>
+<h2 id="PNG_u4F18_u5316"><a href="#PNG_u4F18_u5316" class="headerlink" title="PNG优化"></a>PNG优化</h2><p>APK打包会自动对PNG进行无损压缩，如果自行无损压缩是无效的。<br>当然进行有损压缩是可以的：<a href="https://tinypng.com/">https://tinypng.com/</a></p>
+<h2 id="Tcpdump_u6293_u5305"><a href="#Tcpdump_u6293_u5305" class="headerlink" title="Tcpdump抓包"></a>Tcpdump抓包</h2>]]>
+    
+    </summary>
+    
+      <category term="知识库" scheme="http://kevinhero.github.io/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
+    
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Android开发代码片段]]></title>
     <link href="http://kevinhero.github.io/2016/03/21/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/android%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5/"/>
     <id>http://kevinhero.github.io/2016/03/21/小知识点/android代码片段/</id>
@@ -3819,47 +4042,6 @@ GitHub，Slack，甚至 Minecraft
     </summary>
     
       <category term="Kotlin" scheme="http://kevinhero.github.io/tags/Kotlin/"/>
-    
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Ibeacon]]></title>
-    <link href="http://kevinhero.github.io/2016/01/25/%E9%9A%8F%E7%AC%94/Ibeacon/"/>
-    <id>http://kevinhero.github.io/2016/01/25/随笔/Ibeacon/</id>
-    <published>2016-01-25T04:01:14.000Z</published>
-    <updated>2016-02-19T09:12:16.000Z</updated>
-    <content type="html"><![CDATA[<h3 id="u662F_u4EC0_u4E48_uFF1F"><a href="#u662F_u4EC0_u4E48_uFF1F" class="headerlink" title="是什么？"></a>是什么？</h3><p>iBeacon是apple公司提出的“一种可以让附近手持电子设备检测到的一种新的低功耗、低成本信号传送器”的一套可用于室内定位系统的协议。 这种技术可以使一个智能手机或其他装置在一个iBeacon基站的感应范围内执行相应的命令。</p>
-<p>这是帮助智能手机确定他们大概位置或环境的一个应用程序。在一个iBeacon基站的帮助下，智能手机的软件能大概找到它和这个iBeacon基站的相对位置。iBeacon能让手机收到附近售卖商品的通知，也可以让消费者不用拿出钱包或信用卡就能在销售点的POS机上完成支付。iBeacon技术通过低功耗蓝牙（BLE），也就是我们所说的智能蓝牙来实现。</p>
-<p>iBeacon为利用低功耗蓝牙可以近距离感测的功能来传输通用唯一识别码的一个app或操作系统。 这个识别码可以在网上被查找到用以确定设备的物理位置或者可以在设备上触发一个动作比如在社交媒体签到或者推送通知。</p>
-<p>各种供应商创造了不同形式的iBeacon硬件设备，包括小硬币电池设备，随身碟和蓝牙4.0通用加密狗。<br><a id="more"></a></p>
-<h3 id="u529F_u80FD"><a href="#u529F_u80FD" class="headerlink" title="功能"></a>功能</h3><p>一套iBeacon的部署由一个或多个在一定范围内发射传输他们唯一的识别码iBeacon信标设备组成。接收设备上的软件可以查找iBeacon并实现多种功能，比如通知用户，接收设备也可以通过链接iBeacons从iBeacon的通用属性配置服务来恢复价值。iBeacons不推送通知给接收设备（除了他们自己的ID），然而，手机软件可以使用从iBeacons接收到的信号来自己推送通知。</p>
-<h3 id="u533A_u57DF_u76D1_u6D4B"><a href="#u533A_u57DF_u76D1_u6D4B" class="headerlink" title="区域监测"></a>区域监测</h3><p>区域监测仅限20个区域，可以在后台运行，即使app在后台运行或者手机锁屏，依然有不同的应用通知监听app（用户）进入/退出该区。区域监测也给了关闭的app一个反应的机会，在进入相关区域时允许弹出小窗口。</p>
-<h3 id="u5206_u7C7B"><a href="#u5206_u7C7B" class="headerlink" title="分类"></a>分类</h3><p>分类工作仅应用在前端，但是将返回数组iBeacons的所有属性（UUID等）。</p>
-<p>一个iOS设备接收一个iBeacon的传输可以近乎于iBeacon的距离，iBeacon的传输距离分为3个不同的范围：</p>
-<p>最近：几厘米<br>中距：几米<br>远距：大于10米<br>当用户进入、退出或者在区域内徘徊时，iBeacon的广播有能力进行传播，根据用户和Beacon的距离，这三个距离范围可以相互交互。</p>
-<p>iBeacon传输的最大射程将取决于位置、现场布置、障碍物(例如在一个皮革手袋或厚情况下)。标准信号有近似的70米，远程信号可达450米。</p>
-<h3 id="u7535_u529B_u6D88_u8017"><a href="#u7535_u529B_u6D88_u8017" class="headerlink" title="电力消耗"></a>电力消耗</h3><p>Comparison of 16 major beacon hardware of battery life in months (higher is better) by Aislelabs’ The Hitchickers Guide to iBeacon Hardware[15]<br>低功耗蓝牙相比于传统蓝牙在功耗和效率方面有显著提高，在16个不同的iBeacon厂商的一项研究报告称，电池的寿命在1到24个月的范围之内。苹果公司，用一枚纽扣电池提供了1-3个月的生活，设置了100ms的广告频率，这样如果电池提供时间增加到2~3年就相当于广告频率增到到900ms。</p>
-<p>在部署beacon启用手机app时，手机电池的消耗是一个必须要考虑的因素。最新的报告显示附近有ibeacon时，旧的手机会消耗更多的电量，然而新一点的手机在同样的环境下则更加高效。除了浏览手机消耗的时间，扫描附近的浏览量和信标数依然是电池消耗很重要的因素，正如Aislelabs指出的报告一样。在后续的报告中，Aislelabs发现了苹果5s，苹果5c和旧版的苹果4s在电池消耗方面的一个大幅的改善。在10个ibeacons的周围，苹果4s每小时消耗了11%的电量而苹果5s则每小时比它少消耗5%的电量。一个高效节能的ibeacon应用程序需要考虑这些方面去保持应用的响应性和电池消耗之间的平衡。</p>
-<h3 id="u6700_u65B0_u8FDB_u5C55"><a href="#u6700_u65B0_u8FDB_u5C55" class="headerlink" title="最新进展"></a>最新进展</h3><p>2013年中苹果公司介绍了iBeacons，专家撰写了文章表示iBeacons怎样通过简化支付提供现场支持来帮助零售业。随着IOS7的推出，零售商和其他中小型企业将能够使用蓝牙4.0技术。据报道，2013年12月6日苹果在其254个零售店中使用了iBeacons。</p>
-<p>2014年5月，花费最低5美金到30美金以上就可购买不同的iBeacons硬件设备。每一个不同的设备对自己的默认发射功率和广告频率都有不同的默认设置。一些硬件的广告频率可以快到每100毫秒一次而还有一些的可以低至1赫兹。 iBeacon技术还在襁褓期，有报道指出一个软件存在的异样，最新安卓系统的蓝牙堆栈在面对许多iBeacons时会崩溃。</p>
-<h3 id="u517C_u5BB9_u8BBE_u5907"><a href="#u517C_u5BB9_u8BBE_u5907" class="headerlink" title="兼容设备"></a>兼容设备</h3><p>支持蓝牙4.0的IOS设备（iPhone4s及以上，iPad第三代及以上，iPad mini第一代及以上，iPod Touch第五代）。<br>支持OS X Mavericks 10.9操作系统和蓝牙4.0的苹果计算机。<br>安卓4.3及以上（如三星 Galaxy S3/S4/S4 Mini, 三星 Galaxy Note 2/3, HTC One, Google/LG Nexus 7 2013 version/Nexus 4/Nexus 5, HTC Butterfly, OnePlus One）<br>支持Lumia Cyan及以上更新服务Windows Phone设备（报告显示，不包含Windows Phone 8.1）</p>
-<h3 id="u7F3A_u70B9"><a href="#u7F3A_u70B9" class="headerlink" title="缺点"></a>缺点</h3><p>iBeacon协议是开放的，且易于伪造，部署的节点可能被其他人恶意使用，甚至伪造一个ID完全相同的 Beacon，支付安全很难保证。该应用可以搜集用户的位置信息、行为信息，这些隐私信息的安全要如何保障尚待规范。</p>
-<p>iBeacon太麻烦，对于用户来说手机上需要下载不同的 App 才能在不同的商场、地段体验，对于商户来说也没有一个通用、快捷的后台。</p>
-<p>手机必须支持蓝牙4.0以上并保持蓝牙开启状态</p>
-<p>iBeacons由于依赖于蓝牙技术，传输距离较大，而且通过基站传输数据，那么，如果基站被攻击，连接到基站的设备就很危险了。iBeacons是通过蓝牙实现的，一般来说两个设备建立连接都需要几秒甚至十几秒吧，操作也比较繁琐，这个对于用户来说体验就相对较差了。</p>
-<p>在再室外环境 Beacon的信号特别不稳定，尤其是一大风，本来已经搜索到的Beacon瞬间就“风逝”了。<br>测距技术主要有三种：AoA（角测距）、RSSI（基于接收信号强度）和ToA（时间测距）。<br>低功耗蓝牙（即BLE）的测距主要是通过RSSI。虽然从一定程度上说RSSI只需较少的通信开销和较低的实现复杂度,这在能量有限的网络节点中是非常重要的。<br>同时它也有一个致命的缺点——过渡依赖环境。RSSI易受环境变化影响，从而只能是大致测距，想要提高精确度，需要至少三个Beacon，利用圆覆盖区重叠区域得到比较精确的距离。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h3 id="u662F_u4EC0_u4E48_uFF1F"><a href="#u662F_u4EC0_u4E48_uFF1F" class="headerlink" title="是什么？"></a>是什么？</h3><p>iBeacon是apple公司提出的“一种可以让附近手持电子设备检测到的一种新的低功耗、低成本信号传送器”的一套可用于室内定位系统的协议。 这种技术可以使一个智能手机或其他装置在一个iBeacon基站的感应范围内执行相应的命令。</p>
-<p>这是帮助智能手机确定他们大概位置或环境的一个应用程序。在一个iBeacon基站的帮助下，智能手机的软件能大概找到它和这个iBeacon基站的相对位置。iBeacon能让手机收到附近售卖商品的通知，也可以让消费者不用拿出钱包或信用卡就能在销售点的POS机上完成支付。iBeacon技术通过低功耗蓝牙（BLE），也就是我们所说的智能蓝牙来实现。</p>
-<p>iBeacon为利用低功耗蓝牙可以近距离感测的功能来传输通用唯一识别码的一个app或操作系统。 这个识别码可以在网上被查找到用以确定设备的物理位置或者可以在设备上触发一个动作比如在社交媒体签到或者推送通知。</p>
-<p>各种供应商创造了不同形式的iBeacon硬件设备，包括小硬币电池设备，随身碟和蓝牙4.0通用加密狗。<br>]]>
-    
-    </summary>
-    
-      <category term="Ibeacon" scheme="http://kevinhero.github.io/tags/Ibeacon/"/>
     
       <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
