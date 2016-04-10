@@ -3,9 +3,9 @@
   <title><![CDATA[熊凯的个人博客]]></title>
   
   <link href="/atom.xml" rel="self"/>
-  <link href="http://yoursite.com/"/>
-  <updated>2016-04-06T10:49:36.000Z</updated>
-  <id>http://yoursite.com/</id>
+  <link href="http://kevinhero.github.io/"/>
+  <updated>2016-04-10T08:45:45.000Z</updated>
+  <id>http://kevinhero.github.io/</id>
   
   <author>
     <name><![CDATA[熊凯]]></name>
@@ -15,9 +15,286 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[使用AndroidStudio进行NDK开发（一）]]></title>
+    <link href="http://kevinhero.github.io/2016/04/09/Android%20Skills/%E4%BD%BF%E7%94%A8Android%20Studio%E8%BF%9B%E8%A1%8CNDK%E5%BC%80%E5%8F%91%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://kevinhero.github.io/2016/04/09/Android Skills/使用Android Studio进行NDK开发（一）/</id>
+    <published>2016-04-09T05:12:17.000Z</published>
+    <updated>2016-04-10T08:45:45.000Z</updated>
+    <content type="html"><![CDATA[<p>在AndroidStudio中进行开发比起以往的Eclipse要方便的多，下面来介绍下如何使用AndroidStudio这个IDE工具实现相关开发工作。</p>
+<ol>
+<li>准备工作</li>
+</ol>
+<p>在实际写代码之前，首先我们还是需要做一些准备工作：</p>
+<p>下载开发包：Android官方下载页面<br>配置系统环境变量<br>下载好开发包之后，直接解压到任意目录，然后需要配置一下系统环境变量，之所以要配置环境变量，是为了方便使用命令ndk-build脚本进行编译。配置参考如下：</p>
+<pre><code># 在.bash_profile中配置如下代码
+</code></pre><p>export ANDROID_NDK/Users/liangqi/android-ndk<br>export PATH$ANDROID_NDK$PATH</p>
+<pre><code># 然后执行如下代码，更新配置文件
+</code></pre><p>source .bash_profile<br>其实编译C/C++代码不一定在AndroidStudio中，如果配置好环境变量，直接使用进入项目中的目录执行ndk-build命令即可在当前目录下生成一个的目录，里面存放了不同 平台的包，当然运行这个命令的前提是，这个目录下至少得有一个Android.mk文件，如果需要指定具体的编译平台，那么还需要添加一个Application.mk文件，当然，如果命令行让你头疼，那么你可以采用gradle的方式来解决这些问题，接下来我们将分别介绍这些使用方式。<br><a id="more"></a></p>
+<ol>
+<li>项目配置</li>
+</ol>
+<p>使用AndroidStudio开发前我们也要做点额外工作，我们需要在项目根目录下local.properties中添加编译的路径：</p>
+<p>ndkdirUsersliangqiandroidndk<br>如果这个文件不存在，你可以手动生成一个，然后再添加上述内容即可。完成这个步骤之后，我们就可以正式开始着手相关的开发工作了。之所以要配置这个目录，目的是让我们开发的项目在使用gradle编译时能够找到<code>NDK</code>相关编译路径</p>
+<p>那么，接下来的工作也分为两种情况：</p>
+<p>没有（C/C++）源码，别人已经提供好相应的文件，不需要编译代码<br>拥有（C/C++）源码，需要自己编译文件<br>2.1 已有.SO文件，不需要编译源码</p>
+<p>这类情况是最简单的，文件以及被其他人员编译好，或者是第三方库来提供的，那么我们只需要把相应文件放到AndroidStudio目录src/main/jniLibs/下即可，当然，肯定需要按CPU架构分不同的子目录，例如，如下：</p>
+<p><img src="https://p1.jscssimg.com/a61e938a106e7abf.png" alt=""><br>jniLibs是AndroidStudio默认提供的目录，用来存放已经编译好的文件，当然你也可以放在任意自定义目录下，例如src/main/libs，然后在build.gradle中指定相应的资源目录位置即可：</p>
+<p>android<br>    sourceSetsmain<br>        // 你的.so库的实际路径<br>        jniLibssrcDir ‘src/main/libs’ </p>
+<p>在导入文件完成之后，那么你可以在相应的类文件中，加载这个静态库，一般来说，文件如果由第三方提供，他在提供文件的同时也会提供相应的调用类文件，或者按之前双方定好的规则自己创建相应类文件，并生成相应的方法，之所以要约定好只因为，下的C/C++函数和桥接的函数命名是有约束的，规则如下：</p>
+<p>Java_PackageName_ClassName_MethodName<br>双方必须按这个规则来实现或者调用此函数，否则不会成功，例如，我们现在有一个函数：String stringFromJNI()的函数，它在com.example.hellojni.HelloJni这个文件下，这个函数用来返回一个字符串，功能由底层来实现，那么相应的语言开发文件中就必须按上述规则命名一个Java_com_example_hellojni_HelloJni_stringFromJNI( JNIEnv* env, jobject thiz )的函数，并返回一个字符串结果：</p>
+<p>#include </p>
+<p>#include<br>// 函数名格式必须按规矩来<br>jstring Java_com_example_hellojni_HelloJni_stringFromJNI JNIEnv env jobject thiz </p>
+<pre><code>return env-&gt;NewStringUTFenv &quot;Hello from JNI !  Compiled with ABI &quot; ABI 
+</code></pre><p>同样对应的文件也必须：</p>
+<p>文件必须在com.example.hellojni包名下<br>类文件名必须是HelloJni<br>方法名必须是stringFromJNI<br>package comexamplehellojni</p>
+<p>class HelloJni<br>     public static native String stringFromJNI</p>
+<pre><code>static 
+    // 加载 hellojni.so静态块
+    SystemloadLibrary&quot;hellojni&quot;
+</code></pre><p>2.2 有源码，需要编译.so文件</p>
+<p>如果有C/C++源码，没有文件，那么我们就得手动把源码文件编译成文件，编译的方式也分为两种：</p>
+<p>手工执行命令经行编译<br>使用gradle脚本自动实现编译<br>AndroidStudio默认的源码存放目录是:</p>
+<p>src/main/jni<br>如果你没发现此目录，那么你可以手动创建一个，把所有的C/C++源码放在此文件下，当然并非必须要放在此目录下，你可以自定义目录，然后在build.gradle中做一个资源路径指定即可：</p>
+<p>// build.gradle<br>android<br>    sourceSetsmain<br>        // 你的源码目录<br>        jnisrcDir ‘src/main/otherDir’ </p>
+<p>2.2.1 手工执行命令经行编译</p>
+<p>在使用手工编译（C/C++）文件之前，我们要回到文章开头部分，我们需要配置好系统环境变量，这样我们才能在系统环境下执行ndk相关编译命令，如果您的环境变量还没有配置，那么可以参考下文章开头部分，如果已经做好这部分工作，那么咱们继续。</p>
+<p>接下来，我们还要创建如下两个文件：</p>
+<p>Android.mk<br>Applicatoin.mk (非必要)<br>2.2.1.1 创建Android.mk</p>
+<p>Android.mk文件用来指定源码编译的配置信息，例如工作目录，编译模块的名称，参与编译的文件等，大致内容如下：</p>
+<p>LOCAL_PATH         $call mydir<br>include              $CLEAR_VARS<br>LOCAL_MODULE       hello_jni<br>LOCAL_SRC_FILES    hello_jnic<br>include              $BUILD_SHARED_LIBRARY<br>LOCAL_PATH：设置工作目录，而my-dir则会返回Android.mk文件所在的目录。<br>CLEAR——VARS：清除几乎所有以LOCAL——PATH开头的变量（不包括LOCAL_PATH）。<br>LOCAL_MODULE：用来设置模块的名称。<br>LOCAL_SRC_FILES：用来指定参与模块编译的C/C++源文件名。<br>BUILD_SHARED_LIBRARY：作用是指定生成的静态库或者共享库在运行时依赖的共享库模块列表。<br>2.2.1.2 创建Application.mk</p>
+<p>这个文件用来配置编译平台相关内容，我们最常用的估计只是APP_ABI字段，它用来指定我们需要基于哪些CPU架构的文件，当然你可以配置多个平台：</p>
+<p>APP_ABI  armeabi armeabiv7a x86 mips<br>如果不创建Application.mk文件，那么手动编译的文件只有armeabi平台一个版本，其他平台的不会被编译。</p>
+<p>假设我们配置好了Android.mk文件，那么接下来我们就可以执行如下命令来生成文件了，我们假设开发NDK的目录为默认目录：</p>
+<p> src/main/jni/<br>ndk-build<br>如果顺利，那么你将会看到，在src/main/目录下会多了一个目录，这是使用命令编译文件的生成的默认目录，而AndroidSutdio默认加载的目录是jniLibs，那么你有两种解决方式：</p>
+<p>配置build.gradle资源目录，参见文章2.1小节<br>使用 ndk-build NDK_LIBS_OUT=../jniLibs 指定具体的输出目录<br>当你得到了文件，那么接下来就是在文件中调用执行即可，如果想了解更多ndk-build命令内容，可参见：Android ndk-build 使用文档</p>
+<p>2.2.2 使用gradle脚本</p>
+<p>当然该机器做的事我们还是尽量让机器来做，因此，接下来我打算使用build.gradle来添加一些配置，让Gradle自动帮我完成编译工作，这简直就是爽歪歪啦！</p>
+<p>使用gradle,你再也不用手动添加Android.mk和Application.mk文件，一切在build.gradle文件中就都能搞定，在这里我们直接贴出build.gradle中相关的配置：</p>
+<pre><code>androidndk 
+    // 模块名称
+    moduleName  &quot;hello-jni&quot;
+
+    // 指定编译平台，更多平台信息 参见https://developer.android.com/ndk/guides/abis.html#sa
+    abiFilters &quot;armeabi&quot; &quot;armeabi-v7a&quot;
+    /*
+     * Other ndk flags configurable here are
+     * cppFlags.add(&quot;-fno-rtti&quot;)
+     * cppFlags.add(&quot;-fno-exceptions&quot;)
+     * ldLibs.addAll([&quot;android&quot;, &quot;log&quot;])
+     * stl       = &quot;system&quot;
+     */
+</code></pre><p>使用gradle的好处是，自动编译生成文件，并且把相关的文件打包到安装包中，一劳永逸。<br>MeasureMeasure</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在AndroidStudio中进行开发比起以往的Eclipse要方便的多，下面来介绍下如何使用AndroidStudio这个IDE工具实现相关开发工作。</p>
+<ol>
+<li>准备工作</li>
+</ol>
+<p>在实际写代码之前，首先我们还是需要做一些准备工作：</p>
+<p>下载开发包：Android官方下载页面<br>配置系统环境变量<br>下载好开发包之后，直接解压到任意目录，然后需要配置一下系统环境变量，之所以要配置环境变量，是为了方便使用命令ndk-build脚本进行编译。配置参考如下：</p>
+<pre><code># 在.bash_profile中配置如下代码
+</code></pre><p>export ANDROID_NDK/Users/liangqi/android-ndk<br>export PATH$ANDROID_NDK$PATH</p>
+<pre><code># 然后执行如下代码，更新配置文件
+</code></pre><p>source .bash_profile<br>其实编译C/C++代码不一定在AndroidStudio中，如果配置好环境变量，直接使用进入项目中的目录执行ndk-build命令即可在当前目录下生成一个的目录，里面存放了不同 平台的包，当然运行这个命令的前提是，这个目录下至少得有一个Android.mk文件，如果需要指定具体的编译平台，那么还需要添加一个Application.mk文件，当然，如果命令行让你头疼，那么你可以采用gradle的方式来解决这些问题，接下来我们将分别介绍这些使用方式。<br>]]>
+    
+    </summary>
+    
+      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+    
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[深入浅出RxJava(三：响应式的好处)]]></title>
+    <link href="http://kevinhero.github.io/2016/04/04/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava%E4%B8%89--%E5%93%8D%E5%BA%94%E5%BC%8F%E7%9A%84%E5%A5%BD%E5%A4%84/"/>
+    <id>http://kevinhero.github.io/2016/04/04/RxJava/深入浅出RxJava三--响应式的好处/</id>
+    <published>2016-04-04T05:12:17.000Z</published>
+    <updated>2016-04-10T08:47:22.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p><a href="http://blog.danlew.net/2014/09/30/grokking-rxjava-part-3/" target="_blank" rel="external">英文原文</a> </p>
+<p><a href="http://blog.csdn.net/lzyzsd/article/details/44891933" target="_blank" rel="external">译文原文</a></p>
+</blockquote>
+<p>在第一篇中，我介绍了RxJava的基础知识。第二篇中，我向你展示了操作符的强大。但是你可能仍然没被说服。这篇里面，我讲向你展示RxJava的其他的一些好处，相信这篇足够让你去使用Rxjava.</p>
+<p>到目前为止，我们都没怎么介绍onComplete()和onError()函数。这两个函数用来通知订阅者，被观察的对象将停止发送数据以及为什么停止（成功的完成或者出错了）。</p>
+<p>下面的代码展示了怎么使用这两个函数：</p>
+<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.map(s -&gt; potentialException(s))</code></p>
+<p><code>.map(s -&gt; anotherPotentialException(s))</code></p>
+<p><code>.subscribe(``new</code> <code>Subscriber&lt;String&gt;() {        @Override</code></p>
+<p><code>public void onNext(String s) { System.out.println(s); }        @Override</code></p>
+<p><code>public void onCompleted() { System.out.println(``&quot;Completed!&quot;``); }        @Override</code></p>
+<p><code>public void onError(Throwable e) { System.out.println(``&quot;Ouch!&quot;``); }</code></p>
+<p><code>});</code><br><a id="more"></a><br>代码中的potentialException() 和 anotherPotentialException()有可能会抛出异常。每一个Observerable对象在终结的时候都会调用 onCompleted()或者onError()方法，所以Demo中会打印”Completed!”或者”Ouch!”。</p>
+<p>这种模式有以下几个优点：</p>
+<p>1.只要有异常发生onError()一定会被调用</p>
+<p>这极大的简化了错误处理。只需要在一个地方处理错误即可以。</p>
+<p>2.操作符不需要处理异常</p>
+<p>将异常处理交给订阅者来做，Observerable的操作符调用链中一旦有一个抛出了异常，就会直接执行onError()方法。</p>
+<p>3.你能够知道什么时候订阅者已经接收了全部的数据。</p>
+<p>知道什么时候任务结束能够帮助简化代码的流程。（虽然有可能Observable对象永远不会结束）</p>
+<p>我觉得这种错误处理方式比传统的错误处理更简单。传统的错误处理中，通常是在每个回调中处理错误。这不仅导致了重复的代码，并且意味着每个回调都必须知道如何处理错误，你的回调代码将和调用者紧耦合在一起。</p>
+<p>使用RxJava，Observable对象根本不需要知道如何处理错误！操作符也不需要处理错误状态-一旦发生错误，就会跳过当前和后续的操作符。所有的错误处理都交给订阅者来做。</p>
+<p>假设你编写的Android app需要从网络请求数据（感觉这是必备的了，还有单机么？）。网络请求需要话费较长的时间，因此你打算在另外一个线程中加载数据。为问题来了！</p>
+<p>编写多线程的Android应用程序是很难的，因为你必须确保代码在正确的线程中运行，否则的话可能会导致app崩溃。最常见的就是在非主线程更新UI。</p>
+<p>使用RxJava，你可以使用subscribeOn()指定观察者代码运行的线程，使用observerOn()指定订阅者运行的线程：</p>
+<p><code>myObservableServices.retrieveImage(url)</code></p>
+<p><code>.subscribeOn(Schedulers.io())</code></p>
+<p><code>.observeOn(AndroidSchedulers.mainThread())</code></p>
+<p><code>.subscribe(bitmap -&gt; myImageView.setImageBitmap(bitmap));</code></p>
+<p>是不是很简单？任何在我的Subscriber前面执行的代码都是在I/O线程中运行。最后，操作view的代码在主线程中运行.</p>
+<p>最棒的是我可以把subscribeOn()和observerOn()添加到任何Observable对象上。这两个也是操作符！。我不需要关心Observable对象以及它上面有哪些操作符。仅仅运用这两个操作符就可以实现在不同的线程中调度。</p>
+<p>如果使用AsyncTask或者其他类似的，我将不得不仔细设计我的代码，找出需要并发执行的部分。使用RxJava，我可以保持代码不变，仅仅在需要并发的时候调用这两个操作符就可以。</p>
+<h2 id="u8BA2_u9605_uFF08Subscriptions_uFF09"><a href="#u8BA2_u9605_uFF08Subscriptions_uFF09" class="headerlink" title="订阅（Subscriptions）"></a>订阅（Subscriptions）</h2><p>当调用Observable.subscribe()，会返回一个Subscription对象。这个对象代表了被观察者和订阅者之间的联系。</p>
+<p><code>ubscription subscription = Observable.just(``&quot;Hello, World!&quot;``)</code></p>
+<p><code>.subscribe(s -&gt; System.out.println(s));</code></p>
+<p>你可以在后面使用这个Subscription对象来操作被观察者和订阅者之间的联系.</p>
+<p><code>subscription.unsubscribe();</code></p>
+<p><code>System.out.println(``&quot;Unsubscribed=&quot;</code> <code>+ subscription.isUnsubscribed());</code></p>
+<p><code>// Outputs &quot;Unsubscribed=true&quot;</code></p>
+<p>RxJava的另外一个好处就是它处理unsubscribing的时候，会停止整个调用链。如果你使用了一串很复杂的操作符，调用unsubscribe将会在他当前执行的地方终止。不需要做任何额外的工作！</p>
+<p>记住这个系列仅仅是对RxJava的一个入门介绍。RxJava中有更多的我没介绍的功能等你探索（比如backpressure）。当然我也不是所有的代码都使用响应式的方式–仅仅当代码复杂到我想将它分解成简单的逻辑的时候，我才使用响应式代码。</p>
+<p>最初，我的计划是这篇文章作为这个系列的总结，但是我收到许多请求我介绍在Android中使用RxJava，所以你可以继续阅读第四篇了。我希望这个介绍能让你开始使用RxJava。如果你想学到更多，我建议你阅读RxJava的官方wiki。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p><a href="http://blog.danlew.net/2014/09/30/grokking-rxjava-part-3/">英文原文</a> </p>
+<p><a href="http://blog.csdn.net/lzyzsd/article/details/44891933">译文原文</a></p>
+</blockquote>
+<p>在第一篇中，我介绍了RxJava的基础知识。第二篇中，我向你展示了操作符的强大。但是你可能仍然没被说服。这篇里面，我讲向你展示RxJava的其他的一些好处，相信这篇足够让你去使用Rxjava.</p>
+<p>到目前为止，我们都没怎么介绍onComplete()和onError()函数。这两个函数用来通知订阅者，被观察的对象将停止发送数据以及为什么停止（成功的完成或者出错了）。</p>
+<p>下面的代码展示了怎么使用这两个函数：</p>
+<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.map(s -&gt; potentialException(s))</code></p>
+<p><code>.map(s -&gt; anotherPotentialException(s))</code></p>
+<p><code>.subscribe(``new</code> <code>Subscriber&lt;String&gt;() {        @Override</code></p>
+<p><code>public void onNext(String s) { System.out.println(s); }        @Override</code></p>
+<p><code>public void onCompleted() { System.out.println(``&quot;Completed!&quot;``); }        @Override</code></p>
+<p><code>public void onError(Throwable e) { System.out.println(``&quot;Ouch!&quot;``); }</code></p>
+<p><code>});</code><br>]]>
+    
+    </summary>
+    
+      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+    
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[深入浅出RxJava(二：操作符)]]></title>
+    <link href="http://kevinhero.github.io/2016/04/02/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava(%E4%BA%8C%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%AC%A6)/"/>
+    <id>http://kevinhero.github.io/2016/04/02/RxJava/深入浅出RxJava(二：操作符)/</id>
+    <published>2016-04-02T15:12:17.000Z</published>
+    <updated>2016-04-10T08:45:02.000Z</updated>
+    <content type="html"><![CDATA[<p>译文原文 <a href="http://blog.csdn.net/lzyzsd/article/details/44094895" target="_blank" rel="external">http://blog.csdn.net/lzyzsd/article/details/44094895</a> </p>
+<p>英文原文 <a href="http://blog.danlew.net/2014/09/22/grokking-rxjava-part-2/" target="_blank" rel="external">Grokking RxJava, Part 2: Operator, Operator</a></p>
+<p>在<a href="http://blog.csdn.net/lzyzsd/article/details/41833541" target="_blank" rel="external">第一篇blog</a>中， 我介绍了RxJava的一些基础知识，同时也介绍了map()操作符。当然如果你并没有意愿去使用RxJava我一点都不诧异，毕竟才接触了这么点。看完 这篇blog，我相信你肯定想立即在你的项目中使用RxJava了，这篇blog将介绍许多RxJava中的操作符，RxJava的强大性就来自于它所定 义的操作符。</p>
+<p>首先先看一个例子：</p>
+<p>假设我有这样一个方法：<br>这个方法根据输入的字符串返回一个网站的url列表（啊哈，搜索引擎）</p>
+<p><code>Observable&lt;List&lt;String&gt;&gt; query(String text);</code></p>
+<p>现在我希望构建一个健壮系统，它可以查询字符串并且显示结果。根据上一篇blog的内容，我们可能会写出下面的代码：</p>
+<p><code>query(``&quot;Hello, world!&quot;``)</code><br><code>.subscribe(urls -&gt; {</code><br><code>for</code> <code>(String url : urls) {</code><br><code>System.out.println(url);</code><br><code>}</code><br><code>});</code><br><a id="more"></a><br>这种代码当然是不能容忍的，因为上面的代码使我们丧失了变化数据流的能力。一旦我们想要更改每一个URL，只能在Subscriber中来做。我们竟然没有使用如此酷的map()操作符！！！</p>
+<p>当然，我可以使用map操作符，map的输入是urls列表，处理的时候还是要for each遍历，一样很蛋疼。</p>
+<p>万幸，还有Observable.from()方法，它接收一个集合作为输入，然后每次输出一个元素给subscriber：</p>
+<p><code>Observable.from(``&quot;url1&quot;``, ``&quot;url2&quot;``, ``&quot;url3&quot;``)</code></p>
+<p><code>.subscribe(url -&gt; System.out.println(url));</code></p>
+<p>我们来把这个方法使用到刚才的场景：</p>
+<p><code>query(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.subscribe(urls -&gt; {</code></p>
+<p><code>Observable.from(urls)</code></p>
+<p><code>.subscribe(url -&gt; System.out.println(url));</code></p>
+<p><code>});</code></p>
+<p>虽然去掉了for each循环，但是代码依然看起来很乱。多个嵌套的subscription不仅看起来很丑，难以修改，更严重的是它会破坏某些我们现在还没有讲到的RxJava的特性。</p>
+<p>救星来了,他就是flatMap()。<br>Observable.flatMap()接收一个Observable的输出作为输入，同时输出另外一个Observable。直接看代码：</p>
+<p><code>query(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.flatMap(``new</code> <code>Func1&lt;List&lt;String&gt;, Observable&lt;String&gt;&gt;() {</code></p>
+<p><code>@Override</code></p>
+<p><code>public Observable&lt;String&gt; call(List&lt;String&gt; urls) {</code></p>
+<p><code>return</code> <code>Observable.from(urls);</code></p>
+<p><code>}</code></p>
+<p><code>})</code></p>
+<p><code>.subscribe(url -&gt; System.out.println(url));</code></p>
+<p>这里我贴出了整个的函数代码，以方便你了解发生了什么，使用lambda可以大大简化代码长度：</p>
+<p><code>query(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.flatMap(urls -&gt; Observable.from(urls))</code></p>
+<p><code>.subscribe(url -&gt; System.out.println(url));</code></p>
+<p>flatMap()是不是看起来很奇怪？为什么它要返回另外一个Observable呢？理解flatMap的关键点在于，flatMap输出的新的 Observable正是我们在Subscriber想要接收的。现在Subscriber不再收到List\<string\>，而是收到一些 列单个的字符串，就像Observable.from()的输出一样。</string\></p>
+<p>这部分也是我当初学RxJava的时候最难理解的部分，一旦我突然领悟了，RxJava的很多疑问也就一并解决了。</p>
+<h2 id="u8FD8_u53EF_u4EE5_u66F4_u597D"><a href="#u8FD8_u53EF_u4EE5_u66F4_u597D" class="headerlink" title="还可以更好"></a>还可以更好</h2><p>flatMap()实在不能更赞了，它可以返回任何它想返回的Observable对象。<br>比如下面的方法：</p>
+<p><code>// 返回网站的标题，如果404了就返回null</code></p>
+<p><code>Observable&lt;String&gt; getTitle(String URL);</code></p>
+<p>接着前面的例子，现在我不想打印URL了，而是要打印收到的每个网站的标题。问题来了，我的方法每次只能传入一个URL，并且返回值不是一个String，而是一个输出String的Observabl对象。使用flatMap()可以简单的解决这个问题。</p>
+<p><code>query(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.flatMap(urls -&gt; Observable.from(urls))</code></p>
+<p><code>.flatMap(``new</code> <code>Func1&lt;String, Observable&lt;String&gt;&gt;() {</code></p>
+<p><code>@Override</code></p>
+<p><code>public Observable&lt;String&gt; call(String url) {</code></p>
+<p><code>return</code> <code>getTitle(url);</code></p>
+<p><code>}</code></p>
+<p><code>})</code></p>
+<p><code>.subscribe(title -&gt; System.out.println(title));</code></p>
+<p>使用lambda:</p>
+<p><code>query(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.flatMap(urls -&gt; Observable.from(urls))</code></p>
+<p><code>.flatMap(url -&gt; getTitle(url))</code></p>
+<p><code>.subscribe(title -&gt; System.out.println(title));</code></p>
+<p>是不是感觉很不可思议？我竟然能将多个独立的返回Observable对象的方法组合在一起！帅呆了！<br>不止这些，我还将两个API的调用组合到一个链式调用中了。我们可以将任意多个API调用链接起来。大家应该都应该知道同步所有的API调用，然后将所有 API调用的回调结果组合成需要展示的数据是一件多么蛋疼的事情。这里我们成功的避免了callback hell（多层嵌套的回调，导致代码难以阅读维护）。现在所有的逻辑都包装成了这种简单的响应式调用。</p>
+<h2 id="u4E30_u5BCC_u7684_u64CD_u4F5C_u7B26"><a href="#u4E30_u5BCC_u7684_u64CD_u4F5C_u7B26" class="headerlink" title="丰富的操作符"></a>丰富的操作符</h2><p>目前为止，我们已经接触了两个操作符，RxJava中还有更多的操作符，那么我们如何使用其他的操作符来改进我们的代码呢？<br>getTitle()返回null如果url不存在。我们不想输出”null”，那么我们可以从返回的title列表中过滤掉null值！</p>
+<p><code>query(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.flatMap(urls -&gt; Observable.from(urls))</code></p>
+<p><code>.flatMap(url -&gt; getTitle(url))</code></p>
+<p><code>.filter(title -&gt; title != ``null``)</code></p>
+<p><code>.subscribe(title -&gt; System.out.println(title));</code></p>
+<p>filter()输出和输入相同的元素，并且会过滤掉那些不满足检查条件的。</p>
+<p>如果我们只想要最多5个结果：</p>
+<p><code>query(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.flatMap(urls -&gt; Observable.from(urls))</code></p>
+<p><code>.flatMap(url -&gt; getTitle(url))</code></p>
+<p><code>.filter(title -&gt; title != ``null``)</code></p>
+<p><code>.take(5)</code></p>
+<p><code>.subscribe(title -&gt; System.out.println(title));</code></p>
+<p>take()输出最多指定数量的结果。</p>
+<p>如果我们想在打印之前，把每个标题保存到磁盘：</p>
+<p><code>query(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.flatMap(urls -&gt; Observable.from(urls))</code></p>
+<p><code>.flatMap(url -&gt; getTitle(url))</code></p>
+<p><code>.filter(title -&gt; title != ``null``)</code></p>
+<p><code>.take(5)</code></p>
+<p><code>.doOnNext(title -&gt; saveTitle(title))</code></p>
+<p><code>.subscribe(title -&gt; System.out.println(title));</code></p>
+<p>doOnNext()允许我们在每次输出一个元素之前做一些额外的事情，比如这里的保存标题。</p>
+<p>看到这里操作数据流是多么简单了么。你可以添加任意多的操作，并且不会搞乱你的代码。</p>
+<p>RxJava包含了大量的操作符。操作符的数量是有点吓人，但是很值得你去挨个看一下，这样你可以知道有哪些操作符可以使用。弄懂这些操作符可能会花一些时间，但是一旦弄懂了，你就完全掌握了RxJava的威力。</p>
+<p>你甚至可以编写自定义的操作符！这篇blog不打算将自定义操作符，如果你想的话，清自行Google吧。</p>
+<h2 id="u611F_u89C9_u5982_u4F55_uFF1F"><a href="#u611F_u89C9_u5982_u4F55_uFF1F" class="headerlink" title="感觉如何？"></a>感觉如何？</h2><p>好吧，你是一个怀疑主义者，并且还很难被说服，那为什么你要关心这些操作符呢？</p>
+<p>因为操作符可以让你对数据流做任何操作。</p>
+<p>将一系列的操作符链接起来就可以完成复杂的逻辑。代码被分解成一系列可以组合的片段。这就是响应式函数编程的魅力。用的越多，就会越多的改变你的编程思维。</p>
+<p>另外，RxJava也使我们处理数据的方式变得更简单。在最后一个例子里，我们调用了两个API，对API返回的数据进行了处理，然后保存到磁盘。 但是我们的Subscriber并不知道这些，它只是认为自己在接收一个Observable\<string\>对象。良好的封装性也带来了编 码的便利！</string\></p>
+<p>在第三部分中，我将介绍RxJava的另外一些很酷的特性，比如错误处理和并发，这些特性并不会直接用来处理数据。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>译文原文 <a href="http://blog.csdn.net/lzyzsd/article/details/44094895">http://blog.csdn.net/lzyzsd/article/details/44094895</a> </p>
+<p>英文原文 <a href="http://blog.danlew.net/2014/09/22/grokking-rxjava-part-2/">Grokking RxJava, Part 2: Operator, Operator</a></p>
+<p>在<a href="http://blog.csdn.net/lzyzsd/article/details/41833541">第一篇blog</a>中， 我介绍了RxJava的一些基础知识，同时也介绍了map()操作符。当然如果你并没有意愿去使用RxJava我一点都不诧异，毕竟才接触了这么点。看完 这篇blog，我相信你肯定想立即在你的项目中使用RxJava了，这篇blog将介绍许多RxJava中的操作符，RxJava的强大性就来自于它所定 义的操作符。</p>
+<p>首先先看一个例子：</p>
+<p>假设我有这样一个方法：<br>这个方法根据输入的字符串返回一个网站的url列表（啊哈，搜索引擎）</p>
+<p><code>Observable&lt;List&lt;String&gt;&gt; query(String text);</code></p>
+<p>现在我希望构建一个健壮系统，它可以查询字符串并且显示结果。根据上一篇blog的内容，我们可能会写出下面的代码：</p>
+<p><code>query(``&quot;Hello, world!&quot;``)</code><br><code>.subscribe(urls -&gt; {</code><br><code>for</code> <code>(String url : urls) {</code><br><code>System.out.println(url);</code><br><code>}</code><br><code>});</code><br>]]>
+    
+    </summary>
+    
+      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+    
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Q2季度目标]]></title>
-    <link href="http://yoursite.com/2016/04/01/Q2%E5%AD%A3%E5%BA%A6%E7%9B%AE%E6%A0%87/"/>
-    <id>http://yoursite.com/2016/04/01/Q2季度目标/</id>
+    <link href="http://kevinhero.github.io/2016/04/01/%E9%9A%8F%E7%AC%94/Q2%E5%AD%A3%E5%BA%A6%E7%9B%AE%E6%A0%87/"/>
+    <id>http://kevinhero.github.io/2016/04/01/随笔/Q2季度目标/</id>
     <published>2016-04-01T03:33:45.000Z</published>
     <updated>2016-04-06T10:49:36.000Z</updated>
     <content type="html"><![CDATA[<p>1、完成GankAPP，并上线</p>
@@ -46,16 +323,186 @@
     
     </summary>
     
-      <category term="目标" scheme="http://yoursite.com/tags/%E7%9B%AE%E6%A0%87/"/>
+      <category term="目标" scheme="http://kevinhero.github.io/tags/%E7%9B%AE%E6%A0%87/"/>
     
-      <category term="随笔" scheme="http://yoursite.com/categories/%E9%9A%8F%E7%AC%94/"/>
+      <category term="随笔" scheme="http://kevinhero.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[深入浅出RxJava(一：基础篇)]]></title>
+    <link href="http://kevinhero.github.io/2016/03/29/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava%EF%BC%88%E4%B8%80%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89/"/>
+    <id>http://kevinhero.github.io/2016/03/29/RxJava/深入浅出RxJava（一：基础篇）/</id>
+    <published>2016-03-29T13:12:17.000Z</published>
+    <updated>2016-04-10T08:47:16.000Z</updated>
+    <content type="html"><![CDATA[<p><a href="http://blog.danlew.net/2014/09/15/grokking-rxjava-part-1/" target="_blank" rel="external">英文原文</a> </p>
+<p><a href="http://blog.csdn.net/lzyzsd/article/details/41833541" target="_blank" rel="external">译文原文</a> </p>
+<p><a href="https://github.com/ReactiveX/RxJava" target="_blank" rel="external">RxJava</a>正在Android开发者中变的越来越流行。唯一的问题就是上手不容易，尤其是大部分人之前都是使用命令式编程语言。但是一旦你弄明白了，你就会发现RxJava真是太棒了。<br>这里仅仅是帮助你了解RxJava，整个系列共有四篇文章，希望你看完这四篇文章之后能够了解RxJava背后的思想，并且喜欢上RxJava。</p>
+<p>RxJava最核心的两个东西是Observables（被观察者，事件源）和 Subscribers（观察者）。Observables发出一系列事件，Subscribers处理这些事件。这里的事件可以是任何你感兴趣的东西 （触摸事件，web接口调用返回的数据。。。）</p>
+<p>一个Observable可以发出零个或者多个事件，知道结束或者出错。每发出一个事件，就会调用它的Subscriber的onNext方法，最后调用Subscriber.onNext()或者Subscriber.onError()结束。</p>
+<p>Rxjava的看起来很想设计模式中的观察者模式，但是有一点明显不同，那就是如果一个Observerble没有任何的的Subscriber，那么这个Observable是不会发出任何事件的。</p>
+<h1 id="Hello_World"><a href="#Hello_World" class="headerlink" title="Hello World"></a>Hello World</h1><a id="more"></a>
+<p>创建一个Observable对象很简单，直接调用Observable.create即可</p>
+<p><code>Observable&lt;String&gt; myObservable = Observable.create(</code></p>
+<p><code>new</code> <code>Observable.OnSubscribe&lt;String&gt;() {</code></p>
+<p><code>@Override</code></p>
+<p><code>public void call(Subscriber&lt;? ``super</code> <code>String&gt; sub) {</code></p>
+<p><code>sub.onNext(``&quot;Hello, world!&quot;``);</code></p>
+<p><code>sub.onCompleted();</code></p>
+<p><code>}</code></p>
+<p><code>}</code></p>
+<p><code>);</code></p>
+<p>这里定义的Observable对象仅仅发出一个Hello World字符串，然后就结束了。接着我们创建一个Subscriber来处理Observable对象发出的字符串。</p>
+<p><code>Subscriber&lt;String&gt; mySubscriber = ``new</code> <code>Subscriber&lt;String&gt;() {</code></p>
+<p><code>@Override</code></p>
+<p><code>public void onNext(String s) { System.out.println(s); }</code></p>
+<p><code>@Override</code></p>
+<p><code>public void onCompleted() { }</code></p>
+<p><code>@Override</code></p>
+<p><code>public void onError(Throwable e) { }</code></p>
+<p><code>};</code></p>
+<p>这里subscriber仅仅就是打印observable发出的字符串。通过subscribe函数就可以将我们定义的myObservable对象和mySubscriber对象关联起来，这样就完成了subscriber对observable的订阅。</p>
+<p><code>myObservable.subscribe(mySubscriber);</code></p>
+<p>一旦mySubscriber订阅了myObservable，myObservable就是调用mySubscriber对象的onNext和onComplete方法，mySubscriber就会打印出Hello World！</p>
+<h2 id="u66F4_u7B80_u6D01_u7684_u4EE3_u7801"><a href="#u66F4_u7B80_u6D01_u7684_u4EE3_u7801" class="headerlink" title="更简洁的代码"></a>更简洁的代码</h2><p>是不是觉得仅仅为了打印一个hello world要写这么多代码太啰嗦？我这里主要是为了展示RxJava背后的原理而采用了这种比较啰嗦的写法，RxJava其实提供了很多便捷的函数来帮助我们减少代码。</p>
+<p>首先来看看如何简化Observable对象的创建过程。RxJava内置了很多简化创建Observable对象的函数，比如 Observable.just就是用来创建只发出一个事件就结束的Observable对象，上面创建Observable对象的代码可以简化为一行</p>
+<p><code>Observable&lt;String&gt; myObservable = Observable.just(``&quot;Hello, world!&quot;``);</code></p>
+<p>接下来看看如何简化Subscriber，上面的例子中，我们其实并不关心OnComplete和OnError，我们只需要在onNext的时候做一些处理，这时候就可以使用Action1类。</p>
+<p><code>Action1&lt;String&gt; onNextAction = ``new</code> <code>Action1&lt;String&gt;() {</code></p>
+<p><code>@Override</code></p>
+<p><code>public void call(String s) {</code></p>
+<p><code>System.out.println(s);</code></p>
+<p><code>}</code></p>
+<p><code>};</code></p>
+<p>subscribe方法有一个重载版本，接受三个Action1类型的参数，分别对应OnNext，OnComplete， OnError函数。</p>
+<p><code>myObservable.subscribe(onNextAction, onErrorAction, onCompleteAction);</code></p>
+<p>这里我们并不关心onError和onComplete，所以只需要第一个参数就可以</p>
+<p><code>myObservable.subscribe(onNextAction);</code></p>
+<p><code>// Outputs &quot;Hello, world!&quot;</code></p>
+<p>上面的代码最终可以写成这样</p>
+<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.subscribe(``new</code> <code>Action1&lt;String&gt;() {</code></p>
+<p><code>@Override</code></p>
+<p><code>public void call(String s) {</code></p>
+<p><code>System.out.println(s);</code></p>
+<p><code>}</code></p>
+<p><code>});</code></p>
+<p>使用java8的lambda可以使代码更简洁</p>
+<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.subscribe(s -&gt; System.out.println(s));</code></p>
+<p>Android开发中，强烈推荐使用<a href="https://github.com/evant/gradle-retrolambda" target="_blank" rel="external">retrolambda</a>这个gradle插件，这样你就可以在你的代码中使用lambda了。</p>
+<p>让我们做一些更有趣的事情吧！<br>比如我想在hello world中加上我的签名，你可能会想到去修改Observable对象：</p>
+<p><code>Observable.just(``&quot;Hello, world! -Dan&quot;``)</code></p>
+<p><code>.subscribe(s -&gt; System.out.println(s));</code></p>
+<p>如果你能够改变Observable对象，这当然是可以的，但是如果你不能修改Observable对象呢？比如Observable对象是第三方库提供的？比如我的Observable对象被多个Subscriber订阅，但是我只想在对某个订阅者做修改呢？<br>那么在Subscriber中对事件进行修改怎么样呢？比如下面的代码：</p>
+<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.subscribe(s -&gt; System.out.println(s + ``&quot; -Dan&quot;``));</code></p>
+<p>这种方式仍然不能让人满意，因为我希望我的Subscribers越轻量越好，因为我有可能会在mainThread中运行subscriber。另外， 根据响应式函数编程的概念，Subscribers更应该做的事情是“响应”，响应Observable发出的事件，而不是去修改。如果我能在某些中间步 骤中对“Hello World！”进行变换是不是很酷？</p>
+<h2 id="u64CD_u4F5C_u7B26_uFF08Operators_uFF09"><a href="#u64CD_u4F5C_u7B26_uFF08Operators_uFF09" class="headerlink" title="操作符（Operators）"></a>操作符（Operators）</h2><p>操作符就是为了解决对Observable对象的变换的问题，操作符用于在Observable和最终的Subscriber之间修改Observable发出的事件。RxJava提供了很多很有用的操作符。<br>比如map操作符，就是用来把把一个事件转换为另一个事件的。</p>
+<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.map(``new</code> <code>Func1&lt;String, String&gt;() {</code></p>
+<p><code>@Override</code></p>
+<p><code>public String call(String s) {</code></p>
+<p><code>return</code> <code>s + ``&quot; -Dan&quot;``;</code></p>
+<p><code>}</code></p>
+<p><code>})</code></p>
+<p><code>.subscribe(s -&gt; System.out.println(s));</code></p>
+<p>使用lambda可以简化为</p>
+<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.map(s -&gt; s + ``&quot; -Dan&quot;``)</code></p>
+<p><code>.subscribe(s -&gt; System.out.println(s));</code></p>
+<p>是不是很酷？map()操作符就是用于变换Observable对象的，map操作符返回一个Observable对象，这样就可以实现链式调用，在一个Observable对象上多次使用map操作符，最终将最简洁的数据传递给Subscriber对象。</p>
+<h2 id="map_u64CD_u4F5C_u7B26_u8FDB_u9636"><a href="#map_u64CD_u4F5C_u7B26_u8FDB_u9636" class="headerlink" title="map操作符进阶"></a>map操作符进阶</h2><p>map操作符更有趣的一点是它不必返回Observable对象返回的类型，你可以使用map操作符返回一个发出新的数据类型的observable对象。<br>比如上面的例子中，subscriber并不关心返回的字符串，而是想要字符串的hash值</p>
+<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.map(``new</code> <code>Func1&lt;String, Integer&gt;() {</code></p>
+<p><code>@Override</code></p>
+<p><code>public Integer call(String s) {</code></p>
+<p><code>return</code> <code>s.hashCode();</code></p>
+<p><code>}</code></p>
+<p><code>})</code></p>
+<p><code>.subscribe(i -&gt; System.out.println(Integer.toString(i)));</code></p>
+<p>很有趣吧？我们初始的Observable返回的是字符串，最终的Subscriber收到的却是Integer，当然使用lambda可以进一步简化代码：</p>
+<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.map(s -&gt; s.hashCode())</code></p>
+<p><code>.subscribe(i -&gt; System.out.println(Integer.toString(i)));</code></p>
+<p>前面说过，Subscriber做的事情越少越好，我们再增加一个map操作符</p>
+<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
+<p><code>.map(s -&gt; s.hashCode())</code></p>
+<p><code>.map(i -&gt; Integer.toString(i))</code></p>
+<p><code>.subscribe(s -&gt; System.out.println(s));</code></p>
+<p>是不是觉得我们的例子太简单，不足以说服你？你需要明白下面的两点:</p>
+<p>1.Observable和Subscriber可以做任何事情<br>Observable可以是一个数据库查询，Subscriber用来显示查询结果；Observable可以是屏幕上的点击事件，Subscriber用来响应点击事件；Observable可以是一个网络请求，Subscriber用来显示请求结果。</p>
+<p>2.Observable和Subscriber是独立于中间的变换过程的。<br>在Observable和Subscriber中间可以增减任何数量的map。整个系统是高度可组合的，操作数据是一个很简单的过程。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><a href="http://blog.danlew.net/2014/09/15/grokking-rxjava-part-1/">英文原文</a> </p>
+<p><a href="http://blog.csdn.net/lzyzsd/article/details/41833541">译文原文</a> </p>
+<p><a href="https://github.com/ReactiveX/RxJava">RxJava</a>正在Android开发者中变的越来越流行。唯一的问题就是上手不容易，尤其是大部分人之前都是使用命令式编程语言。但是一旦你弄明白了，你就会发现RxJava真是太棒了。<br>这里仅仅是帮助你了解RxJava，整个系列共有四篇文章，希望你看完这四篇文章之后能够了解RxJava背后的思想，并且喜欢上RxJava。</p>
+<p>RxJava最核心的两个东西是Observables（被观察者，事件源）和 Subscribers（观察者）。Observables发出一系列事件，Subscribers处理这些事件。这里的事件可以是任何你感兴趣的东西 （触摸事件，web接口调用返回的数据。。。）</p>
+<p>一个Observable可以发出零个或者多个事件，知道结束或者出错。每发出一个事件，就会调用它的Subscriber的onNext方法，最后调用Subscriber.onNext()或者Subscriber.onError()结束。</p>
+<p>Rxjava的看起来很想设计模式中的观察者模式，但是有一点明显不同，那就是如果一个Observerble没有任何的的Subscriber，那么这个Observable是不会发出任何事件的。</p>
+<h1 id="Hello_World"><a href="#Hello_World" class="headerlink" title="Hello World"></a>Hello World</h1>]]>
+    
+    </summary>
+    
+      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+    
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[谷歌官方出的一套关于 Android 架构的实例参考]]></title>
+    <link href="http://kevinhero.github.io/2016/03/29/%E8%B0%B7%E6%AD%8C%E5%AE%98%E6%96%B9%E5%87%BA%E7%9A%84%E4%B8%80%E5%A5%97%E5%85%B3%E4%BA%8E%20Android%20%E6%9E%B6%E6%9E%84%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%82%E8%80%83/"/>
+    <id>http://kevinhero.github.io/2016/03/29/谷歌官方出的一套关于 Android 架构的实例参考/</id>
+    <published>2016-03-29T05:12:17.000Z</published>
+    <updated>2016-04-10T08:44:24.000Z</updated>
+    <content type="html"><![CDATA[<p>原文 <a href="https://github.com/googlesamples/android-architecture" target="_blank" rel="external">github.com</a></p>
+<p>The Android framework offers a lot of flexibility when it comes to defining how to organize and <em>architect</em> an Android app. This freedom, whilst very valuable, can also result in apps with large classes, inconsistent naming and architectures (or lack of) that can make testing, maintaining and extending difficult.</p>
+<p>Android Architecture Blueprints is meant to demonstrate possible ways to help with these common problems. In this project we offer the same application implemented using different architectural concepts and tools.</p>
+<p>You can use these samples as a reference or as a starting point for creating your own apps. The focus here is on code structure, architecture, testing and maintainability. However, bear in mind that there are many ways to build apps with these architectures and tools, depending on your priorities, so these shouldn’t be considered canonical examples. The UI is deliberately kept simple.</p>
+<p><strong>What does <em>*</em></strong>beta<strong>*</strong> mean?**</p>
+<p>We’re still making decisions that could affect all samples so we’re keeping the initial number of variants low before the stable release.</p>
+<p><strong>Samples</strong></p>
+<p>All projects are released in their own branch. Check each project’s README for more information.<br><a id="more"></a><br>In progress:</p>
+<ul>
+<li>todo-mvp-contentproviders - Based on todo-mvp-loaders, uses Content Providers</li>
+<li>todo-mvp-clean - Based on todo-mvp, uses concepts from Clean Architecture.</li>
+<li>todo-mvp-dagger - Based on todo-mvp, uses Dagger2 for Dependency Injection</li>
+</ul>
+<p>Also, see <a href="https://github.com/googlesamples/android-architecture/issues?q=is%3Aissue+is%3Aopen+label%3A%22New+sample%22" target="_blank" rel="external">“New sample” issues</a> for planned samples.</p>
+<p><strong>Why a to-do application?</strong></p>
+<p>The aim of the app is to be simple enough that it’s understood quickly, but complex enough to showcase difficult design decisions and testing scenarios. Check out the <a href="https://github.com/googlesamples/android-architecture/wiki/To-do-app-specification" target="_blank" rel="external">app’s specification</a>.</p>
+<p><a href="https://github.com/googlesamples/android-architecture/wiki/images/tasks2.png" target="_blank" rel="external"><img src="https://raw.githubusercontent.com/wiki/googlesamples/android-architecture/images/tasks2.png" alt="Screenshot"></a></p>
+<p>Also, a similar project exists to compare JavaScript frameworks, called <a href="https://github.com/tastejs/todomvc" target="_blank" rel="external">TodoMVC</a>.</p>
+<p><strong>Which sample should I choose for my app?</strong></p>
+<p>That’s for you to decide: each sample has a README where you’ll find metrics and subjective assessments. Your mileage may vary depending on the size of the app, the size and experience of your team, the amount of maintenance that you foresee, whether you need a tablet layout or support multiple platforms, how compact you like your codebase, etc.</p>
+<p><strong>Who is behind this project?</strong></p>
+<p>This project is made by the <a href="https://github.com/googlesamples/android-architecture/graphs/contributors" target="_blank" rel="external">community</a> and curated by Google and core maintainers. Each sample has a group of owners that look after it keeping it up to date and handling issues and pull requests.</p>
+<p>Want to be part of it? Read <a href="https://github.com/googlesamples/android-architecture/blob/master/CONTRIBUTING.md" target="_blank" rel="external">how to become a contributor</a> and the <a href="https://github.com/googlesamples/android-architecture/wiki/Contributions" target="_blank" rel="external">contributor’s guide</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>原文 <a href="https://github.com/googlesamples/android-architecture">github.com</a></p>
+<p>The Android framework offers a lot of flexibility when it comes to defining how to organize and <em>architect</em> an Android app. This freedom, whilst very valuable, can also result in apps with large classes, inconsistent naming and architectures (or lack of) that can make testing, maintaining and extending difficult.</p>
+<p>Android Architecture Blueprints is meant to demonstrate possible ways to help with these common problems. In this project we offer the same application implemented using different architectural concepts and tools.</p>
+<p>You can use these samples as a reference or as a starting point for creating your own apps. The focus here is on code structure, architecture, testing and maintainability. However, bear in mind that there are many ways to build apps with these architectures and tools, depending on your priorities, so these shouldn’t be considered canonical examples. The UI is deliberately kept simple.</p>
+<p><strong>What does <em>*</em></strong>beta<strong>*</strong> mean?**</p>
+<p>We’re still making decisions that could affect all samples so we’re keeping the initial number of variants low before the stable release.</p>
+<p><strong>Samples</strong></p>
+<p>All projects are released in their own branch. Check each project’s README for more information.<br>]]>
+    
+    </summary>
+    
+      <category term="架构的实例" scheme="http://kevinhero.github.io/tags/%E6%9E%B6%E6%9E%84%E7%9A%84%E5%AE%9E%E4%BE%8B/"/>
+    
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[从案例学习RxAndroid]]></title>
-    <link href="http://yoursite.com/2016/03/25/RxAndroid/"/>
-    <id>http://yoursite.com/2016/03/25/RxAndroid/</id>
+    <link href="http://kevinhero.github.io/2016/03/25/RxJava/RxAndroid/"/>
+    <id>http://kevinhero.github.io/2016/03/25/RxJava/RxAndroid/</id>
     <published>2016-03-25T13:01:45.000Z</published>
     <updated>2016-04-07T03:37:12.000Z</updated>
     <content type="html"><![CDATA[<p><a herf="https://medium.com/@kurtisnusbaum/rxandroid-basics-part-1-c0d5edcf6850">原文链接</a></p>
@@ -272,16 +719,16 @@ public void afterTextChanged(Editable s) { }
     
     </summary>
     
-      <category term="RxAndroid" scheme="http://yoursite.com/tags/RxAndroid/"/>
+      <category term="RxAndroid" scheme="http://kevinhero.github.io/tags/RxAndroid/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Android开发代码片段]]></title>
-    <link href="http://yoursite.com/2016/03/21/android%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5/"/>
-    <id>http://yoursite.com/2016/03/21/android代码片段/</id>
+    <link href="http://kevinhero.github.io/2016/03/21/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/android%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5/"/>
+    <id>http://kevinhero.github.io/2016/03/21/小知识点/android代码片段/</id>
     <published>2016-03-21T12:33:02.000Z</published>
     <updated>2016-04-06T04:04:15.000Z</updated>
     <content type="html"><![CDATA[<h3 id="1_u3001_u83B7_u53D6_u7535_u6E90_u9501"><a href="#1_u3001_u83B7_u53D6_u7535_u6E90_u9501" class="headerlink" title="1、获取电源锁"></a>1、获取电源锁</h3><pre><code>public static void acquireWakeLock() {
@@ -577,16 +1024,16 @@ private static void deleteFilesByDirectory(File directory) {
     
     </summary>
     
-      <category term="写作" scheme="http://yoursite.com/tags/%E5%86%99%E4%BD%9C/"/>
+      <category term="写作" scheme="http://kevinhero.github.io/tags/%E5%86%99%E4%BD%9C/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Android开发工作中的细节]]></title>
-    <link href="http://yoursite.com/2016/03/02/Android%E5%BC%80%E5%8F%91%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E7%BB%86%E8%8A%82/"/>
-    <id>http://yoursite.com/2016/03/02/Android开发工作中的细节/</id>
+    <link href="http://kevinhero.github.io/2016/03/02/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/Android%E5%BC%80%E5%8F%91%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E7%BB%86%E8%8A%82/"/>
+    <id>http://kevinhero.github.io/2016/03/02/小知识点/Android开发工作中的细节/</id>
     <published>2016-03-01T18:33:45.000Z</published>
     <updated>2016-04-05T06:44:02.000Z</updated>
     <content type="html"><![CDATA[<ol>
@@ -727,16 +1174,16 @@ private static void deleteFilesByDirectory(File directory) {
     
     </summary>
     
-      <category term="知识库" scheme="http://yoursite.com/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
+      <category term="知识库" scheme="http://kevinhero.github.io/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[日常使用到的梯子]]></title>
-    <link href="http://yoursite.com/2016/03/01/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E5%88%B0%E7%9A%84%E6%A2%AF%E5%AD%90/"/>
-    <id>http://yoursite.com/2016/03/01/日常使用到的梯子/</id>
+    <link href="http://kevinhero.github.io/2016/03/01/%E9%9A%8F%E7%AC%94/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E5%88%B0%E7%9A%84%E6%A2%AF%E5%AD%90/"/>
+    <id>http://kevinhero.github.io/2016/03/01/随笔/日常使用到的梯子/</id>
     <published>2016-03-01T04:33:45.000Z</published>
     <updated>2016-04-05T08:47:20.000Z</updated>
     <content type="html"><![CDATA[<p>日常生活中,由于天朝的局域网的限制,很多网站都无法进行使用,虽然国内也有替代的网站,但是作为开发人员来讲,这些事远远不够的,现在就讲我个人在生活工作中使用到梯子,进行总结一下</p>
@@ -763,16 +1210,16 @@ private static void deleteFilesByDirectory(File directory) {
     
     </summary>
     
-      <category term="VPN" scheme="http://yoursite.com/tags/VPN/"/>
+      <category term="VPN" scheme="http://kevinhero.github.io/tags/VPN/"/>
     
-      <category term="随笔" scheme="http://yoursite.com/categories/%E9%9A%8F%E7%AC%94/"/>
+      <category term="随笔" scheme="http://kevinhero.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Android小知识库]]></title>
-    <link href="http://yoursite.com/2016/03/01/Android%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
-    <id>http://yoursite.com/2016/03/01/Android开发中的小知识点汇总/</id>
+    <link href="http://kevinhero.github.io/2016/03/01/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/Android%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
+    <id>http://kevinhero.github.io/2016/03/01/小知识点/Android开发中的小知识点汇总/</id>
     <published>2016-02-29T18:33:45.000Z</published>
     <updated>2016-04-07T03:26:16.000Z</updated>
     <content type="html"><![CDATA[<p>这份是我工作以来，总结的小知识库，有些知识点现在看来太LOW了，把还觉得有用的分享出来！</p>
@@ -1845,16 +2292,16 @@ android:cycles=&quot;7&quot; /&gt;
     
     </summary>
     
-      <category term="知识库" scheme="http://yoursite.com/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
+      <category term="知识库" scheme="http://kevinhero.github.io/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Lambda for Android]]></title>
-    <link href="http://yoursite.com/2016/03/01/Lambda%20for%20Android/"/>
-    <id>http://yoursite.com/2016/03/01/Lambda for Android/</id>
+    <link href="http://kevinhero.github.io/2016/03/01/Android%20Skills/Lambda%20for%20Android/"/>
+    <id>http://kevinhero.github.io/2016/03/01/Android Skills/Lambda for Android/</id>
     <published>2016-02-29T18:33:17.000Z</published>
     <updated>2016-04-06T04:28:28.000Z</updated>
     <content type="html"><![CDATA[<p>Lambda，它让代码看起来更加简洁，但个人认为代码的可读性差了很多，因此一直没有去深入学习。</p>
@@ -1977,16 +2424,16 @@ v -&gt; Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;));
     
     </summary>
     
-      <category term="Lambda" scheme="http://yoursite.com/tags/Lambda/"/>
+      <category term="Lambda" scheme="http://kevinhero.github.io/tags/Lambda/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[理解Android编译命令]]></title>
-    <link href="http://yoursite.com/2016/02/25/%E7%90%86%E8%A7%A3Android%E7%9A%84%E7%BC%96%E8%AF%91%E5%91%BD%E4%BB%A4/"/>
-    <id>http://yoursite.com/2016/02/25/理解Android的编译命令/</id>
+    <link href="http://kevinhero.github.io/2016/02/25/Android%20Skills/%E7%90%86%E8%A7%A3Android%E7%9A%84%E7%BC%96%E8%AF%91%E5%91%BD%E4%BB%A4/"/>
+    <id>http://kevinhero.github.io/2016/02/25/Android Skills/理解Android的编译命令/</id>
     <published>2016-02-25T11:33:45.000Z</published>
     <updated>2016-04-06T11:04:55.000Z</updated>
     <content type="html"><![CDATA[<p>工欲善其事，必先利其器，对于想要深入学习Android源码，必须先掌握Android编译命令.</p>
@@ -2167,16 +2614,16 @@ v -&gt; Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;));
     
     </summary>
     
-      <category term="编译" scheme="http://yoursite.com/tags/%E7%BC%96%E8%AF%91/"/>
+      <category term="编译" scheme="http://kevinhero.github.io/tags/%E7%BC%96%E8%AF%91/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Webview上传文件的那些坑]]></title>
-    <link href="http://yoursite.com/2016/02/22/Webview%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/"/>
-    <id>http://yoursite.com/2016/02/22/Webview上传文件的那些坑/</id>
+    <link href="http://kevinhero.github.io/2016/02/22/Android%20Skills/Webview%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/"/>
+    <id>http://kevinhero.github.io/2016/02/22/Android Skills/Webview上传文件的那些坑/</id>
     <published>2016-02-22T13:01:14.000Z</published>
     <updated>2016-02-22T05:35:13.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
@@ -2764,16 +3211,16 @@ public class MainActivity extends Activity {
     
     </summary>
     
-      <category term="Webview" scheme="http://yoursite.com/tags/Webview/"/>
+      <category term="Webview" scheme="http://kevinhero.github.io/tags/Webview/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Android源码编译和内核编译]]></title>
-    <link href="http://yoursite.com/2016/02/21/Android%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/"/>
-    <id>http://yoursite.com/2016/02/21/Android源码编译/</id>
+    <link href="http://kevinhero.github.io/2016/02/21/Android%20Skills/Android%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/"/>
+    <id>http://kevinhero.github.io/2016/02/21/Android Skills/Android源码编译/</id>
     <published>2016-02-21T06:33:45.000Z</published>
     <updated>2016-02-26T07:27:49.000Z</updated>
     <content type="html"><![CDATA[<h2 id="u6E90_u7801_u7F16_u8BD1"><a href="#u6E90_u7801_u7F16_u8BD1" class="headerlink" title="源码编译"></a>源码编译</h2><h4 id="1_u3001_u7CFB_u7EDF_uFF1A_Ubuntu14-04_u4EE5_u4E0A__u6216_u8005_Mac"><a href="#1_u3001_u7CFB_u7EDF_uFF1A_Ubuntu14-04_u4EE5_u4E0A__u6216_u8005_Mac" class="headerlink" title="1、系统： Ubuntu14.04以上 或者 Mac"></a>1、系统： Ubuntu14.04以上 或者 Mac</h4><blockquote>
@@ -2917,16 +3364,16 @@ $ sudo apt-get install sun-java8-jdk
     
     </summary>
     
-      <category term="源码" scheme="http://yoursite.com/tags/%E6%BA%90%E7%A0%81/"/>
+      <category term="源码" scheme="http://kevinhero.github.io/tags/%E6%BA%90%E7%A0%81/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Kotlin 1.0 正式版发布啦]]></title>
-    <link href="http://yoursite.com/2016/02/18/Kotlin1.0%E6%AD%A3%E5%BC%8F%E7%89%88%E5%8F%91%E5%B8%83/"/>
-    <id>http://yoursite.com/2016/02/18/Kotlin1.0正式版发布/</id>
+    <link href="http://kevinhero.github.io/2016/02/18/New%20Lan/Kotlin1.0%E6%AD%A3%E5%BC%8F%E7%89%88%E5%8F%91%E5%B8%83/"/>
+    <id>http://kevinhero.github.io/2016/02/18/New Lan/Kotlin1.0正式版发布/</id>
     <published>2016-02-18T15:01:14.000Z</published>
     <updated>2016-04-07T03:45:13.000Z</updated>
     <content type="html"><![CDATA[<p>就在昨天，Android领域的Swift–Kotlin 1.0发布了，详细的新版本发布介绍请「阅读原文」查看官方发行说明。</p>
@@ -3062,16 +3509,16 @@ GitHub，Slack，甚至 Minecraft
     
     </summary>
     
-      <category term="Kotlin" scheme="http://yoursite.com/tags/Kotlin/"/>
+      <category term="Kotlin" scheme="http://kevinhero.github.io/tags/Kotlin/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Ibeacon]]></title>
-    <link href="http://yoursite.com/2016/01/25/Ibeacon/"/>
-    <id>http://yoursite.com/2016/01/25/Ibeacon/</id>
+    <link href="http://kevinhero.github.io/2016/01/25/%E9%9A%8F%E7%AC%94/Ibeacon/"/>
+    <id>http://kevinhero.github.io/2016/01/25/随笔/Ibeacon/</id>
     <published>2016-01-25T04:01:14.000Z</published>
     <updated>2016-02-19T09:12:16.000Z</updated>
     <content type="html"><![CDATA[<h3 id="u662F_u4EC0_u4E48_uFF1F"><a href="#u662F_u4EC0_u4E48_uFF1F" class="headerlink" title="是什么？"></a>是什么？</h3><p>iBeacon是apple公司提出的“一种可以让附近手持电子设备检测到的一种新的低功耗、低成本信号传送器”的一套可用于室内定位系统的协议。 这种技术可以使一个智能手机或其他装置在一个iBeacon基站的感应范围内执行相应的命令。</p>
@@ -3103,16 +3550,16 @@ GitHub，Slack，甚至 Minecraft
     
     </summary>
     
-      <category term="Ibeacon" scheme="http://yoursite.com/tags/Ibeacon/"/>
+      <category term="Ibeacon" scheme="http://kevinhero.github.io/tags/Ibeacon/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Android MotionEvent详解]]></title>
-    <link href="http://yoursite.com/2015/12/21/Android%20MotionEvent%E8%AF%A6%E8%A7%A3/"/>
-    <id>http://yoursite.com/2015/12/21/Android MotionEvent详解/</id>
+    <link href="http://kevinhero.github.io/2015/12/21/Android%20Skills/Android%20MotionEvent%E8%AF%A6%E8%A7%A3/"/>
+    <id>http://kevinhero.github.io/2015/12/21/Android Skills/Android MotionEvent详解/</id>
     <published>2015-12-21T04:12:45.000Z</published>
     <updated>2016-04-06T04:29:56.000Z</updated>
     <content type="html"><![CDATA[<h3 id="u4E8B_u4EF6_u5750_u6807_u7684_u542B_u4E49"><a href="#u4E8B_u4EF6_u5750_u6807_u7684_u542B_u4E49" class="headerlink" title="事件坐标的含义"></a>事件坐标的含义</h3><p> 我们都知道，每个触摸事件都代表用户在屏幕上的一个动作，而每个动作必定有其发生的位置。在MotionEvent中就有一系列与标触摸事件发生位置相关的函数：</p>
@@ -3207,16 +3654,16 @@ return ;
     
     </summary>
     
-      <category term="MotionEvent" scheme="http://yoursite.com/tags/MotionEvent/"/>
+      <category term="MotionEvent" scheme="http://kevinhero.github.io/tags/MotionEvent/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[React-Native学习指南]]></title>
-    <link href="http://yoursite.com/2015/12/19/React-Native%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/"/>
-    <id>http://yoursite.com/2015/12/19/React-Native学习指南/</id>
+    <link href="http://kevinhero.github.io/2015/12/19/New%20Lan/React-Native%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/"/>
+    <id>http://kevinhero.github.io/2015/12/19/New Lan/React-Native学习指南/</id>
     <published>2015-12-19T15:32:17.000Z</published>
     <updated>2016-02-19T09:13:18.000Z</updated>
     <content type="html"><![CDATA[<p>本指南汇集React-Native各类学习资源，给大家提供便利。指南正在不断的更新，大家有好的资源欢迎Pull Requests！</p>
@@ -3519,16 +3966,16 @@ return ;
     
     </summary>
     
-      <category term="React-Native" scheme="http://yoursite.com/tags/React-Native/"/>
+      <category term="React-Native" scheme="http://kevinhero.github.io/tags/React-Native/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[RecyclerView 列表控件中简单实现时间线]]></title>
-    <link href="http://yoursite.com/2015/12/18/RecyclerView%20%E5%88%97%E8%A1%A8%E6%8E%A7%E4%BB%B6%E4%B8%AD%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%97%B6%E9%97%B4%E7%BA%BF/"/>
-    <id>http://yoursite.com/2015/12/18/RecyclerView 列表控件中简单实现时间线/</id>
+    <link href="http://kevinhero.github.io/2015/12/18/Android%20Skills/RecyclerView%20%E5%88%97%E8%A1%A8%E6%8E%A7%E4%BB%B6%E4%B8%AD%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%97%B6%E9%97%B4%E7%BA%BF/"/>
+    <id>http://kevinhero.github.io/2015/12/18/Android Skills/RecyclerView 列表控件中简单实现时间线/</id>
     <published>2015-12-17T17:01:14.000Z</published>
     <updated>2016-02-19T09:20:12.000Z</updated>
     <content type="html"><![CDATA[<p>看见很多软件中都有时间线的东西，貌似天气啊，旅游啊什么的最多了；具体实现方式很多，在本篇文章中讲解一种自定义View封装的方式。</p>
@@ -3993,1865 +4440,9 @@ private List&lt;TimeLineModel&gt; getData() {
     
     </summary>
     
-      <category term="时间轴" scheme="http://yoursite.com/tags/%E6%97%B6%E9%97%B4%E8%BD%B4/"/>
+      <category term="时间轴" scheme="http://kevinhero.github.io/tags/%E6%97%B6%E9%97%B4%E8%BD%B4/"/>
     
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[亮点和不足]]></title>
-    <link href="http://yoursite.com/2015/11/21/3.5%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E4%BA%AE%E7%82%B9%E5%92%8C%E4%B8%8D%E8%B6%B3/"/>
-    <id>http://yoursite.com/2015/11/21/3.5开发中的亮点和不足/</id>
-    <published>2015-11-20T18:33:45.000Z</published>
-    <updated>2016-02-19T08:25:42.000Z</updated>
-    <content type="html"><![CDATA[<h3 id="1_u3001_u4E00_u952E_u52A0_u6CB9_u7684_u6570_u636E_u7F13_u5B58_u64CD_u4F5C"><a href="#1_u3001_u4E00_u952E_u52A0_u6CB9_u7684_u6570_u636E_u7F13_u5B58_u64CD_u4F5C" class="headerlink" title="1、一键加油的数据缓存操作"></a>1、一键加油的数据缓存操作</h3><ul>
-<li><p>添加缓存</p>
-<pre><code>原因：
-    开发过程，由于测试服务器的网络带宽，客户端请求数据超级慢，用户的体验非常不好。
-工具：
-    sharedPreference：
-流程：
-    1、将一键加油的数据，在进入到主页的时候，进行请求完成，将JSON,时间，当前请求的位置等数据缓存到本地
-    2、在进入到一键加油的流程时候，先拿到本地缓存的数据，对时间和位置进行对比，时间超过5分钟，位置移动超过20m，都会重新向服务器请求数据。
-    3、在首页生命周期走到onStop()方法时候，将缓存数据进行致空（json=&quot;&quot;;）操作。
-    4、3的操作，保证每次打开首页进入到一键加油流程都是最新的数据，同样也保证再次回到首页的时候，在网络情况差，请求不到数据的情况，不会使用上一次缓存的数据
-优点：
-    优化用户体验，节省流量
-缺点：暂未发现
-</code></pre></li>
-</ul>
-<a id="more"></a>
-<h3 id="2_u3001_u70ED_u4FEE_u590D_u529F_u80FD_u7684_u662F_u5B9E_u73B0"><a href="#2_u3001_u70ED_u4FEE_u590D_u529F_u80FD_u7684_u662F_u5B9E_u73B0" class="headerlink" title="2、热修复功能的是实现"></a>2、热修复功能的是实现</h3><ul>
-<li><p>添加的热修复框架</p>
-<pre><code>来源：
-    使用的是阿里开源的一个Android热补丁框架（AndFix）
-功能：
-    允许APP在不重新发布版本的情况下修复线上的bug。
-原理：
-    apkpatch将两个apk做一次对比，然后找出不同的部分。可以看到生成的apatch了文件，后缀改成zip再解压开，里面有一个dex文件。通过jadx查看一下源码，
-    里面就是被修复的代码所在的类文件,这些更改过的类都加上了一个_CF的后缀，并且变动的方法都被加上了一个叫@MethodReplace的annotation，
-    通过clazz和method指定了需要替换的方法。然后客户端sdk得到补丁文件后就会根据annotation来寻找需要替换的方法。最后由JNI层完成方法的替换。
-优点：
-    1、不需要重启APP即可应用补丁。
-    2、安全性更好，Nuwa后面的版本应该也会加上安全方面的内容。
-支持：
-    Android 2.3 到 6.0。
-格式：
-    .apatch
-安全：
-    必须使用签名工具进行操作生成的apatch文件，才能进行patch操作
-局限：
-    1、不支持YunOS
-    2、无法添加新类和新的字段
-    3、需要使用加固前的apk制作补丁，但是补丁文件很容易被反编译，也就是修改过的类源码容易泄露。
-    4、使用加固平台可能会使热补丁功能失效（看到有人在360加固提了这个问题，自己还未验证）。
-缺点：
-    无法添加类和字段
-使用：
-    打补丁的过程，首先生成一个apk文件，然后更改代码，在修复bug后生成另一个apk。
-    通过官方提供的工具apkpatch
-    生成一个.apatch格式的补丁文件，需要提供原apk，修复后的apk，以及一个签名文件。
-    可以直接使用命令apkpatch查看具体的使用方法。
-</code></pre></li>
-</ul>
-<h3 id="3-_u5F00_u53D1_u4E2D_u4E00_u952E_u52A0_u6CB9_u7684_u903B_u8F91_u8003_u8651"><a href="#3-_u5F00_u53D1_u4E2D_u4E00_u952E_u52A0_u6CB9_u7684_u903B_u8F91_u8003_u8651" class="headerlink" title="3.开发中一键加油的逻辑考虑"></a>3.开发中一键加油的逻辑考虑</h3><p>*</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Copyright (c) 2015 Copyright Holder All Rights Reserved.</span><br></pre></td></tr></table></figure>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h3 id="1_u3001_u4E00_u952E_u52A0_u6CB9_u7684_u6570_u636E_u7F13_u5B58_u64CD_u4F5C"><a href="#1_u3001_u4E00_u952E_u52A0_u6CB9_u7684_u6570_u636E_u7F13_u5B58_u64CD_u4F5C" class="headerlink" title="1、一键加油的数据缓存操作"></a>1、一键加油的数据缓存操作</h3><ul>
-<li><p>添加缓存</p>
-<pre><code>原因：
-    开发过程，由于测试服务器的网络带宽，客户端请求数据超级慢，用户的体验非常不好。
-工具：
-    sharedPreference：
-流程：
-    1、将一键加油的数据，在进入到主页的时候，进行请求完成，将JSON,时间，当前请求的位置等数据缓存到本地
-    2、在进入到一键加油的流程时候，先拿到本地缓存的数据，对时间和位置进行对比，时间超过5分钟，位置移动超过20m，都会重新向服务器请求数据。
-    3、在首页生命周期走到onStop()方法时候，将缓存数据进行致空（json=&quot;&quot;;）操作。
-    4、3的操作，保证每次打开首页进入到一键加油流程都是最新的数据，同样也保证再次回到首页的时候，在网络情况差，请求不到数据的情况，不会使用上一次缓存的数据
-优点：
-    优化用户体验，节省流量
-缺点：暂未发现
-</code></pre></li>
-</ul>]]>
-    
-    </summary>
-    
-      <category term="反思" scheme="http://yoursite.com/tags/%E5%8F%8D%E6%80%9D/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[ActionBar沉浸式实现]]></title>
-    <link href="http://yoursite.com/2015/10/09/ActionBar%E6%B2%89%E6%B5%B8%E5%BC%8F%E5%AE%9E%E7%8E%B0/"/>
-    <id>http://yoursite.com/2015/10/09/ActionBar沉浸式实现/</id>
-    <published>2015-10-09T13:56:17.000Z</published>
-    <updated>2016-04-07T03:45:54.000Z</updated>
-    <content type="html"><![CDATA[<p>studio，中引入沉浸式兼容库 </p>
-<pre><code>compile &apos;com.readystatesoftware.systembartint:systembartint:1.0.3&apos; 
-</code></pre><p>eclipse，可以导入相应的那个类。</p>
-<h3 id="u7B2C_u4E00_u7C7B_uFF0C_u517C_u5BB9actionbar"><a href="#u7B2C_u4E00_u7C7B_uFF0C_u517C_u5BB9actionbar" class="headerlink" title="第一类，兼容actionbar"></a>第一类，兼容actionbar</h3><ul>
-<li><p>第一步：设置activity主题android:theme=”@style/ActionBarTheme”</p>
-<a id="more"></a>
-  <style name="ActionBarTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-    <!--API 14 themecustomizationscangohere. -->
-    <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-  </style>
-  <style name="ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-    <item name="android:background">@color/actionbar_bg</item>
-  </style>
-</li>
-<li><p>第二步：设置状态栏透明，然后设置状态栏沉浸的颜色</p>
-</li>
-</ul>
-<pre><code>@TargetApi(19)
-private void setTranslucentStatus(boolean on) {
-Window win = getWindow();
-WindowManager.LayoutParams winParams = win.getAttributes();
-final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-    if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &amp;= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-super.onCreate(savedInstanceState);
-setContentView(R.layout.activity_main);
-
-if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-        }
-
-SystemBarTintManager tintManager = new SystemBarTintManager(this);
-tintManager.setStatusBarTintEnabled(true);
-//设置沉浸的颜色        
-tintManager.setStatusBarTintResource(R.color.statusbar_bg);
-}
-</code></pre><ul>
-<li>第三步：设置适应windows，在布局文件设置</li>
-</ul>
-<pre><code>android:fitsSystemWindows=”true”
-如果不设置，应用的ui会顶上去，顶进system ui
-ok
-</code></pre><h3 id="u7B2C_u4E8C_u7C7B__u6CA1_u6709actionbar_u7684activity"><a href="#u7B2C_u4E8C_u7C7B__u6CA1_u6709actionbar_u7684activity" class="headerlink" title="第二类 没有actionbar的activity"></a>第二类 没有actionbar的activity</h3><ul>
-<li>第一步，设置主题，android:theme=”@style/FullBleedTheme”</li>
-</ul>
-<pre><code>&lt;stylename=&quot;FullBleedTheme&quot;parent=&quot;android:Theme.Holo.Light.NoActionBar&quot;&gt;
-&lt;!--API 14 themecustomizationscangohere. --&gt;
-&lt;/style&gt;
-&lt;stylename=&quot;FullBleedTheme&quot;parent=&quot;android:Theme.Holo.Light.NoActionBar.TranslucentDecor&quot;&gt;
-&lt;!--API 19 themecustomizationscangohere. --&gt;
-&lt;/style&gt;
-</code></pre><blockquote>
-<p>或者用toolbar只能设置Theme.AppCompat.NoActionBar主题</p>
-</blockquote>
-<pre><code>&lt;style name=&quot;AppThemeToolbar&quot; parent=&quot;Theme.AppCompat.NoActionBar&quot;&gt;
-    &lt;itemname=&quot;colorPrimary&quot;&gt;#2196F3&lt;/item&gt;
-    &lt;itemname=&quot;colorPrimaryDark&quot;&gt;#2196F3&lt;/item&gt;
-    &lt;!--&lt;item name=&quot;colorPrimaryDark&quot;&gt;#1565C0&lt;/item&gt;--&gt;
-    &lt;itemname=&quot;colorAccent&quot;&gt;#E91E63&lt;/item&gt;
-&lt;/style&gt;
-</code></pre><ul>
-<li>第二步：同上一个第二步。<br>设置状态栏透明+颜色</li>
-</ul>
-<pre><code>mTintManager = new SystemBarTintManager(this);
-mTintManager.setStatusBarTintEnabled(true);
-mTintManager.setNavigationBarTintEnabled(true);  mTintManager.setStatusBarTintResource(R.color.statusbar_bg);
-</code></pre><ul>
-<li>第三步：</li>
-</ul>
-<pre><code>android:fitsSystemWindows=”true”
-android:clipToPadding=”false
-&lt;item name=&quot;android:fitsSystemWindows&quot;&gt;true&lt;/item&gt;
-&lt;item name=&quot;android:clipToPadding&quot;&gt;false&lt;/item&gt;```
-</code></pre><h3 id="u53EF_u80FD_u51FA_u73B0_u7684_u95EE_u9898"><a href="#u53EF_u80FD_u51FA_u73B0_u7684_u95EE_u9898" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h3><ul>
-<li>android:fitsSystemWindows属性的奇怪问题</li>
-</ul>
-<blockquote>
-<p>官方解释是布局的时候是否考虑系统的状态栏，标题栏，通知栏之类的。</p>
-<p>我的实际使用是，为true：那么布局的时候会把系统的状态栏，标题栏，通知栏的高度考虑进去。布局的内容会在状态栏，标题栏，通知栏的下面，不会被遮挡。</p>
-<p>但是在项目开发的过程中，突然发现对话框，AlertDialog的内容会超出背景大小，ProgressDialog的内容会超出背景大小并且不居中。</p>
-<p>也是很偶然才发现是这个属性造成的。我也没理清楚，大概是这个属性也使对话框考虑了系统的一些元素的缘故。</p>
-<p>所以我们在使用这个属性的时候不用直接把这个属性加到theme中。在相关的布局layout中使用就可以了。</p>
-</blockquote>
-<ul>
-<li>Android Toast显示文字超出了背景，文字布局中</li>
-</ul>
-<blockquote>
-<p>项目中突然出现了上述的情况，先开始以为是theme的问题，但是查了很久的资料，也做了很多实验，但是没有效果，还是之前的样子。一个很偶然的情况，<code>Toast.makeText(getActivity(), “密码不可为空”,Toast.LENGTH_SHORT).show();</code>改成了<code>Toast.makeText(App.getInstance(), “密码不可为空”,Toast.LENGTH_SHORT).show();</code>发现就可以了。</p>
-<p>别问我，我也不知道原因。</p>
-<p>但是这提醒我们，以后的Toast 的上下文参数，直接用ApplicationContext就对了。</p>
-</blockquote>
-<p>Copyright (c) 2016 Copyright Holder All Rights Reserved.</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>studio，中引入沉浸式兼容库 </p>
-<pre><code>compile &apos;com.readystatesoftware.systembartint:systembartint:1.0.3&apos; 
-</code></pre><p>eclipse，可以导入相应的那个类。</p>
-<h3 id="u7B2C_u4E00_u7C7B_uFF0C_u517C_u5BB9actionbar"><a href="#u7B2C_u4E00_u7C7B_uFF0C_u517C_u5BB9actionbar" class="headerlink" title="第一类，兼容actionbar"></a>第一类，兼容actionbar</h3><ul>
-<li><p>第一步：设置activity主题android:theme=”@style/ActionBarTheme”</p>]]>
-    
-    </summary>
-    
-      <category term="沉浸式" scheme="http://yoursite.com/tags/%E6%B2%89%E6%B5%B8%E5%BC%8F/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android注解(Annotation)自定义注解入门]]></title>
-    <link href="http://yoursite.com/2015/07/22/%E6%B3%A8%E8%A7%A3(Annotation)%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%E5%85%A5%E9%97%A8/"/>
-    <id>http://yoursite.com/2015/07/22/注解(Annotation)自定义注解入门/</id>
-    <published>2015-07-22T15:12:17.000Z</published>
-    <updated>2016-02-19T09:06:01.000Z</updated>
-    <content type="html"><![CDATA[<p>要深入学习注解，我们就必须能定义自己的注解，并使用注解，在定义自己的注解之前，我们就必须要了解Java为我们提供的元注解和相关定义注解的语法。</p>
-<p>元注解：<br>元注解的作用就是负责注解其他注解。Java5.0定义了4个标准的<code>meta-annotation</code>类型，它们被用来提供对其它 <code>annotation</code>类型作说明。Java5.0定义的元注解：<a id="more"></a></p>
-<pre><code>1.@Target,
-2.@Retention,
-3.@Documented,
-4.@Inherited
-</code></pre><p>这些类型和它们所支持的类在<code>java.lang.annotation</code>包中可以找到。下面我们看一下每个元注解的作用和相应分参数的使用说明。</p>
-<h4 id="@Target_uFF1A"><a href="#@Target_uFF1A" class="headerlink" title="@Target："></a>@Target：</h4><blockquote>
-<p>@Target说明了Annotation所修饰的对象范围：Annotation可被用于 packages、types（类、接口、枚举、Annotation类型）、类型成员（方法、构造方法、成员变量、枚举值）、方法参数和本地变量（如循环变量、catch参数）。在Annotation类型的声明中使用了target可更加明晰其修饰的目标。<br>作用：用于描述注解的使用范围（即：被描述的注解可以用在什么地方）<br>取值(ElementType)有：</p>
-<ul>
-<li>1.CONSTRUCTOR:用于描述构造器</li>
-<li>2.FIELD:用于描述域</li>
-<li>3.LOCAL_VARIABLE:用于描述局部变量</li>
-<li>4.METHOD:用于描述方法</li>
-<li>5.PACKAGE:用于描述包</li>
-<li>6.PARAMETER:用于描述参数</li>
-<li>7.TYPE:用于描述类、接口(包括注解类型) 或enum声明</li>
-</ul>
-</blockquote>
-<p>使用实例：</p>
-<pre><code>@Target(ElementType.TYPE)
-public @interface Table {
-    /**
-     * 数据表名称注解，默认值为类名称
-     * @return
-     */
-    public String tableName() default &quot;className&quot;;
-}
-@Target(ElementType.FIELD)
-public @interface NoDBColumn {
-}
-</code></pre><h3 id="u6CE8_u89E3Table"><a href="#u6CE8_u89E3Table" class="headerlink" title="注解Table"></a>注解Table</h3><p>可以用于注解类、接口(包括注解类型) 或enum声明,而注解NoDBColumn仅可用于注解类的成员变量。</p>
-<h4 id="@Retention_uFF1A"><a href="#@Retention_uFF1A" class="headerlink" title="@Retention："></a>@Retention：</h4><blockquote>
-<p>@Retention定义了该Annotation被保留的时间长短：某些Annotation仅出现在源代码中，而被编译器丢弃；而另一些却被编译在class文件中；编译在class文件中的Annotation可能会被虚拟机忽略，而另一些在class被装载时将被读取（请注意并不影响class的执行，因为Annotation与class在使用上是被分离的）。使用这个meta-Annotation可以对 Annotation的“生命周期”限制。<br>作用：表示需要在什么级别保存该注释信息，用于描述注解的生命周期（即：被描述的注解在什么范围内有效）<br>取值（RetentionPoicy）有：</p>
-<ul>
-<li>1.SOURCE:在源文件中有效（即源文件保留）</li>
-<li>2.CLASS:在class文件中有效（即class保留）</li>
-<li>3.RUNTIME:在运行时有效（即运行时保留）</li>
-</ul>
-</blockquote>
-<h4 id="Retention"><a href="#Retention" class="headerlink" title="Retention"></a>Retention</h4><blockquote>
-<p>meta-annotation类型有唯一的value作为成员，它的取值来自java.lang.annotation.RetentionPolicy的枚举类型值。具体实例如下：</p>
-</blockquote>
-<pre><code>@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Column {
-    public String name() default &quot;fieldName&quot;;
-    public String setFuncName() default &quot;setField&quot;;
-    public String getFuncName() default &quot;getField&quot;;
-    public boolean defaultDBValue() default false;
-}
-</code></pre><blockquote>
-<p>Column注解的的RetentionPolicy的属性值是RUTIME,这样注解处理器可以通过反射，获取到该注解的属性值，从而去做一些运行时的逻辑处理</p>
-</blockquote>
-<h4 id="@Documented_3A"><a href="#@Documented_3A" class="headerlink" title="@Documented:"></a>@Documented:</h4><p>@Documented用于描述其它类型的annotation应该被作为被标注的程序成员的公共API，因此可以被例如javadoc此类的工具文档化。Documented是一个标记注解，没有成员。</p>
-<pre><code>@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Column {
-    public String name() default &quot;fieldName&quot;;
-    public String setFuncName() default &quot;setField&quot;;
-    public String getFuncName() default &quot;getField&quot;;
-    public boolean defaultDBValue() default false;
-}
-</code></pre><h4 id="@Inherited_uFF1A"><a href="#@Inherited_uFF1A" class="headerlink" title="@Inherited："></a>@Inherited：</h4><p>@Inherited 元注解是一个标记注解，@Inherited阐述了某个被标注的类型是被继承的。如果一个使用了@Inherited修饰的annotation类型被用于一个class，则这个annotation将被用于该class的子类。</p>
-<blockquote>
-<p>注意：@Inherited annotation类型是被标注过的class的子类所继承。类并不从它所实现的接口继承annotation，方法并不从它所重载的方法继承annotation。<br>当@Inherited annotation类型标注的annotation的Retention是RetentionPolicy.RUNTIME，则反射API增强了这种继承性。如果我们使用java.lang.reflect去查询一个@Inherited annotation类型的annotation时，反射代码检查将展开工作：检查class和其父类，直到发现指定的annotation类型被发现，或者到达类继承结构的顶层。</p>
-</blockquote>
-<p>实例代码：</p>
-<pre><code>/**
- *
- * @author peida
- *
- */
-@Inherited
-public @interface Greeting {
-    public enum FontColor{ BULE,RED,GREEN};
-    String name();
-    FontColor fontColor() default FontColor.GREEN;
-}
-</code></pre><h3 id="u81EA_u5B9A_u4E49_u6CE8_u89E3_uFF1A"><a href="#u81EA_u5B9A_u4E49_u6CE8_u89E3_uFF1A" class="headerlink" title="自定义注解："></a>自定义注解：</h3><blockquote>
-<p>使用@interface自定义注解时，自动继承了java.lang.annotation.Annotation接口，由编译程序自动完成其他细节。在定义注解时，不能继承其他的注解或接口。@interface用来声明一个注解，其中的每一个方法实际上是声明了一个配置参数。方法的名称就是参数的名称，返回值类型就是参数的类型（返回值类型只能是基本类型、Class、String、enum）。可以通过default来声明参数的默认值。</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>定义注解格式：<br>public @interface 注解名 {定义体}</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>注解参数的可支持数据类型：</p>
-</blockquote>
-<ul>
-<li>1.所有基本数据类型（int,float,boolean,byte,double,char,long,short)</li>
-<li>2.String类型</li>
-<li>3.Class类型</li>
-<li>4.enum类型</li>
-<li>5.Annotation类型</li>
-<li>6.以上所有类型的数组</li>
-</ul>
-<p>Annotation类型里面的参数该怎么设定:</p>
-<blockquote>
-<p>第一,只能用public或默认(default)这两个访问权修饰.例如,String value();这里把方法设为defaul默认类型；</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>第二,参数成员只能用基本类型byte,short,char,int,long,float,double,boolean八种基本数据类型和 String,Enum,Class,annotations等数据类型,以及这一些类型的数组.例如,String value();这里的参数成员就为String;</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>第三,如果只有一个参数成员,最好把参数名称设为”value”,后加小括号.例:下面的例子FruitName注解就只有一个参数成员。</p>
-</blockquote>
-<hr>
-<p>简单的自定义注解和使用注解实例：</p>
-<pre><code>package annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-/**
- * 水果名称注解
- * @author peida
- *
- */
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface FruitName {
-    String value() default &quot;&quot;;
-}
-</code></pre><hr>
-<pre><code>package annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-/**
- * 水果颜色注解
- * @author peida
- *
- */
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface FruitColor {
-    /**
-     * 颜色枚举
-     * @author peida
-     *
-     */
-    public enum Color{ BULE,RED,GREEN};
-
-    /**
-     * 颜色属性
-     * @return
-     */
-    Color fruitColor() default Color.GREEN;
-}
-</code></pre><hr>
-<pre><code>package annotation;
-import annotation.FruitColor.Color;
-public class Apple {
-
-    @FruitName(&quot;Apple&quot;)
-    private String appleName;
-
-    @FruitColor(fruitColor=Color.RED)
-    private String appleColor;
-
-
-
-
-    public void setAppleColor(String appleColor) {
-        this.appleColor = appleColor;
-    }
-    public String getAppleColor() {
-        return appleColor;
-    }
-
-
-    public void setAppleName(String appleName) {
-        this.appleName = appleName;
-    }
-    public String getAppleName() {
-        return appleName;
-    }
-
-    public void displayName(){
-        System.out.println(&quot;水果的名字是：苹果&quot;);
-    }
-}
-</code></pre><h4 id="u6CE8_u89E3_u5143_u7D20_u7684_u9ED8_u8BA4_u503C_uFF1A"><a href="#u6CE8_u89E3_u5143_u7D20_u7684_u9ED8_u8BA4_u503C_uFF1A" class="headerlink" title="注解元素的默认值："></a>注解元素的默认值：</h4><blockquote>
-<p>注解元素必须有确定的值，要么在定义注解的默认值中指定，要么在使用注解时指定，非基本类型的注解元素的值不可为null。因此, 使用空字符串或0作为默认值是一种常用的做法。这个约束使得处理器很难表现一个元素的存在或缺失的状态，因为每个注解的声明中，所有元素都存在，并且都具有相应的值，为了绕开这个约束，我们只能定义一些特殊的值，例如空字符串或者负数，一次表示某个元素不存在，在定义注解时，这已经成为一个习惯用法。</p>
-</blockquote>
-<p>例如：</p>
-<pre><code> 1 package annotation;
- 2
- 3 import java.lang.annotation.Documented;
- 4 import java.lang.annotation.ElementType;
- 5 import java.lang.annotation.Retention;
- 6 import java.lang.annotation.RetentionPolicy;
- 7 import java.lang.annotation.Target;
- 8
- 9 /**
-10  * 水果供应者注解
-11  * @author peida
-12  *
-13  */
-14 @Target(ElementType.FIELD)
-15 @Retention(RetentionPolicy.RUNTIME)
-16 @Documented
-17 public @interface FruitProvider {
-18     /**
-19      * 供应商编号
-20      * @return
-21      */
-22     public int id() default -1;
-23     
-24     /**
-25      * 供应商名称
-26      * @return
-27      */
-28     public String name() default &quot;&quot;;
-29     
-30     /**
-31      * 供应商地址
-32      * @return
-33      */
-34     public String address() default &quot;&quot;;
-35 }
-</code></pre><blockquote>
-<p>定义了注解，并在需要的时候给相关类，类属性加上注解信息，如果没有响应的注解信息处理流程，注解可以说是没有实用价值。如何让注解真真的发挥作用，主要就在于注解处理方法，下一步我们将学习注解信息的获取和处理！</p>
-</blockquote>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>要深入学习注解，我们就必须能定义自己的注解，并使用注解，在定义自己的注解之前，我们就必须要了解Java为我们提供的元注解和相关定义注解的语法。</p>
-<p>元注解：<br>元注解的作用就是负责注解其他注解。Java5.0定义了4个标准的<code>meta-annotation</code>类型，它们被用来提供对其它 <code>annotation</code>类型作说明。Java5.0定义的元注解：]]>
-    
-    </summary>
-    
-      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android OkHttp完全解析]]></title>
-    <link href="http://yoursite.com/2015/07/21/Android%20OkHttp%E5%AE%8C%E5%85%A8%E8%A7%A3%E6%9E%90/"/>
-    <id>http://yoursite.com/2015/07/21/Android OkHttp完全解析/</id>
-    <published>2015-07-21T05:56:17.000Z</published>
-    <updated>2016-02-19T09:08:00.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="u4E00_u3001_u6982_u8FF0"><a href="#u4E00_u3001_u6982_u8FF0" class="headerlink" title="一、概述"></a>一、概述</h2><blockquote>
-<p>最近在群里听到各种讨论okhttp的话题，可见okhttp的口碑相当好了。再加上Google貌似在6.0版本里面删除了HttpClient相关API，对于这个行为不做评价。为了更好的在应对网络访问，学习下okhttp还是蛮必要的，本篇博客首先介绍okhttp的简单使用，主要包含：</p>
-</blockquote>
-<a id="more"></a>
-<pre><code>• 一般的get请求
-• 一般的post请求
-• 基于Http的文件上传
-• 文件下载
-• 加载图片
-• 支持请求回调，直接返回对象、对象集合
-• 支持session的保持
-</code></pre><p>最后会对上述几个功能进行封装，完整的封装类的地址见：<code>https://github.com/hongyangAndroid/okhttp-utils</code><br>使用前，对于Android Studio的用户，可以选择添加:<br><code>compile &#39;com.squareup.okhttp:okhttp:2.4.0&#39;</code></p>
-<p>或者Eclipse的用户，可以下载最新的jar okhttp he latest JAR ，添加依赖就可以用了。<br>注意:okhttp内部依赖okio，别忘了同时导入okio：<br><code>gradle: compile &#39;com.squareup.okio:okio:1.5.0&#39;</code></p>
-<h2 id="u4E8C_u3001_u4F7F_u7528_u6559_u7A0B"><a href="#u4E8C_u3001_u4F7F_u7528_u6559_u7A0B" class="headerlink" title="二、使用教程"></a>二、使用教程</h2><h3 id="uFF08_u4E00_uFF09Http_Get"><a href="#uFF08_u4E00_uFF09Http_Get" class="headerlink" title="（一）Http Get"></a>（一）Http Get</h3><p>对了网络加载库，那么最常见的肯定就是http get请求了，比如获取一个网页的内容。</p>
-<pre><code>//创建okHttpClient对象
-OkHttpClient mOkHttpClient = new OkHttpClient();
-//创建一个Request
-final Request request = new Request.Builder()
-                .url(&quot;https://github.com/hongyangAndroid&quot;)
-                .build();
-//new call
-Call call = mOkHttpClient.newCall(request);
-//请求加入调度
-call.enqueue(new Callback()
-        {
-            @Override
-            public void onFailure(Request request, IOException e)
-            {
-            }
-@Override
-            public void onResponse(final Response response) throws IOException
-            {
-                    //String htmlStr =  response.body().string();
-            }
-        });
-</code></pre><h4 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h4><p> 以上就是发送一个get请求的步骤，首先构造一个Request对象，参数最起码有个url，当然你可以通过Request.Builder设置更多的参数比如：header、method等。</p>
-<h4 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h4><p> 然后通过request的对象去构造得到一个Call对象，类似于将你的请求封装成了任务，既然是任务，就会有execute()和cancel()等方法。</p>
-<h4 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h4><p> 最后，我们希望以异步的方式去执行请求，所以我们调用的是call.enqueue，将call加入调度队列，然后等待任务执行完成，我们在Callback中即可得到结果。<br>看到这，你会发现，整体的写法还是比较长的，所以封装肯定是要做的，不然每个请求这么写，得累死。</p>
-<h4 id="ok_uFF0C_u9700_u8981_u6CE8_u610F_u51E0_u70B9_uFF1A"><a href="#ok_uFF0C_u9700_u8981_u6CE8_u610F_u51E0_u70B9_uFF1A" class="headerlink" title="ok，需要注意几点："></a>ok，需要注意几点：</h4><ul>
-<li>onResponse回调的参数是response，一般情况下，比如我们希望获得返回的字符串，可以通过<code>response.body().string()``获取；如果希望获得返回的二进制字节数组，则调用</code>response.body().bytes()<code>；如果你想拿到返回的inputStream，则调用`response.body().byteStream()</code><br>看到这，你可能会奇怪，竟然还能拿到返回的<code>inputStream</code>，看到这个最起码能意识到一点，这里支持大文件下载，有<code>inputStream</code>我们就可以通过IO的方式写文件。不过也说明一个问题，这个<code>onResponse</code>执行的线程并不是UI线程。的确是的，如果你希望操作控件，还是需要使用<code>handler</code>等，例如：</li>
-</ul>
-<pre><code>@Override
-public void onResponse(final Response response) throws IOException
-{
-      final String res = response.body().string();
-      runOnUiThread(new Runnable()
-      {
-          @Override
-          public void run()
-          {
-            mTv.setText(res);
-          }
-
-});
-}
-</code></pre><p> 我们这里是异步的方式去执行，当然也支持阻塞的方式，上面我们也说了Call有一个execute()方法，你也可以直接调用<code>call.execute()</code>通过返回一个Response。</p>
-<h3 id="28_u4E8C_29_Http_Post__u643A_u5E26_u53C2_u6570"><a href="#28_u4E8C_29_Http_Post__u643A_u5E26_u53C2_u6570" class="headerlink" title="(二) Http Post 携带参数"></a>(二) Http Post 携带参数</h3><p>看来上面的简单的get请求，基本上整个的用法也就掌握了，比如post携带参数，也仅仅是Request的构造的不同。</p>
-<pre><code>Request request = buildMultipartFormRequest(
-        url, new File[]{file}, new String[]{fileKey}, null);
-FormEncodingBuilder builder = new FormEncodingBuilder();
-builder.add(&quot;username&quot;,&quot;张鸿洋&quot;);
-Request request = new Request.Builder()
-                   .url(url)
-                .post(builder.build())
-                .build();
- mOkHttpClient.newCall(request).enqueue(new Callback(){});
-</code></pre><p>大家都清楚，post的时候，参数是包含在请求体中的；所以我们通过<code>FormEncodingBuilder</code>。添加多个String键值对，然后去构造<code>RequestBody</code>，最后完成我们Request的构造。<br>后面的就和上面一样了。</p>
-<h3 id="uFF08_u4E09_uFF09_u57FA_u4E8EHttp_u7684_u6587_u4EF6_u4E0A_u4F20"><a href="#uFF08_u4E09_uFF09_u57FA_u4E8EHttp_u7684_u6587_u4EF6_u4E0A_u4F20" class="headerlink" title="（三）基于Http的文件上传"></a>（三）基于Http的文件上传</h3><p>接下来我们在介绍一个可以构造RequestBody的Builder，叫做<code>MultipartBuilder</code>。当我们需要做类似于表单上传的时候，就可以使用它来构造我们的requestBody。</p>
-<pre><code>File file = new File(Environment.getExternalStorageDirectory(), &quot;balabala.mp4&quot;);
-RequestBody fileBody = RequestBody.create(MediaType.parse(&quot;application/octet-stream&quot;), file);
-RequestBody requestBody = new MultipartBuilder()
-     .type(MultipartBuilder.FORM)
-     .addPart(Headers.of(
-          &quot;Content-Disposition&quot;,
-              &quot;form-data; name=\&quot;username\&quot;&quot;),
-          RequestBody.create(null, &quot;张鸿洋&quot;))
-     .addPart(Headers.of(
-         &quot;Content-Disposition&quot;,
-         &quot;form-data; name=\&quot;mFile\&quot;;
-         filename=\&quot;wjd.mp4\&quot;&quot;), fileBody)
-     .build();
-Request request = new Request.Builder()
-    .url(&quot;http://192.168.1.103:8080/okHttpServer/fileUpload&quot;)
-    .post(requestBody)
-    .build();
-Call call = mOkHttpClient.newCall(request);
-call.enqueue(new Callback()
-{
-    //...
-});
-</code></pre><p>上述代码向服务器传递了一个键值对username:张鸿洋和一个文件。我们通过MultipartBuilder的addPart方法可以添加键值对或者文件。<br>其实类似于我们拼接模拟浏览器行为的方式，如果你对这块不了解，可以参考：从原理角度解析Android （Java） http 文件上传<br>ok，对于我们最开始的目录还剩下图片下载，文件下载；这两个一个是通过回调的Response拿到byte[]然后decode成图片；文件下载，就是拿到inputStream做写文件操作，我们这里就不赘述了。</p>
-<p>接下来我们主要看如何封装上述的代码。</p>
-<h2 id="u4E09_u3001_u5C01_u88C5"><a href="#u4E09_u3001_u5C01_u88C5" class="headerlink" title="三、封装"></a>三、封装</h2><p>由于按照上述的代码，写多个请求肯定包含大量的重复代码，所以我希望封装后的代码调用是这样的：</p>
-<h3 id="uFF08_u4E00_uFF09_u4F7F_u7528"><a href="#uFF08_u4E00_uFF09_u4F7F_u7528" class="headerlink" title="（一）使用"></a>（一）使用</h3><h4 id="4-__u4E00_u822C_u7684get_u8BF7_u6C42"><a href="#4-__u4E00_u822C_u7684get_u8BF7_u6C42" class="headerlink" title="4. 一般的get请求"></a>4. 一般的get请求</h4><pre><code> OkHttpClientManager.getAsyn(&quot;https://www.baidu.com&quot;, new OkHttpClientManager.ResultCallback&lt;String&gt;()
-        {
-            @Override
-            public void onError(Request request, Exception e)
-            {
-                e.printStackTrace();
-            }
-
-@Override
-            public void onResponse(String u)
-            {
-                mTv.setText(u);//注意这里是UI线程
-            }
-        });
-</code></pre><p>对于一般的请求，我们希望给个url，然后CallBack里面直接操作控件。</p>
-<h4 id="5-__u6587_u4EF6_u4E0A_u4F20_u4E14_u643A_u5E26_u53C2_u6570"><a href="#5-__u6587_u4EF6_u4E0A_u4F20_u4E14_u643A_u5E26_u53C2_u6570" class="headerlink" title="5. 文件上传且携带参数"></a>5. 文件上传且携带参数</h4><p>我们希望提供一个方法，传入url,params,file,callback即可。</p>
-<pre><code> OkHttpClientManager.postAsyn(&quot;http://192.168.1.103:8080/okHttpServer/fileUpload&quot;,//
-    new OkHttpClientManager.ResultCallback&lt;String&gt;()
-    {
-        @Override
-        public void onError(Request request, IOException e)
-        {
-            e.printStackTrace();
-        }
-
-@Override
-        public void onResponse(String result)
-        {
-
-}
-    },//
-    file,//
-    &quot;mFile&quot;,//
-    new OkHttpClientManager.Param[]{
-            new OkHttpClientManager.Param(&quot;username&quot;, &quot;zhy&quot;),
-            new OkHttpClientManager.Param(&quot;password&quot;, &quot;123&quot;)}
-        );
-</code></pre><p>键值对没什么说的，参数3为file，参数4为file对应的name，这个name不是文件的名字；<br>对应于http中的</p>
-<pre><code>&lt;input type=&quot;file&quot; name=&quot;mFile&quot; &gt;
-</code></pre><p>对应的是name后面的值，即mFile.</p>
-<h4 id="6-__u6587_u4EF6_u4E0B_u8F7D"><a href="#6-__u6587_u4EF6_u4E0B_u8F7D" class="headerlink" title="6. 文件下载"></a>6. 文件下载</h4><p>对于文件下载，提供url，目标dir，callback即可。</p>
-<pre><code>OkHttpClientManager.downloadAsyn(
-    &quot;http://192.168.1.103:8080/okHttpServer/files/messenger_01.png&quot;,
-    Environment.getExternalStorageDirectory().getAbsolutePath(),
-new OkHttpClientManager.ResultCallback&lt;String&gt;()
-    {
-        @Override
-        public void onError(Request request, IOException e)
-        {
-
-}
-
-@Override
-        public void onResponse(String response)
-        {
-            //文件下载成功，这里回调的reponse为文件的absolutePath
-        }
-});
-</code></pre><h4 id="7-__u5C55_u793A_u56FE_u7247"><a href="#7-__u5C55_u793A_u56FE_u7247" class="headerlink" title="7. 展示图片"></a>7. 展示图片</h4><p>展示图片，我们希望提供一个url和一个imageview，如果下载成功，直接帮我们设置上即可。</p>
-<pre><code>OkHttpClientManager.displayImage(mImageView,
-    &quot;http://images.csdn.net/20150817/1.jpg&quot;);
-</code></pre><p>内部会自动根据imageview的大小自动对图片进行合适的压缩。虽然，这里可能不适合一次性加载大量图片的场景，但是对于app中偶尔有几个图片的加载，还是可用的。</p>
-<h2 id="u56DB_u3001_u6574_u5408Gson"><a href="#u56DB_u3001_u6574_u5408Gson" class="headerlink" title="四、整合Gson"></a>四、整合Gson</h2><p>很多人提出项目中使用时，服务端返回的是Json字符串，希望客户端回调可以直接拿到对象，于是整合进入了Gson，完善该功能。</p>
-<h3 id="uFF08_u4E00_uFF09_u76F4_u63A5_u56DE_u8C03_u5BF9_u8C61"><a href="#uFF08_u4E00_uFF09_u76F4_u63A5_u56DE_u8C03_u5BF9_u8C61" class="headerlink" title="（一）直接回调对象"></a>（一）直接回调对象</h3><p>例如现在有个User实体类：</p>
-<pre><code>package com.zhy.utils.http.okhttp;
-public class User {
-public String username ;
-    public String password  ;
-public User() {
-        // TODO Auto-generated constructor stub
-    }
-public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-@Override
-    public String toString()
-    {
-        return &quot;User{&quot; +
-                &quot;username=&apos;&quot; + username + &apos;\&apos;&apos; +
-                &quot;, password=&apos;&quot; + password + &apos;\&apos;&apos; +
-                &apos;}&apos;;
-    }
-}
-</code></pre><p>服务端返回：</p>
-<pre><code>{&quot;username&quot;:&quot;zhy&quot;,&quot;password&quot;:&quot;123&quot;}
-</code></pre><p>客户端可以如下方式调用：</p>
-<pre><code> OkHttpClientManager.getAsyn(&quot;http://192.168.56.1:8080/okHttpServer/user!getUser&quot;,
-new OkHttpClientManager.ResultCallback&lt;User&gt;()
-{
-    @Override
-    public void onError(Request request, Exception e)
-    {
-        e.printStackTrace();
-    }
-@Override
-    public void onResponse(User user)
-    {
-        mTv.setText(u.toString());//UI线程
-    }
-});
-</code></pre><p>我们传入泛型User，在onResponse里面直接回调User对象。</p>
-<p>这里特别要注意的事，如果在json字符串-&gt;实体对象过程中发生错误，程序不会崩溃，onError方法会被回调。<br>注意：这里做了少许的更新，接口命名从StringCallback修改为ResultCallback。接口中的onFailure方法修改为onError。</p>
-<h3 id="28_u4E8C_29__u56DE_u8C03_u5BF9_u8C61_u96C6_u5408"><a href="#28_u4E8C_29__u56DE_u8C03_u5BF9_u8C61_u96C6_u5408" class="headerlink" title="(二) 回调对象集合"></a>(二) 回调对象集合</h3><p>依然是上述的User类，服务端返回</p>
-<pre><code>[{&quot;username&quot;:&quot;zhy&quot;,&quot;password&quot;:&quot;123&quot;},{&quot;username&quot;:&quot;lmj&quot;,&quot;password&quot;:&quot;12345&quot;}]
-</code></pre><p>则客户端可以如下调用：</p>
-<pre><code>OkHttpClientManager.getAsyn(&quot;http://192.168.56.1:8080/okHttpServer/user!getUsers&quot;,
-new OkHttpClientManager.ResultCallback&lt;List&lt;User&gt;&gt;()
-{
-    @Override
-    public void onError(Request request, Exception e)
-    {
-        e.printStackTrace();
-    }
-    @Override
-    public void onResponse(List&lt;User&gt; us)
-    {
-        Log.e(&quot;TAG&quot;, us.size() + &quot;&quot;);
-        mTv.setText(us.get(1).toString());
-    }
-});
-</code></pre><p>唯一的区别，就是泛型变为List<user> ，ok ， 如果发现bug或者有任何意见欢迎留言。</user></p>
-<h3 id="u6E90_u7801"><a href="#u6E90_u7801" class="headerlink" title="源码"></a>源码</h3><p>ok，基本介绍完了，对于封装的代码其实也很简单，我就直接贴出来了，因为也没什么好介绍的，如果你看完上面的用法，肯定可以看懂：</p>
-<pre><code>package com.zhy.utils.http.okhttp;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.ImageView;
-import com.google.gson.Gson;
-import com.google.gson.internal.$Gson$Types;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.FileNameMap;
-import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-/**
- * Created by zhy on 15/8/17.
- */
-public class OkHttpClientManager
-{
-    private static OkHttpClientManager mInstance;
-    private OkHttpClient mOkHttpClient;
-    private Handler mDelivery;
-    private Gson mGson;
-private static final String TAG = &quot;OkHttpClientManager&quot;;
-private OkHttpClientManager()
-    {
-        mOkHttpClient = new OkHttpClient();
-        //cookie enabled
-        mOkHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
-        mDelivery = new Handler(Looper.getMainLooper());
-        mGson = new Gson();
-    }
-public static OkHttpClientManager getInstance()
-    {
-        if (mInstance == null)
-        {
-            synchronized (OkHttpClientManager.class)
-            {
-                if (mInstance == null)
-                {
-                    mInstance = new OkHttpClientManager();
-                }
-            }
-        }
-        return mInstance;
-    }
-/**
-     * 同步的Get请求
-     *
-     * @param url
-     * @return Response
-     */
-    private Response _getAsyn(String url) throws IOException
-    {
-        final Request request = new Request.Builder()
-                .url(url)
-                .build();
-        Call call = mOkHttpClient.newCall(request);
-        Response execute = call.execute();
-        return execute;
-    }
-/**
-     * 同步的Get请求
-     *
-     * @param url
-     * @return 字符串
-     */
-    private String _getAsString(String url) throws IOException
-    {
-        Response execute = _getAsyn(url);
-        return execute.body().string();
-    }
-/**
-     * 异步的get请求
-     *
-     * @param url
-     * @param callback
-     */
-    private void _getAsyn(String url, final ResultCallback callback)
-    {
-        final Request request = new Request.Builder()
-                .url(url)
-                .build();
-        deliveryResult(callback, request);
-    }
-/**
-     * 同步的Post请求
-     *
-     * @param url
-     * @param params post的参数
-     * @return
-     */
-    private Response _post(String url, Param... params) throws IOException
-    {
-        Request request = buildPostRequest(url, params);
-        Response response = mOkHttpClient.newCall(request).execute();
-        return response;
-    }
-/**
-     * 同步的Post请求
-     *
-     * @param url
-     * @param params post的参数
-     * @return 字符串
-     */
-    private String _postAsString(String url, Param... params) throws IOException
-    {
-        Response response = _post(url, params);
-        return response.body().string();
-    }
-/**
-     * 异步的post请求
-     *
-     * @param url
-     * @param callback
-     * @param params
-     */
-    private void _postAsyn(String url, final ResultCallback callback, Param... params)
-    {
-        Request request = buildPostRequest(url, params);
-        deliveryResult(callback, request);
-    }
-/**
-     * 异步的post请求
-     *
-     * @param url
-     * @param callback
-     * @param params
-     */
-    private void _postAsyn(String url, final ResultCallback callback, Map&lt;String, String&gt; params)
-    {
-        Param[] paramsArr = map2Params(params);
-        Request request = buildPostRequest(url, paramsArr);
-        deliveryResult(callback, request);
-    }
-/**
-     * 同步基于post的文件上传
-     *
-     * @param params
-     * @return
-     */
-    private Response _post(String url, File[] files, String[] fileKeys, Param... params) throws IOException
-    {
-        Request request = buildMultipartFormRequest(url, files, fileKeys, params);
-        return mOkHttpClient.newCall(request).execute();
-    }
-private Response _post(String url, File file, String fileKey) throws IOException
-    {
-        Request request = buildMultipartFormRequest(url, new File[]{file}, new String[]{fileKey}, null);
-        return mOkHttpClient.newCall(request).execute();
-    }
-private Response _post(String url, File file, String fileKey, Param... params) throws IOException
-    {
-        Request request = buildMultipartFormRequest(url, new File[]{file}, new String[]{fileKey}, params);
-        return mOkHttpClient.newCall(request).execute();
-    }
-/**
-     * 异步基于post的文件上传
-     *
-     * @param url
-     * @param callback
-     * @param files
-     * @param fileKeys
-     * @throws IOException
-     */
-    private void _postAsyn(String url, ResultCallback callback, File[] files, String[] fileKeys, Param... params) throws IOException
-    {
-        Request request = buildMultipartFormRequest(url, files, fileKeys, params);
-        deliveryResult(callback, request);
-    }
-/**
-     * 异步基于post的文件上传，单文件不带参数上传
-     *
-     * @param url
-     * @param callback
-     * @param file
-     * @param fileKey
-     * @throws IOException
-     */
-    private void _postAsyn(String url, ResultCallback callback, File file, String fileKey) throws IOException
-    {
-        Request request = buildMultipartFormRequest(url, new File[]{file}, new String[]{fileKey}, null);
-        deliveryResult(callback, request);
-    }
-/**
-     * 异步基于post的文件上传，单文件且携带其他form参数上传
-     *
-     * @param url
-     * @param callback
-     * @param file
-     * @param fileKey
-     * @param params
-     * @throws IOException
-     */
-    private void _postAsyn(String url, ResultCallback callback, File file, String fileKey, Param... params) throws IOException
-    {
-        Request request = buildMultipartFormRequest(url, new File[]{file}, new String[]{fileKey}, params);
-        deliveryResult(callback, request);
-    }
-/**
-     * 异步下载文件
-     *
-     * @param url
-     * @param destFileDir 本地文件存储的文件夹
-     * @param callback
-     */
-    private void _downloadAsyn(final String url, final String destFileDir, final ResultCallback callback)
-    {
-        final Request request = new Request.Builder()
-                .url(url)
-                .build();
-        final Call call = mOkHttpClient.newCall(request);
-        call.enqueue(new Callback()
-        {
-            @Override
-            public void onFailure(final Request request, final IOException e)
-            {
-                sendFailedStringCallback(request, e, callback);
-            }
-@Override
-            public void onResponse(Response response)
-            {
-                InputStream is = null;
-                byte[] buf = new byte[2048];
-                int len = 0;
-                FileOutputStream fos = null;
-                try
-                {
-                    is = response.body().byteStream();
-                    File file = new File(destFileDir, getFileName(url));
-                    fos = new FileOutputStream(file);
-                    while ((len = is.read(buf)) != -1)
-                    {
-                        fos.write(buf, 0, len);
-                    }
-                    fos.flush();
-                    //如果下载文件成功，第一个参数为文件的绝对路径
-                    sendSuccessResultCallback(file.getAbsolutePath(), callback);
-                } catch (IOException e)
-                {
-                    sendFailedStringCallback(response.request(), e, callback);
-                } finally
-                {
-                    try
-                    {
-                        if (is != null) is.close();
-                    } catch (IOException e)
-                    {
-                    }
-                    try
-                    {
-                        if (fos != null) fos.close();
-                    } catch (IOException e)
-                    {
-                    }
-                }
-}
-        });
-    }
-private String getFileName(String path)
-    {
-        int separatorIndex = path.lastIndexOf(&quot;/&quot;);
-        return (separatorIndex &lt; 0) ? path : path.substring(separatorIndex + 1, path.length());
-    }
-/**
-     * 加载图片
-     *
-     * @param view
-     * @param url
-     * @throws IOException
-     */
-    private void _displayImage(final ImageView view, final String url, final int errorResId)
-    {
-        final Request request = new Request.Builder()
-                .url(url)
-                .build();
-        Call call = mOkHttpClient.newCall(request);
-        call.enqueue(new Callback()
-        {
-            @Override
-            public void onFailure(Request request, IOException e)
-            {
-                setErrorResId(view, errorResId);
-            }
-@Override
-            public void onResponse(Response response)
-            {
-                InputStream is = null;
-                try
-                {
-                    is = response.body().byteStream();
-                    ImageUtils.ImageSize actualImageSize = ImageUtils.getImageSize(is);
-                    ImageUtils.ImageSize imageViewSize = ImageUtils.getImageViewSize(view);
-                    int inSampleSize = ImageUtils.calculateInSampleSize(actualImageSize, imageViewSize);
-                    try
-                    {
-                        is.reset();
-                    } catch (IOException e)
-                    {
-                        response = _getAsyn(url);
-                        is = response.body().byteStream();
-                    }
-BitmapFactory.Options ops = new BitmapFactory.Options();
-                    ops.inJustDecodeBounds = false;
-                    ops.inSampleSize = inSampleSize;
-                    final Bitmap bm = BitmapFactory.decodeStream(is, null, ops);
-                    mDelivery.post(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            view.setImageBitmap(bm);
-                        }
-                    });
-                } catch (Exception e)
-                {
-                    setErrorResId(view, errorResId);
-} finally
-                {
-                    if (is != null) try
-                    {
-                        is.close();
-                    } catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-}
-private void setErrorResId(final ImageView view, final int errorResId)
-    {
-        mDelivery.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                view.setImageResource(errorResId);
-            }
-        });
-    }
-//*************对外公布的方法************
-public static Response getAsyn(String url) throws IOException
-    {
-        return getInstance()._getAsyn(url);
-    }
-public static String getAsString(String url) throws IOException
-    {
-        return getInstance()._getAsString(url);
-    }
-public static void getAsyn(String url, ResultCallback callback)
-    {
-        getInstance()._getAsyn(url, callback);
-    }
-public static Response post(String url, Param... params) throws IOException
-    {
-        return getInstance()._post(url, params);
-    }
-public static String postAsString(String url, Param... params) throws IOException
-    {
-        return getInstance()._postAsString(url, params);
-    }
-public static void postAsyn(String url, final ResultCallback callback, Param... params)
-    {
-        getInstance()._postAsyn(url, callback, params);
-    }
-public static void postAsyn(String url, final ResultCallback callback, Map&lt;String, String&gt; params)
-    {
-        getInstance()._postAsyn(url, callback, params);
-    }
-public static Response post(String url, File[] files, String[] fileKeys, Param... params) throws IOException
-    {
-        return getInstance()._post(url, files, fileKeys, params);
-    }
-public static Response post(String url, File file, String fileKey) throws IOException
-    {
-        return getInstance()._post(url, file, fileKey);
-    }
-public static Response post(String url, File file, String fileKey, Param... params) throws IOException
-    {
-        return getInstance()._post(url, file, fileKey, params);
-    }
-public static void postAsyn(String url, ResultCallback callback, File[] files, String[] fileKeys, Param... params) throws IOException
-    {
-        getInstance()._postAsyn(url, callback, files, fileKeys, params);
-    }
-public static void postAsyn(String url, ResultCallback callback, File file, String fileKey) throws IOException
-    {
-        getInstance()._postAsyn(url, callback, file, fileKey);
-    }
-public static void postAsyn(String url, ResultCallback callback, File file, String fileKey, Param... params) throws IOException
-    {
-        getInstance()._postAsyn(url, callback, file, fileKey, params);
-    }
-public static void displayImage(final ImageView view, String url, int errorResId) throws IOException
-    {
-        getInstance()._displayImage(view, url, errorResId);
-    }
-public static void displayImage(final ImageView view, String url)
-    {
-        getInstance()._displayImage(view, url, -1);
-    }
-public static void downloadAsyn(String url, String destDir, ResultCallback callback)
-    {
-        getInstance()._downloadAsyn(url, destDir, callback);
-    }
-//****************************
-private Request buildMultipartFormRequest(String url, File[] files,
-                                              String[] fileKeys, Param[] params)
-    {
-        params = validateParam(params);
-MultipartBuilder builder = new MultipartBuilder()
-                .type(MultipartBuilder.FORM);
-for (Param param : params)
-        {
-            builder.addPart(Headers.of(&quot;Content-Disposition&quot;, &quot;form-data; name=\&quot;&quot; + param.key + &quot;\&quot;&quot;),
-                    RequestBody.create(null, param.value));
-        }
-        if (files != null)
-        {
-            RequestBody fileBody = null;
-            for (int i = 0; i &lt; files.length; i++)
-            {
-                File file = files[i];
-                String fileName = file.getName();
-                fileBody = RequestBody.create(MediaType.parse(guessMimeType(fileName)), file);
-                //TODO 根据文件名设置contentType
-                builder.addPart(Headers.of(&quot;Content-Disposition&quot;,
-                                &quot;form-data; name=\&quot;&quot; + fileKeys[i] + &quot;\&quot;; filename=\&quot;&quot; + fileName + &quot;\&quot;&quot;),
-                        fileBody);
-            }
-        }
-RequestBody requestBody = builder.build();
-        return new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
-    }
-private String guessMimeType(String path)
-    {
-        FileNameMap fileNameMap = URLConnection.getFileNameMap();
-        String contentTypeFor = fileNameMap.getContentTypeFor(path);
-        if (contentTypeFor == null)
-        {
-            contentTypeFor = &quot;application/octet-stream&quot;;
-        }
-        return contentTypeFor;
-    }
-private Param[] validateParam(Param[] params)
-    {
-        if (params == null)
-            return new Param[0];
-        else return params;
-    }
-private Param[] map2Params(Map&lt;String, String&gt; params)
-    {
-        if (params == null) return new Param[0];
-        int size = params.size();
-        Param[] res = new Param[size];
-        Set&lt;Map.Entry&lt;String, String&gt;&gt; entries = params.entrySet();
-        int i = 0;
-        for (Map.Entry&lt;String, String&gt; entry : entries)
-        {
-            res[i++] = new Param(entry.getKey(), entry.getValue());
-        }
-        return res;
-    }
-private static final String SESSION_KEY = &quot;Set-Cookie&quot;;
-    private static final String mSessionKey = &quot;JSESSIONID&quot;;
-private Map&lt;String, String&gt; mSessions = new HashMap&lt;String, String&gt;();
-private void deliveryResult(final ResultCallback callback, Request request)
-    {
-        mOkHttpClient.newCall(request).enqueue(new Callback()
-        {
-            @Override
-            public void onFailure(final Request request, final IOException e)
-            {
-                sendFailedStringCallback(request, e, callback);
-            }
-@Override
-            public void onResponse(final Response response)
-            {
-                try
-                {
-                    final String string = response.body().string();
-                    if (callback.mType == String.class)
-                    {
-                        sendSuccessResultCallback(string, callback);
-                    } else
-                    {
-                        Object o = mGson.fromJson(string, callback.mType);
-                        sendSuccessResultCallback(o, callback);
-                    }
-} catch (IOException e)
-                {
-                    sendFailedStringCallback(response.request(), e, callback);
-                } catch (com.google.gson.JsonParseException e)//Json解析的错误
-                {
-                    sendFailedStringCallback(response.request(), e, callback);
-                }
-}
-        });
-    }
-private void sendFailedStringCallback(final Request request, final Exception e, final ResultCallback callback)
-    {
-        mDelivery.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if (callback != null)
-                    callback.onError(request, e);
-            }
-        });
-    }
-private void sendSuccessResultCallback(final Object object, final ResultCallback callback)
-    {
-        mDelivery.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if (callback != null)
-                {
-                    callback.onResponse(object);
-                }
-            }
-        });
-    }
-private Request buildPostRequest(String url, Param[] params)
-    {
-        if (params == null)
-        {
-            params = new Param[0];
-        }
-        FormEncodingBuilder builder = new FormEncodingBuilder();
-        for (Param param : params)
-        {
-            builder.add(param.key, param.value);
-        }
-        RequestBody requestBody = builder.build();
-        return new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
-    }
-public static abstract class ResultCallback&lt;T&gt;
-    {
-        Type mType;
-public ResultCallback()
-        {
-            mType = getSuperclassTypeParameter(getClass());
-        }
-static Type getSuperclassTypeParameter(Class&lt;?&gt; subclass)
-        {
-            Type superclass = subclass.getGenericSuperclass();
-            if (superclass instanceof Class)
-            {
-                throw new RuntimeException(&quot;Missing type parameter.&quot;);
-            }
-            ParameterizedType parameterized = (ParameterizedType) superclass;
-            return $Gson$Types.canonicalize(parameterized.getActualTypeArguments()[0]);
-        }
-public abstract void onError(Request request, Exception e);
-public abstract void onResponse(T response);
-    }
-public static class Param
-    {
-        public Param()
-        {
-        }
-public Param(String key, String value)
-        {
-            this.key = key;
-            this.value = value;
-        }
-String key;
-        String value;
-    }
-}
-</code></pre><p>源码地址okhttp-utils，大家可以自己下载查看。</p>
-<p>来自 <a href="http://blog.csdn.net/lmj623565791/article/details/47911083" target="_blank" rel="external">http://blog.csdn.net/lmj623565791/article/details/47911083</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="u4E00_u3001_u6982_u8FF0"><a href="#u4E00_u3001_u6982_u8FF0" class="headerlink" title="一、概述"></a>一、概述</h2><blockquote>
-<p>最近在群里听到各种讨论okhttp的话题，可见okhttp的口碑相当好了。再加上Google貌似在6.0版本里面删除了HttpClient相关API，对于这个行为不做评价。为了更好的在应对网络访问，学习下okhttp还是蛮必要的，本篇博客首先介绍okhttp的简单使用，主要包含：</p>
-</blockquote>]]>
-    
-    </summary>
-    
-      <category term="OkHttp" scheme="http://yoursite.com/tags/OkHttp/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android OkHttp使用教程]]></title>
-    <link href="http://yoursite.com/2015/07/19/Android%20OkHttp%E5%88%9D%E7%BA%A7%E5%85%A5%E9%97%A8/"/>
-    <id>http://yoursite.com/2015/07/19/Android OkHttp初级入门/</id>
-    <published>2015-07-19T05:33:17.000Z</published>
-    <updated>2016-02-19T09:07:45.000Z</updated>
-    <content type="html"><![CDATA[<p>Android系统提供了两种HTTP通信类，HttpURLConnection和HttpClient。</p>
-<p>尽管Google在大部分安卓版本中推荐使用HttpURLConnection，但是这个类相比HttpClient实在是太难用，太弱爆了。</p>
-<p>OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp实现了。所以我们更有理由相信OkHttp的强大。<br><a id="more"></a><br>OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中自动恢复。如果您的服务器配置了多个IP地址，当第一个IP连接失败的时候，OkHttp会自动尝试下一个IP。OkHttp还处理了代理服务器问题和SSL握手失败问题。</p>
-<p>使用 OkHttp 无需重写您程序中的网络代码。OkHttp实现了几乎和java.net.HttpURLConnection一样的API。如果你用了 Apache HttpClient，则OkHttp也提供了一个对应的okhttp-apache 模块。</p>
-<pre><code>注：在国内使用OkHttp会因为这个问题导致部分酷派手机用户无法联网，所以对于大众app来说，需要等待这个bug修复后再使用。或者尝试使用OkHttp的老版本。
-截止到目前，OkHttp一直没有修复，并把修复计划延迟到了OkHttp2.3中。不是所有设备都能重现，仅少量设备会出现这个问题。（如果问题这么明显，OkHttp早就修复了）
-</code></pre><h3 id="u5165_u95E8"><a href="#u5165_u95E8" class="headerlink" title="入门"></a>入门</h3><pre><code>官方资料
-官方介绍
-github源码
-使用范围
-OkHttp支持Android 2.3及其以上版本。
-对于Java, JDK1.7以上。
-jar包准备
-官方介绍页面有链接位置。这里把下载链接也写在下面。
-OkHttp
-Okio
-</code></pre><h3 id="u57FA_u672C_u4F7F_u7528"><a href="#u57FA_u672C_u4F7F_u7528" class="headerlink" title="基本使用"></a>基本使用</h3><h4 id="HTTP_GET"><a href="#HTTP_GET" class="headerlink" title="HTTP GET"></a>HTTP GET</h4><pre><code>1    OkHttpClient client = new OkHttpClient();
-2     
-3    String run(String url) throws IOException {
-4        Request request = new Request.Builder().url(url).build();
-5        Response response = client.newCall(request).execute();    if (response.isSuccessful()) {        return response.body().string();
-6        } else {        throw new IOException(&quot;Unexpected code &quot; + response);
-7        }
-8    }
-Request是OkHttp中访问的请求，Builder是辅助类。Response即OkHttp中的响应。
-Response类：
-1    public boolean isSuccessful()
-2    Returns true if the code is in [200..300),
-3     which means the request was successfully received, understood, and accepted.
-response.body()返回ResponseBody类
-</code></pre><p>可以方便的获取string</p>
-<pre><code>1    public final String string() throws IOException
-2    Returns the response as a string decoded with the charset of the Content-Type header. If that header is either absent or lacks a charset,
-3     this will attempt to decode the response body as UTF-8.Throws:
-4    IOException
-</code></pre><p>当然也能获取到流的形式：</p>
-<pre><code>1    public final InputStream byteStream()
-</code></pre><h4 id="HTTP_POST"><a href="#HTTP_POST" class="headerlink" title="HTTP POST"></a>HTTP POST</h4><p>POST提交Json数据</p>
-<pre><code>1    public static final MediaType JSON = MediaType.parse(&quot;application/json; charset=utf-8&quot;);
-2    OkHttpClient client = new OkHttpClient();
-3    String post(String url, String json) throws IOException {
-4         RequestBody body = RequestBody.create(JSON, json);
-5          Request request = new Request.Builder()
-6          .url(url)
-7          .post(body)
-8          .build();
-9          Response response = client.newCall(request).execute();
-10        f (response.isSuccessful()) {
-11            return response.body().string();
-12        } else {
-13            throw new IOException(&quot;Unexpected code &quot; + response);
-14        }
-15    }
-</code></pre><p>使用Request的post方法来提交请求体RequestBody<br>POST提交键值对<br>很多时候我们会需要通过POST方式把键值对数据传送到服务器。 OkHttp提供了很方便的方式来做这件事情。</p>
-<pre><code>1    OkHttpClient client = new OkHttpClient();
-2    String post(String url, String json) throws IOException {
-3     
-4         RequestBody formBody = new FormEncodingBuilder()
-5        .add(&quot;platform&quot;, &quot;android&quot;)
-6        .add(&quot;name&quot;, &quot;bug&quot;)
-7        .add(&quot;subject&quot;, &quot;XXXXXXXXXXXXXXX&quot;)
-8        .build();
-9     
-10          Request request = new Request.Builder()
-11          .url(url)
-12          .post(body)
-13          .build();
-14     
-15          Response response = client.newCall(request).execute();
-16        if (response.isSuccessful()) {
-17            return response.body().string();
-18        } else {
-19            throw new IOException(&quot;Unexpected code &quot; + response);
-20        }
-21    }
-</code></pre><h4 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h4><p>通过上面的例子我们可以发现，OkHttp在很多时候使用都是很方便的，而且很多代码也有重复，因此特地整理了下面的工具类。<br>注意：</p>
-<pre><code>• OkHttp官方文档并不建议我们创建多个OkHttpClient，因此全局使用一个。 如果有需要，可以使用clone方法，再进行自定义。这点在后面的高级教程里会提到。
-• enqueue为OkHttp提供的异步方法，入门教程中并没有提到，后面的高级教程里会有解释。
-1    import java.io.IOException;
-2    import java.util.List;
-3    import java.util.concurrent.TimeUnit;
-4    import org.apache.http.client.utils.URLEncodedUtils;
-5    import org.apache.http.message.BasicNameValuePair;
-6    import cn.wiz.sdk.constant.WizConstant;
-7    import com.squareup.okhttp.Callback;
-8    import com.squareup.okhttp.OkHttpClient;
-9    import com.squareup.okhttp.Request;
-10    import com.squareup.okhttp.Response; 
-11      
-12    public class OkHttpUtil {
-13        private static final OkHttpClient mOkHttpClient = new OkHttpClient();
-14        static{
-15            mOkHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
-16        }
-17        /**
-18         * 该不会开启异步线程。
-19         * @param request
-20         * @return
-21         * @throws IOException
-22         */
-23        public static Response execute(Request request) throws IOException{
-24            return mOkHttpClient.newCall(request).execute();
-25        }
-26        /**
-27         * 开启异步线程访问网络
-28         * @param request
-29         * @param responseCallback
-30         */
-31        public static void enqueue(Request request, Callback responseCallback){
-32            mOkHttpClient.newCall(request).enqueue(responseCallback);
-33        }
-34        /**
-35         * 开启异步线程访问网络, 且不在意返回结果（实现空callback）
-36         * @param request
-37         */
-38        public static void enqueue(Request request){
-39            mOkHttpClient.newCall(request).enqueue(new Callback() {
-40                 
-41                @Override
-42                public void onResponse(Response arg0) throws IOException {
-43                     
-44                }
-45                 
-46                @Override
-47                public void onFailure(Request arg0, IOException arg1) {
-48                     
-49                }
-50            });
-51        }
-52        public static String getStringFromServer(String url) throws IOException{
-53            Request request = new Request.Builder().url(url).build();
-54            Response response = execute(request);
-55            if (response.isSuccessful()) {
-56                String responseUrl = response.body().string();
-57                return responseUrl;
-58            } else {
-59                throw new IOException(&quot;Unexpected code &quot; + response);
-60            }
-61        }
-62        private static final String CHARSET_NAME = &quot;UTF-8&quot;;
-63        /**
-64         * 这里使用了HttpClinet的API。只是为了方便
-65         * @param params
-66         * @return
-67         */
-68        public static String formatParams(List&lt;BasicNameValuePair&gt; params){
-69            return URLEncodedUtils.format(params, CHARSET_NAME);
-70        }
-71        /**
-72         * 为HttpGet 的 url 方便的添加多个name value 参数。
-73         * @param url
-74         * @param params
-75         * @return
-76         */
-77        public static String attachHttpGetParams(String url, List&lt;BasicNameValuePair&gt; params){
-78            return url + &quot;?&quot; + formatParams(params);
-79        }
-80        /**
-81         * 为HttpGet 的 url 方便的添加1个name value 参数。
-82         * @param url
-83         * @param name
-84         * @param value
-85         * @return
-86         */
-87        public static String attachHttpGetParam(String url, String name, String value){
-88            return url + &quot;?&quot; + name + &quot;=&quot; + value;
-89        }
-90    }
-</code></pre><h3 id="u9AD8_u7EA7"><a href="#u9AD8_u7EA7" class="headerlink" title="高级"></a>高级</h3><p>高级属性其实用的不多，这里主要是对OkHttp github官方教程进行了翻译。</p>
-<h4 id="u540C_u6B65get"><a href="#u540C_u6B65get" class="headerlink" title="同步get"></a>同步get</h4><p>下载一个文件，打印他的响应头，以string形式打印响应体。<br>响应体的 string() 方法对于小文档来说十分方便、高效。但是如果响应体太大（超过1MB），应避免适应 string()方法 ，因为他会将把整个文档加载到内存中。<br>对于超过1MB的响应body，应使用流的方式来处理body。</p>
-<pre><code>1    private final OkHttpClient client = new OkHttpClient();
-2     
-3    public void run() throws Exception {
-4        Request request = new Request.Builder()
-5            .url(&quot;http://publicobject.com/helloworld.txt&quot;)
-6            .build();
-7     
-8        Response response = client.newCall(request).execute();
-9        if (!response.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response);
-10     
-11        Headers responseHeaders = response.headers();
-12        for (int i = 0; i &lt; responseHeaders.size(); i++) {
-13          System.out.println(responseHeaders.name(i) + &quot;: &quot; + responseHeaders.value(i));
-14        }
-15     
-16        System.out.println(response.body().string());
-17    }
-</code></pre><h4 id="u5F02_u6B65get"><a href="#u5F02_u6B65get" class="headerlink" title="异步get"></a>异步get</h4><p>在一个工作线程中下载文件，当响应可读时回调Callback接口。读取响应时会阻塞当前线程。OkHttp现阶段不提供异步api来接收响应体。</p>
-<pre><code>1    private final OkHttpClient client = new OkHttpClient();
-2     
-3    public void run() throws Exception {
-4        Request request = new Request.Builder()
-5            .url(&quot;http://publicobject.com/helloworld.txt&quot;)
-6            .build();
-7     
-8        client.newCall(request).enqueue(new Callback() {
-9          @Override public void onFailure(Request request, Throwable throwable) {
-10            throwable.printStackTrace();
-11          }
-12     
-13          @Override public void onResponse(Response response) throws IOException {
-14            if (!response.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response);
-15     
-16            Headers responseHeaders = response.headers();
-17            for (int i = 0; i &lt; responseHeaders.size(); i++) {
-18              System.out.println(responseHeaders.name(i) + &quot;: &quot; + responseHeaders.value(i));
-19            }
-20     
-21            System.out.println(response.body().string());
-22          }
-23        });
-24    }
-</code></pre><h4 id="u63D0_u53D6_u54CD_u5E94_u5934"><a href="#u63D0_u53D6_u54CD_u5E94_u5934" class="headerlink" title="提取响应头"></a>提取响应头</h4><p>典型的HTTP头 像是一个 Map<string, string=""> :每个字段都有一个或没有值。但是一些头允许多个值，像Guava的Multimap。例如：HTTP响应里面提供的Vary响应头，就是多值的。OkHttp的api试图让这些情况都适用。<br>当写请求头的时候，使用header(name, value)可以设置唯一的name、value。如果已经有值，旧的将被移除，然后添加新的。使用addHeader(name, value)可以添加多值（添加，不移除已有的）。<br>当读取响应头时，使用header(name)返回最后出现的name、value。通常情况这也是唯一的name、value。如果没有值，那么header(name)将返回null。如果想读取字段对应的所有值，使用headers(name)会返回一个list。<br>为了获取所有的Header，Headers类支持按index访问。</string,></p>
-<pre><code>1    private final OkHttpClient client = new OkHttpClient();
-2     
-3    public void run() throws Exception {
-4        Request request = new Request.Builder()
-5            .url(&quot;https://api.github.com/repos/square/okhttp/issues&quot;)
-6            .header(&quot;User-Agent&quot;, &quot;OkHttp Headers.java&quot;)
-7            .addHeader(&quot;Accept&quot;, &quot;application/json; q=0.5&quot;)
-8            .addHeader(&quot;Accept&quot;, &quot;application/vnd.github.v3+json&quot;)
-9            .build();
-10     
-11        Response response = client.newCall(request).execute();
-12        if (!response.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response);
-13     
-14        System.out.println(&quot;Server: &quot; + response.header(&quot;Server&quot;));
-15        System.out.println(&quot;Date: &quot; + response.header(&quot;Date&quot;));
-16        System.out.println(&quot;Vary: &quot; + response.headers(&quot;Vary&quot;));
-17    }
-</code></pre><h4 id="Post_u65B9_u5F0F_u63D0_u4EA4String"><a href="#Post_u65B9_u5F0F_u63D0_u4EA4String" class="headerlink" title="Post方式提交String"></a>Post方式提交String</h4><p>使用HTTP POST提交请求到服务。这个例子提交了一个markdown文档到web服务，以HTML方式渲染markdown。因为整个请求体都在内存中，因此避免使用此api提交大文档（大于1MB）。</p>
-<pre><code>1    public static final MediaType MEDIA_TYPE_MARKDOWN
-2      = MediaType.parse(&quot;text/x-markdown; charset=utf-8&quot;);
-3     
-4    private final OkHttpClient client = new OkHttpClient();
-5     
-6    public void run() throws Exception {
-7        String postBody = &quot;&quot;
-8            + &quot;Releases\n&quot;
-9            + &quot;--------\n&quot;
-10            + &quot;\n&quot;
-11            + &quot; * _1.0_ May 6, 2013\n&quot;
-12            + &quot; * _1.1_ June 15, 2013\n&quot;
-13            + &quot; * _1.2_ August 11, 2013\n&quot;;
-14     
-15        Request request = new Request.Builder()
-16            .url(&quot;https://api.github.com/markdown/raw&quot;)
-17            .post(RequestBody.create(MEDIA_TYPE_MARKDOWN, postBody))
-18            .build();
-19     
-20        Response response = client.newCall(request).execute();
-21        if (!response.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response);
-22     
-23        System.out.println(response.body().string());
-24    }
-</code></pre><h4 id="Post_u65B9_u5F0F_u63D0_u4EA4_u6D41"><a href="#Post_u65B9_u5F0F_u63D0_u4EA4_u6D41" class="headerlink" title="Post方式提交流"></a>Post方式提交流</h4><p>以流的方式POST提交请求体。请求体的内容由流写入产生。这个例子是流直接写入Okio的BufferedSink。你的程序可能会使用OutputStream，你可以使用BufferedSink.outputStream()来获取。</p>
-<pre><code>1    public static final MediaType MEDIA_TYPE_MARKDOWN
-2          = MediaType.parse(&quot;text/x-markdown; charset=utf-8&quot;);
-3     
-4    private final OkHttpClient client = new OkHttpClient();
-5     
-6    public void run() throws Exception {
-7        RequestBody requestBody = new RequestBody() {
-8          @Override public MediaType contentType() {
-9            return MEDIA_TYPE_MARKDOWN;
-10          }
-11     
-12          @Override public void writeTo(BufferedSink sink) throws IOException {
-13            sink.writeUtf8(&quot;Numbers\n&quot;);
-14            sink.writeUtf8(&quot;-------\n&quot;);
-15            for (int i = 2; i &lt;= 997; i++) {
-16              sink.writeUtf8(String.format(&quot; * %s = %s\n&quot;, i, factor(i)));
-17            }
-18          }
-19     
-20          private String factor(int n) {
-21            for (int i = 2; i &lt; n; i++) {
-22              int x = n / i;
-23              if (x * i == n) return factor(x) + &quot; × &quot; + i;
-24            }
-25            return Integer.toString(n);
-26          }
-27        };
-28     
-29        Request request = new Request.Builder()
-30            .url(&quot;https://api.github.com/markdown/raw&quot;)
-31            .post(requestBody)
-32            .build();
-33     
-34        Response response = client.newCall(request).execute();
-35        if (!response.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response);
-36     
-37        System.out.println(response.body().string());
-38    }
-</code></pre><h4 id="Post_u65B9_u5F0F_u63D0_u4EA4_u6587_u4EF6"><a href="#Post_u65B9_u5F0F_u63D0_u4EA4_u6587_u4EF6" class="headerlink" title="Post方式提交文件"></a>Post方式提交文件</h4><p>以文件作为请求体是十分简单的。</p>
-<pre><code>1    public static final MediaType MEDIA_TYPE_MARKDOWN
-2      = MediaType.parse(&quot;text/x-markdown; charset=utf-8&quot;);
-3     
-4    private final OkHttpClient client = new OkHttpClient();
-5     
-6    public void run() throws Exception {
-7        File file = new File(&quot;README.md&quot;);
-8     
-9        Request request = new Request.Builder()
-10            .url(&quot;https://api.github.com/markdown/raw&quot;)
-11            .post(RequestBody.create(MEDIA_TYPE_MARKDOWN, file))
-12            .build();
-13     
-14        Response response = client.newCall(request).execute();
-15        if (!response.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response);
-16     
-17        System.out.println(response.body().string());
-18    }
-</code></pre><h4 id="Post_u65B9_u5F0F_u63D0_u4EA4_u8868_u5355"><a href="#Post_u65B9_u5F0F_u63D0_u4EA4_u8868_u5355" class="headerlink" title="Post方式提交表单"></a>Post方式提交表单</h4><p>使用FormEncodingBuilder来构建和HTML<form>标签相同效果的请求体。键值对将使用一种HTML兼容形式的URL编码来进行编码。</form></p>
-<pre><code>1    private final OkHttpClient client = new OkHttpClient();
-2     
-3    public void run() throws Exception {
-4        RequestBody formBody = new FormEncodingBuilder()
-5            .add(&quot;search&quot;, &quot;Jurassic Park&quot;)
-6            .build();
-7        Request request = new Request.Builder()
-8            .url(&quot;https://en.wikipedia.org/w/index.php&quot;)
-9            .post(formBody)
-10            .build();
-11     
-12        Response response = client.newCall(request).execute();
-13        if (!response.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response);
-14     
-15        System.out.println(response.body().string());
-16    }
-</code></pre><h4 id="Post_u65B9_u5F0F_u63D0_u4EA4_u5206_u5757_u8BF7_u6C42"><a href="#Post_u65B9_u5F0F_u63D0_u4EA4_u5206_u5757_u8BF7_u6C42" class="headerlink" title="Post方式提交分块请求"></a>Post方式提交分块请求</h4><p>MultipartBuilder可以构建复杂的请求体，与HTML文件上传形式兼容。多块请求体中每块请求都是一个请求体，可以定义自己的请求头。这些请求头可以用来描述这块请求，例如他的Content-Disposition。如果Content-Length和Content-Type可用的话，他们会被自动添加到请求头中。</p>
-<pre><code>1    private static final String IMGUR_CLIENT_ID = &quot;...&quot;;
-2    private static final MediaType MEDIA_TYPE_PNG = MediaType.parse(&quot;image/png&quot;);
-3     
-4    private final OkHttpClient client = new OkHttpClient();
-5     
-6    public void run() throws Exception {
-7        // Use the imgur image upload API as documented at https://api.imgur.com/endpoints/image
-8        RequestBody requestBody = new MultipartBuilder()
-9            .type(MultipartBuilder.FORM)
-10            .addPart(
-11                Headers.of(&quot;Content-Disposition&quot;, &quot;form-data; name=\&quot;title\&quot;&quot;),
-12                RequestBody.create(null, &quot;Square Logo&quot;))
-13            .addPart(
-14                Headers.of(&quot;Content-Disposition&quot;, &quot;form-data; name=\&quot;image\&quot;&quot;),
-15                RequestBody.create(MEDIA_TYPE_PNG, new File(&quot;website/static/logo-square.png&quot;)))
-16            .build();
-17     
-18        Request request = new Request.Builder()
-19            .header(&quot;Authorization&quot;, &quot;Client-ID &quot; + IMGUR_CLIENT_ID)
-20            .url(&quot;https://api.imgur.com/3/image&quot;)
-21            .post(requestBody)
-22            .build();
-23     
-24        Response response = client.newCall(request).execute();
-25        if (!response.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response);
-26     
-27        System.out.println(response.body().string());
-28    }
-</code></pre><h4 id="u4F7F_u7528Gson_u6765_u89E3_u6790JSON_u54CD_u5E94"><a href="#u4F7F_u7528Gson_u6765_u89E3_u6790JSON_u54CD_u5E94" class="headerlink" title="使用Gson来解析JSON响应"></a>使用Gson来解析JSON响应</h4><p>Gson是一个在JSON和Java对象之间转换非常方便的api。这里我们用Gson来解析Github API的JSON响应。<br>注意：ResponseBody.charStream()使用响应头Content-Type指定的字符集来解析响应体。默认是UTF-8。</p>
-<pre><code>1    private final OkHttpClient client = new OkHttpClient();
-2    private final Gson gson = new Gson();
-3     
-4    public void run() throws Exception {
-5        Request request = new Request.Builder()
-6            .url(&quot;https://api.github.com/gists/c2a7c39532239ff261be&quot;)
-7            .build();
-8        Response response = client.newCall(request).execute();
-9        if (!response.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response);
-10     
-11        Gist gist = gson.fromJson(response.body().charStream(), Gist.class);
-12        for (Map.Entry&lt;String, GistFile&gt; entry : gist.files.entrySet()) {
-13          System.out.println(entry.getKey());
-14          System.out.println(entry.getValue().content);
-15        }
-16    }
-17     
-18    static class Gist {
-19        Map&lt;String, GistFile&gt; files;
-20    }
-21     
-22    static class GistFile {
-23        String content;
-24    }
-</code></pre><h4 id="u54CD_u5E94_u7F13_u5B58"><a href="#u54CD_u5E94_u7F13_u5B58" class="headerlink" title="响应缓存"></a>响应缓存</h4><p>为了缓存响应，你需要一个你可以读写的缓存目录，和缓存大小的限制。这个缓存目录应该是私有的，不信任的程序应不能读取缓存内容。<br>一个缓存目录同时拥有多个缓存访问是错误的。大多数程序只需要调用一次new OkHttp()，在第一次调用时配置好缓存，然后其他地方只需要调用这个实例就可以了。否则两个缓存示例互相干扰，破坏响应缓存，而且有可能会导致程序崩溃。<br>响应缓存使用HTTP头作为配置。你可以在请求头中添加Cache-Control: max-stale=3600 ,OkHttp缓存会支持。你的服务通过响应头确定响应缓存多长时间，例如使用Cache-Control: max-age=9600。</p>
-<pre><code>1    private final OkHttpClient client;
-2     
-3    public CacheResponse(File cacheDirectory) throws Exception {
-4        int cacheSize = 10 * 1024 * 1024; // 10 MiB
-5        Cache cache = new Cache(cacheDirectory, cacheSize);
-6     
-7        client = new OkHttpClient();
-8        client.setCache(cache);
-9    }
-10     
-11    public void run() throws Exception {
-12        Request request = new Request.Builder()
-13            .url(&quot;http://publicobject.com/helloworld.txt&quot;)
-14            .build();
-15     
-16        Response response1 = client.newCall(request).execute();
-17        if (!response1.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response1);
-18     
-19        String response1Body = response1.body().string();
-20        System.out.println(&quot;Response 1 response:          &quot; + response1);
-21        System.out.println(&quot;Response 1 cache response:    &quot; + response1.cacheResponse());
-22        System.out.println(&quot;Response 1 network response:  &quot; + response1.networkResponse());
-23     
-24        Response response2 = client.newCall(request).execute();
-25        if (!response2.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response2);
-26     
-27        String response2Body = response2.body().string();
-28        System.out.println(&quot;Response 2 response:          &quot; + response2);
-29        System.out.println(&quot;Response 2 cache response:    &quot; + response2.cacheResponse());
-30        System.out.println(&quot;Response 2 network response:  &quot; + response2.networkResponse());
-31     
-32        System.out.println(&quot;Response 2 equals Response 1? &quot; + response1Body.equals(response2Body));
-33    }
-</code></pre><h3 id="u6269_u5C55"><a href="#u6269_u5C55" class="headerlink" title="扩展"></a>扩展</h3><p>在这一节还提到了下面一句：<br>There are cache headers to force a cached response, force a network response, or force the network response to be validated with a conditional GET.<br>我不是很懂cache，平时用到的也不多，所以把Google在Android Developers一段相关的解析放到这里吧。<br>Force a Network Response<br>In some situations, such as after a user clicks a ‘refresh’ button, it may be necessary to skip the cache, and fetch data directly from the server. To force a full refresh, add the no-cache directive:<br>connection.addRequestProperty(“Cache-Control”, “no-cache”);<br>If it is only necessary to force a cached response to be validated by the server, use the more efficient max-age=0 instead:<br>connection.addRequestProperty(“Cache-Control”, “max-age=0”);<br>Force a Cache Response<br>Sometimes you’ll want to show resources if they are available immediately, but not otherwise. This can be used so your application can show something while waiting for the latest data to be downloaded. To restrict a request to locally-cached resources, add the only-if-cached directive:</p>
-<pre><code>1    try {
-2         connection.addRequestProperty(&quot;Cache-Control&quot;, &quot;only-if-cached&quot;);
-3         InputStream cached = connection.getInputStream();
-4         // the resource was cached! show it
-5      catch (FileNotFoundException e) {
-6         // the resource was not cached
-7     }
-8    }
-</code></pre><p>This technique works even better in situations where a stale response is better than no response. To permit stale cached responses, use the max-stale directive with the maximum staleness in seconds:</p>
-<pre><code>1    int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks staleconnection.addRequestProperty(&quot;Cache-Control&quot;, &quot;max-stale=&quot; + maxStale);
-</code></pre><p>以上信息来自：<code>HttpResponseCache - Android SDK | Android Developers</code><br>取消一个Call<br>使用Call.cancel()可以立即停止掉一个正在执行的call。如果一个线程正在写请求或者读响应，将会引发IOException。当call没有必要的时候，使用这个api可以节约网络资源。例如当用户离开一个应用时。不管同步还是异步的call都可以取消。<br>你可以通过tags来同时取消多个请求。当你构建一请求时，使用RequestBuilder.tag(tag)来分配一个标签。之后你就可以用OkHttpClient.cancel(tag)来取消所有带有这个tag的call。</p>
-<pre><code>1    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-2    private final OkHttpClient client = new OkHttpClient();
-3     
-4    public void run() throws Exception {
-5        Request request = new Request.Builder()
-6            .url(&quot;http://httpbin.org/delay/2&quot;) // This URL is served with a 2 second delay.
-7            .build();
-8     
-9        final long startNanos = System.nanoTime();
-10        final Call call = client.newCall(request);
-11     
-12        // Schedule a job to cancel the call in 1 second.
-13        executor.schedule(new Runnable() {
-14          @Override public void run() {
-15            System.out.printf(&quot;%.2f Canceling call.%n&quot;, (System.nanoTime() - startNanos) / 1e9f);
-16            call.cancel();
-17            System.out.printf(&quot;%.2f Canceled call.%n&quot;, (System.nanoTime() - startNanos) / 1e9f);
-18          }
-19        }, 1, TimeUnit.SECONDS);
-20     
-21        try {
-22          System.out.printf(&quot;%.2f Executing call.%n&quot;, (System.nanoTime() - startNanos) / 1e9f);
-23          Response response = call.execute();
-24          System.out.printf(&quot;%.2f Call was expected to fail, but completed: %s%n&quot;,
-25              (System.nanoTime() - startNanos) / 1e9f, response);
-26        } catch (IOException e) {
-27          System.out.printf(&quot;%.2f Call failed as expected: %s%n&quot;,
-28              (System.nanoTime() - startNanos) / 1e9f, e);
-29        }
-30    }
-</code></pre><h4 id="u8D85_u65F6"><a href="#u8D85_u65F6" class="headerlink" title="超时"></a>超时</h4><p>没有响应时使用超时结束call。没有响应的原因可能是客户点链接问题、服务器可用性问题或者这之间的其他东西。OkHttp支持连接，读取和写入超时。</p>
-<pre><code>1    private final OkHttpClient client;
-2     
-3    public ConfigureTimeouts() throws Exception {
-4        client = new OkHttpClient();
-5        client.setConnectTimeout(10, TimeUnit.SECONDS);
-6        client.setWriteTimeout(10, TimeUnit.SECONDS);
-7        client.setReadTimeout(30, TimeUnit.SECONDS);
-8    }
-9     
-10    public void run() throws Exception {
-11        Request request = new Request.Builder()
-12            .url(&quot;http://httpbin.org/delay/2&quot;) // This URL is served with a 2 second delay.
-13            .build();
-14     
-15        Response response = client.newCall(request).execute();
-16        System.out.println(&quot;Response completed: &quot; + response);
-17    }
-</code></pre><h4 id="u6BCF_u4E2Acall_u7684_u914D_u7F6E"><a href="#u6BCF_u4E2Acall_u7684_u914D_u7F6E" class="headerlink" title="每个call的配置"></a>每个call的配置</h4><p>使用OkHttpClient，所有的HTTP Client配置包括代理设置、超时设置、缓存设置。当你需要为单个call改变配置的时候，clone 一个 OkHttpClient。这个api将会返回一个浅拷贝（shallow copy），你可以用来单独自定义。下面的例子中，我们让一个请求是500ms的超时、另一个是3000ms的超时。</p>
-<pre><code>1    private final OkHttpClient client = new OkHttpClient();
-2     
-3    public void run() throws Exception {
-4        Request request = new Request.Builder()
-5            .url(&quot;http://httpbin.org/delay/1&quot;) // This URL is served with a 1 second delay.
-6            .build();
-7     
-8        try {
-9          Response response = client.clone() // Clone to make a customized OkHttp for this request.
-10              .setReadTimeout(500, TimeUnit.MILLISECONDS)
-11              .newCall(request)
-12              .execute();
-13          System.out.println(&quot;Response 1 succeeded: &quot; + response);
-14        } catch (IOException e) {
-15          System.out.println(&quot;Response 1 failed: &quot; + e);
-16        }
-17     
-18        try {
-19          Response response = client.clone() // Clone to make a customized OkHttp for this request.
-20              .setReadTimeout(3000, TimeUnit.MILLISECONDS)
-21              .newCall(request)
-22              .execute();
-23          System.out.println(&quot;Response 2 succeeded: &quot; + response);
-24        } catch (IOException e) {
-25          System.out.println(&quot;Response 2 failed: &quot; + e);
-26        }
-27    }
-</code></pre><h4 id="u5904_u7406_u9A8C_u8BC1"><a href="#u5904_u7406_u9A8C_u8BC1" class="headerlink" title="处理验证"></a>处理验证</h4><p>这部分和HTTP AUTH有关。<br>相关资料：HTTP AUTH 那些事 - 王绍全的博客 - 博客频道 - CSDN.NET<br>OkHttp会自动重试未验证的请求。当响应是401 Not Authorized时，Authenticator会被要求提供证书。Authenticator的实现中需要建立一个新的包含证书的请求。如果没有证书可用，返回null来跳过尝试。</p>
-<pre><code>1    public List&lt;Challenge&gt; challenges()
-2    Returns the authorization challenges appropriate for this response&apos;s code. 
-3    If the response code is 401 unauthorized, 
-4    this returns the &quot;WWW-Authenticate&quot; challenges.
-5    If the response code is 407 proxy unauthorized, this returns the &quot;Proxy-Authenticate&quot; challenges.
-6    Otherwise this returns an empty list of challenges.
-</code></pre><p>当需要实现一个Basic challenge， 使用Credentials.basic(username, password)来编码请求头。</p>
-<pre><code>1    private final OkHttpClient client = new OkHttpClient();
-2     
-3    public void run() throws Exception {
-4        client.setAuthenticator(new Authenticator() {
-5          @Override public Request authenticate(Proxy proxy, Response response) {
-6            System.out.println(&quot;Authenticating for response: &quot; + response);
-7            System.out.println(&quot;Challenges: &quot; + response.challenges());
-8            String credential = Credentials.basic(&quot;jesse&quot;, &quot;password1&quot;);
-9            return response.request().newBuilder()
-10                .header(&quot;Authorization&quot;, credential)
-11                .build();
-12          }
-13     
-14          @Override public Request authenticateProxy(Proxy proxy, Response response) {
-15            return null; // Null indicates no attempt to authenticate.
-16          }
-17        });
-18     
-19        Request request = new Request.Builder()
-20            .url(&quot;http://publicobject.com/secrets/hellosecret.txt&quot;)
-21            .build();
-22     
-23        Response response = client.newCall(request).execute();
-24        if (!response.isSuccessful()) throw new IOException(&quot;Unexpected code &quot; + response);
-25     
-26        System.out.println(response.body().string());
-27    }
-</code></pre><p>转自  <a href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0106/2275.html" target="_blank" rel="external">http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0106/2275.html</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>Android系统提供了两种HTTP通信类，HttpURLConnection和HttpClient。</p>
-<p>尽管Google在大部分安卓版本中推荐使用HttpURLConnection，但是这个类相比HttpClient实在是太难用，太弱爆了。</p>
-<p>OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp实现了。所以我们更有理由相信OkHttp的强大。<br>]]>
-    
-    </summary>
-    
-      <category term="OkHttp" scheme="http://yoursite.com/tags/OkHttp/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
