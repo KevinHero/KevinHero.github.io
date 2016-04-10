@@ -110,9 +110,9 @@
     <link href="http://kevinhero.github.io/2016/04/06/RxJava/RxJava%20&%20RxAndroid%E5%A4%87%E5%BF%98/"/>
     <id>http://kevinhero.github.io/2016/04/06/RxJava/RxJava & RxAndroid备忘/</id>
     <published>2016-04-05T17:14:17.000Z</published>
-    <updated>2016-04-10T09:49:49.000Z</updated>
-    <content type="html"><![CDATA[<p>来源 <a href="http://chenqichao.me/2015/07/01/119-Mastering-RxAndroid/" target="_blank" rel="external">http://chenqichao.me/2015/07/01/119-Mastering-RxAndroid/</a> </p>
-<p>今天在刷G+的时候看到Dave Smith推荐了一个视频<a href="https://www.youtube.com/watch?v=k3D0cWyNno4" target="_blank" rel="external">《Learning RxJava (for Android) by example》</a>点进去看了一下，原来是位熟悉的”阿三哥”，视频封面如下：（没有歧视的意思，不要喷我啊~，为什么感到熟悉？接着往下看）</p>
+    <updated>2016-04-10T10:08:43.000Z</updated>
+    <content type="html"><![CDATA[<pre><code>来源 &lt;http://chenqichao.me/2015/07/01/119-Mastering-RxAndroid/&gt; 
+</code></pre><p>今天在刷G+的时候看到Dave Smith推荐了一个视频<a href="https://www.youtube.com/watch?v=k3D0cWyNno4" target="_blank" rel="external">《Learning RxJava (for Android) by example》</a>点进去看了一下，原来是位熟悉的”阿三哥”，视频封面如下：（没有歧视的意思，不要喷我啊~，为什么感到熟悉？接着往下看）</p>
 <p><a href="http://7mnllc.com1.z0.glb.clouddn.com/kp.png" target="_blank" rel="external"></a></p>
 <p><a href="http://7mnllc.com1.z0.glb.clouddn.com/kp.png" target="_blank" rel="external"><img src="http://7mnllc.com1.z0.glb.clouddn.com/kp.png" alt=""></a></p>
 <p>几乎同时也看到了JetBrains在G+也推荐了篇在Medium上的博文<a href="https://medium.com/@ahmedrizwan/rxandroid-and-kotlin-part-1-f0382dc26ed8" target="_blank" rel="external">《RxAndroid And Kotlin (Part 1)》</a>，然后想到前几天转了InfoQ上的<a href="http://www.infoq.com/cn/news/2015/06/Android-JVM-JetBrains-Kotlin" target="_blank" rel="external">《Kotlin：Android世界的Swift》</a>，再加上隐约记得之前在AndroidCN看到过<a href="http://weibo.com/brucefromsdu" target="_blank" rel="external">@hi大头鬼hi</a>写的《深入浅出RxJava》，最后还想到了这篇<a href="http://www.jianshu.com/p/a7fadc79e0fb" target="_blank" rel="external">《Kotlin在Android工程中的应用》</a>，Holy shit…大脑能瞬间闪过这么多关联的文章和博文，于是把这些资料找了出来，觉得有必要把这些内容记下来，<br>方便日后查阅，因此有了今天这篇文章，取名叫《RxJava &amp; RxAndroid备忘》是希望列出的参考资料能让大家尽快熟悉和掌握了RxJava和RxAndroid。</p>
@@ -124,8 +124,8 @@
 <p>下面列出参考链接（如你有需要补充的可以直接评论~）</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>来源 <a href="http://chenqichao.me/2015/07/01/119-Mastering-RxAndroid/">http://chenqichao.me/2015/07/01/119-Mastering-RxAndroid/</a> </p>
-<p>今天在刷G+的时候看到Dave Smith推荐了一个视频<a href="https://www.youtube.com/watch?v=k3D0cWyNno4">《Learning RxJava (for Android) by example》</a>点进去看了一下，原来是位熟悉的”阿三哥”，视频封面如下：（没有歧视的意思，不要喷我啊~，为什么感到熟悉？接着往下看）</p>
+    <![CDATA[<pre><code>来源 &lt;http://chenqichao.me/2015/07/01/119-Mastering-RxAndroid/&gt; 
+</code></pre><p>今天在刷G+的时候看到Dave Smith推荐了一个视频<a href="https://www.youtube.com/watch?v=k3D0cWyNno4">《Learning RxJava (for Android) by example》</a>点进去看了一下，原来是位熟悉的”阿三哥”，视频封面如下：（没有歧视的意思，不要喷我啊~，为什么感到熟悉？接着往下看）</p>
 <p><a href="http://7mnllc.com1.z0.glb.clouddn.com/kp.png"></a></p>
 <p><a href="http://7mnllc.com1.z0.glb.clouddn.com/kp.png"><img src="http://7mnllc.com1.z0.glb.clouddn.com/kp.png" alt=""></a></p>
 <p>几乎同时也看到了JetBrains在G+也推荐了篇在Medium上的博文<a href="https://medium.com/@ahmedrizwan/rxandroid-and-kotlin-part-1-f0382dc26ed8">《RxAndroid And Kotlin (Part 1)》</a>，然后想到前几天转了InfoQ上的<a href="http://www.infoq.com/cn/news/2015/06/Android-JVM-JetBrains-Kotlin">《Kotlin：Android世界的Swift》</a>，再加上隐约记得之前在AndroidCN看到过<a href="http://weibo.com/brucefromsdu">@hi大头鬼hi</a>写的《深入浅出RxJava》，最后还想到了这篇<a href="http://www.jianshu.com/p/a7fadc79e0fb">《Kotlin在Android工程中的应用》</a>，Holy shit…大脑能瞬间闪过这么多关联的文章和博文，于是把这些资料找了出来，觉得有必要把这些内容记下来，<br>方便日后查阅，因此有了今天这篇文章，取名叫《RxJava &amp; RxAndroid备忘》是希望列出的参考资料能让大家尽快熟悉和掌握了RxJava和RxAndroid。</p>
@@ -319,16 +319,16 @@
     <link href="http://kevinhero.github.io/2016/04/05/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava%E5%9B%9B-%E5%9C%A8Android%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     <id>http://kevinhero.github.io/2016/04/05/RxJava/深入浅出RxJava四-在Android中使用响应式编程/</id>
     <published>2016-04-05T15:12:17.000Z</published>
-    <updated>2016-04-10T09:46:17.000Z</updated>
-    <content type="html"><![CDATA[<p>原文链接 <a href="http://blog.danlew.net/2014/10/08/grokking-rxjava-part-4/" target="_blank" rel="external">http://blog.danlew.net/2014/10/08/grokking-rxjava-part-4/</a> </p>
-<p>译文链接 <a href="http://blog.csdn.net/lzyzsd/article/details/45033611" target="_blank" rel="external">http://blog.csdn.net/lzyzsd/article/details/45033611</a> </p>
-<p>在第<a href="http://blog.csdn.net/lzyzsd/article/details/41833541" target="_blank" rel="external">1</a>，<a href="http://blog.csdn.net/lzyzsd/article/details/44094895" target="_blank" rel="external">2</a>，<a href="http://blog.csdn.net/lzyzsd/article/details/44891933" target="_blank" rel="external">3</a>篇中，我大概介绍了RxJava是怎么使用的。下面我会介绍如何在Android中使用RxJava.</p>
+    <updated>2016-04-10T10:10:02.000Z</updated>
+    <content type="html"><![CDATA[<p>在第<a href="http://blog.csdn.net/lzyzsd/article/details/41833541" target="_blank" rel="external">1</a>，<a href="http://blog.csdn.net/lzyzsd/article/details/44094895" target="_blank" rel="external">2</a>，<a href="http://blog.csdn.net/lzyzsd/article/details/44891933" target="_blank" rel="external">3</a>篇中，我大概介绍了RxJava是怎么使用的。下面我会介绍如何在Android中使用RxJava.</p>
 <h2 id="RxAndroid"><a href="#RxAndroid" class="headerlink" title="RxAndroid"></a>RxAndroid</h2><p>RxAndroid是RxJava的一个针对Android平台的扩展。它包含了一些能够简化Android开发的工具。</p>
 <p>首先，AndroidSchedulers提供了针对Android的线程系统的调度器。需要在UI线程中运行某些代码？很简单，只需要使用AndroidSchedulers.mainThread():</p>
-<p><code>retrofitService.getImage(url)</code></p>
-<p><code>.subscribeOn(Schedulers.io())</code></p>
-<p><code>.observeOn(AndroidSchedulers.mainThread())</code></p>
-<p><code>.subscribe(bitmap -&gt; myImageView.setImageBitmap(bitmap));</code><br><a id="more"></a><br>如果你已经创建了自己的Handler，你可以使用HandlerThreadScheduler1将一个调度器链接到你的handler上。</p>
+<pre><code>retrofitService.getImage(url)
+.subscribeOn(Schedulers.io())
+.observeOn(AndroidSchedulers.mainThread())
+.subscribe(bitmap -&gt; myImageView.setImageBitmap(bitmap));
+</code></pre><a id="more"></a>
+<p>如果你已经创建了自己的Handler，你可以使用HandlerThreadScheduler1将一个调度器链接到你的handler上。</p>
 <p>接着要介绍的就是AndroidObservable，它提供了跟多的功能来配合Android的生命周期。bindActivity()和 bindFragment()方法默认使用AndroidSchedulers.mainThread()来执行观察者代码，这两个方法会在 Activity或者Fragment结束的时候通知被观察者停止发出新的消息。</p>
 <p><code>AndroidObservable.bindActivity(``this``, retrofitService.getImage(url))</code></p>
 <p><code>.subscribeOn(Schedulers.io())</code></p>
@@ -394,17 +394,18 @@
 <p>注意! 一旦你调用了 CompositeSubscription.unsubscribe()，这个CompositeSubscription对象就不可用了, 如果你还想使用CompositeSubscription，就必须在创建一个新的对象了。</p>
 <p>两个问题的解决方案都需要添加额外的代码，如果谁有更好的方案，欢迎告诉我。</p>
 <p>RxJava还是一个很新的项目，RxAndroid更是。RxAndroid目前还在活跃开发中，也没有多少好的例子。我打赌一年之后我的一些建议就会被看做过时了。</p>
-]]></content>
+<pre><code>原文链接 &lt;http://blog.danlew.net/2014/10/08/grokking-rxjava-part-4/&gt; 
+译文链接 &lt;http://blog.csdn.net/lzyzsd/article/details/45033611&gt; 
+</code></pre>]]></content>
     <summary type="html">
-    <![CDATA[<p>原文链接 <a href="http://blog.danlew.net/2014/10/08/grokking-rxjava-part-4/">http://blog.danlew.net/2014/10/08/grokking-rxjava-part-4/</a> </p>
-<p>译文链接 <a href="http://blog.csdn.net/lzyzsd/article/details/45033611">http://blog.csdn.net/lzyzsd/article/details/45033611</a> </p>
-<p>在第<a href="http://blog.csdn.net/lzyzsd/article/details/41833541">1</a>，<a href="http://blog.csdn.net/lzyzsd/article/details/44094895">2</a>，<a href="http://blog.csdn.net/lzyzsd/article/details/44891933">3</a>篇中，我大概介绍了RxJava是怎么使用的。下面我会介绍如何在Android中使用RxJava.</p>
+    <![CDATA[<p>在第<a href="http://blog.csdn.net/lzyzsd/article/details/41833541">1</a>，<a href="http://blog.csdn.net/lzyzsd/article/details/44094895">2</a>，<a href="http://blog.csdn.net/lzyzsd/article/details/44891933">3</a>篇中，我大概介绍了RxJava是怎么使用的。下面我会介绍如何在Android中使用RxJava.</p>
 <h2 id="RxAndroid"><a href="#RxAndroid" class="headerlink" title="RxAndroid"></a>RxAndroid</h2><p>RxAndroid是RxJava的一个针对Android平台的扩展。它包含了一些能够简化Android开发的工具。</p>
 <p>首先，AndroidSchedulers提供了针对Android的线程系统的调度器。需要在UI线程中运行某些代码？很简单，只需要使用AndroidSchedulers.mainThread():</p>
-<p><code>retrofitService.getImage(url)</code></p>
-<p><code>.subscribeOn(Schedulers.io())</code></p>
-<p><code>.observeOn(AndroidSchedulers.mainThread())</code></p>
-<p><code>.subscribe(bitmap -&gt; myImageView.setImageBitmap(bitmap));</code><br>]]>
+<pre><code>retrofitService.getImage(url)
+.subscribeOn(Schedulers.io())
+.observeOn(AndroidSchedulers.mainThread())
+.subscribe(bitmap -&gt; myImageView.setImageBitmap(bitmap));
+</code></pre>]]>
     
     </summary>
     
@@ -419,7 +420,7 @@
     <link href="http://kevinhero.github.io/2016/04/04/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava%E4%B8%89--%E5%93%8D%E5%BA%94%E5%BC%8F%E7%9A%84%E5%A5%BD%E5%A4%84/"/>
     <id>http://kevinhero.github.io/2016/04/04/RxJava/深入浅出RxJava三--响应式的好处/</id>
     <published>2016-04-04T05:12:17.000Z</published>
-    <updated>2016-04-10T08:47:22.000Z</updated>
+    <updated>2016-04-10T10:11:20.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p><a href="http://blog.danlew.net/2014/09/30/grokking-rxjava-part-3/" target="_blank" rel="external">英文原文</a> </p>
 <p><a href="http://blog.csdn.net/lzyzsd/article/details/44891933" target="_blank" rel="external">译文原文</a></p>
@@ -427,14 +428,19 @@
 <p>在第一篇中，我介绍了RxJava的基础知识。第二篇中，我向你展示了操作符的强大。但是你可能仍然没被说服。这篇里面，我讲向你展示RxJava的其他的一些好处，相信这篇足够让你去使用Rxjava.</p>
 <p>到目前为止，我们都没怎么介绍onComplete()和onError()函数。这两个函数用来通知订阅者，被观察的对象将停止发送数据以及为什么停止（成功的完成或者出错了）。</p>
 <p>下面的代码展示了怎么使用这两个函数：</p>
-<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
-<p><code>.map(s -&gt; potentialException(s))</code></p>
-<p><code>.map(s -&gt; anotherPotentialException(s))</code></p>
-<p><code>.subscribe(``new</code> <code>Subscriber&lt;String&gt;() {        @Override</code></p>
-<p><code>public void onNext(String s) { System.out.println(s); }        @Override</code></p>
-<p><code>public void onCompleted() { System.out.println(``&quot;Completed!&quot;``); }        @Override</code></p>
-<p><code>public void onError(Throwable e) { System.out.println(``&quot;Ouch!&quot;``); }</code></p>
-<p><code>});</code><br><a id="more"></a><br>代码中的potentialException() 和 anotherPotentialException()有可能会抛出异常。每一个Observerable对象在终结的时候都会调用 onCompleted()或者onError()方法，所以Demo中会打印”Completed!”或者”Ouch!”。</p>
+<pre><code>Observable.just(``&quot;Hello, world!&quot;``)
+.map(s -&gt; potentialException(s))
+.map(s -&gt; anotherPotentialException(s))
+.subscribe(``new` `Subscriber&lt;String&gt;() {        
+    @Override
+    public void onNext(String s) { System.out.println(s); }        
+    @Override
+    public void onCompleted() { System.out.println(``&quot;Completed!&quot;``); }        
+    @Override
+    public void onError(Throwable e) { System.out.println(``&quot;Ouch!&quot;``); }
+});
+</code></pre><a id="more"></a>
+<p>代码中的potentialException() 和 anotherPotentialException()有可能会抛出异常。每一个Observerable对象在终结的时候都会调用 onCompleted()或者onError()方法，所以Demo中会打印”Completed!”或者”Ouch!”。</p>
 <p>这种模式有以下几个优点：</p>
 <p>1.只要有异常发生onError()一定会被调用</p>
 <p>这极大的简化了错误处理。只需要在一个地方处理错误即可以。</p>
@@ -473,14 +479,18 @@
 <p>在第一篇中，我介绍了RxJava的基础知识。第二篇中，我向你展示了操作符的强大。但是你可能仍然没被说服。这篇里面，我讲向你展示RxJava的其他的一些好处，相信这篇足够让你去使用Rxjava.</p>
 <p>到目前为止，我们都没怎么介绍onComplete()和onError()函数。这两个函数用来通知订阅者，被观察的对象将停止发送数据以及为什么停止（成功的完成或者出错了）。</p>
 <p>下面的代码展示了怎么使用这两个函数：</p>
-<p><code>Observable.just(``&quot;Hello, world!&quot;``)</code></p>
-<p><code>.map(s -&gt; potentialException(s))</code></p>
-<p><code>.map(s -&gt; anotherPotentialException(s))</code></p>
-<p><code>.subscribe(``new</code> <code>Subscriber&lt;String&gt;() {        @Override</code></p>
-<p><code>public void onNext(String s) { System.out.println(s); }        @Override</code></p>
-<p><code>public void onCompleted() { System.out.println(``&quot;Completed!&quot;``); }        @Override</code></p>
-<p><code>public void onError(Throwable e) { System.out.println(``&quot;Ouch!&quot;``); }</code></p>
-<p><code>});</code><br>]]>
+<pre><code>Observable.just(``&quot;Hello, world!&quot;``)
+.map(s -&gt; potentialException(s))
+.map(s -&gt; anotherPotentialException(s))
+.subscribe(``new` `Subscriber&lt;String&gt;() {        
+    @Override
+    public void onNext(String s) { System.out.println(s); }        
+    @Override
+    public void onCompleted() { System.out.println(``&quot;Completed!&quot;``); }        
+    @Override
+    public void onError(Throwable e) { System.out.println(``&quot;Ouch!&quot;``); }
+});
+</code></pre>]]>
     
     </summary>
     
@@ -1036,10 +1046,10 @@ public void afterTextChanged(Editable s) { }
   
   <entry>
     <title><![CDATA[Android小经验]]></title>
-    <link href="http://kevinhero.github.io/2016/03/23/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/"/>
-    <id>http://kevinhero.github.io/2016/03/23/小知识点/你应该知道的那些Android小经验/你应该知道的那些Android小经验/</id>
+    <link href="http://kevinhero.github.io/2016/03/23/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/"/>
+    <id>http://kevinhero.github.io/2016/03/23/小知识点/你应该知道的那些Android小经验/</id>
     <published>2016-03-23T15:33:02.000Z</published>
-    <updated>2016-04-10T10:02:22.000Z</updated>
+    <updated>2016-04-10T10:08:20.000Z</updated>
     <content type="html"><![CDATA[<p>原文出处：<a href="http://jayfeng.com/2016/03/18/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/" target="_blank" rel="external">http://jayfeng.com/</a> </p>
 <p>做Android久了，就会踩很多坑，被坑的多了就有经验了，闲暇之余整理了部分，现挑选一些重要或者偏门的“小”经验做个记录。</p>
 <h2 id="u67E5_u770BSQLite_u65E5_u5FD7"><a href="#u67E5_u770BSQLite_u65E5_u5FD7" class="headerlink" title="查看SQLite日志"></a>查看SQLite日志</h2><p><code>adb shell setprop log.tag.SQLiteLog V</code></p>
