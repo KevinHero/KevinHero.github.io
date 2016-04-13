@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   
-  <title>解析：TypedArray 为什么需要调用recycle() | 一只熊猫的个人博客</title>
+  <title>解析：TypedArray 为什么需要调用recycle() | 一只熊猫的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="在 Android 自定义 View 的时候，需要使用 TypedArray 来获取 XML layout 中的属性值，使用完之后，需要调用 recyle() 方法将 TypedArray 回收。
 那么问题来了，这个TypedArray是个什么东西？为什么需要回收呢？TypedArray并没有占用IO，线程，它仅仅是一个变量而已，为什么需要 recycle？为了解开这个谜，首先去找官网的 Docu">
 <meta property="og:type" content="article">
 <meta property="og:title" content="解析：TypedArray 为什么需要调用recycle()">
 <meta property="og:url" content="http://apanda.club/2014/07/18/Android Skills/TypedArray/index.html">
-<meta property="og:site_name" content="一只熊猫的个人博客">
+<meta property="og:site_name" content="一只熊猫的博客">
 <meta property="og:description" content="在 Android 自定义 View 的时候，需要使用 TypedArray 来获取 XML layout 中的属性值，使用完之后，需要调用 recyle() 方法将 TypedArray 回收。
 那么问题来了，这个TypedArray是个什么东西？为什么需要回收呢？TypedArray并没有占用IO，线程，它仅仅是一个变量而已，为什么需要 recycle？为了解开这个谜，首先去找官网的 Docu">
 <meta property="og:image" content="http://i.imgur.com/0YmjniV.png">
@@ -20,7 +20,7 @@
 <meta name="twitter:description" content="在 Android 自定义 View 的时候，需要使用 TypedArray 来获取 XML layout 中的属性值，使用完之后，需要调用 recyle() 方法将 TypedArray 回收。
 那么问题来了，这个TypedArray是个什么东西？为什么需要回收呢？TypedArray并没有占用IO，线程，它仅仅是一个变量而已，为什么需要 recycle？为了解开这个谜，首先去找官网的 Docu">
   
-    <link rel="alternative" href="/atom.xml" title="一只熊猫的个人博客" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="一只熊猫的博客" type="application/atom+xml">
   
   
     <link rel="icon" href="/img/favicon.jpg">
