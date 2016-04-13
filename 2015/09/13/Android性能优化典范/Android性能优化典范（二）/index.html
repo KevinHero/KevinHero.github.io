@@ -3,64 +3,64 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Android性能优化典范（二） | 熊凯的个人博客</title>
+  <title>Android性能优化典范（二） | 一只熊猫的个人博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="来源 http://www.csdn.net/article/2015-04-29/2824583-android-performance-patterns-season-2/4 
 Google前几天刚发布了Android性能优化典范第2季的 课程，一共20个短视频，包括的内容大致有：电量优化、网络优化、Android Wear上如何做优化、使用对象池来提高效率、LRU Cache、Bitmap的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android性能优化典范（二）">
-<meta property="og:url" content="http://kevinhero.github.io/2015/09/13/Android性能优化典范/Android性能优化典范（二）/index.html">
-<meta property="og:site_name" content="熊凯的个人博客">
+<meta property="og:url" content="http://apanda.club/2015/09/13/Android性能优化典范/Android性能优化典范（二）/index.html">
+<meta property="og:site_name" content="一只熊猫的个人博客">
 <meta property="og:description" content="来源 http://www.csdn.net/article/2015-04-29/2824583-android-performance-patterns-season-2/4 
 Google前几天刚发布了Android性能优化典范第2季的 课程，一共20个短视频，包括的内容大致有：电量优化、网络优化、Android Wear上如何做优化、使用对象池来提高效率、LRU Cache、Bitmap的">
-<meta property="og:image" content="http://kevinhero.github.io/resources/35C6E464AD6DAF773B756644C64CE853.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/907BD199535B7B1A9E9514CEDB57A50C.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/4428194A93D3D6F48A4CD58CCDC71D27.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/3F37A3F7F9568F2A18DF0981FDF9949E.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/AEAB4A2857329873E9A771BB25CB0A54.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/A46F24DCE8F31AF97800AC5611BDDCB4.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/F9474BCACC131EB758965FF5E7435220.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/29322C6F8C312F12749906452BEAB207.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/D425CB952322A83CD0366E1B25F45B0F.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/B7CA9253D7137C19CC53ACF633665BB7.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/C38370AE654C4647548B8D4000F2839D.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/903B374C2C0F4F43D176EE35EC804B28.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/26BD627FABDF568F28490EB646F96B11.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/2834CAFA59771C212293BDF35AE5C796.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/4826DC7C52124FEA09D05AB980CA5DBC.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/C5FC565503FE750D0997B4DE1622D448.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/1EA32CAC57328BE700ED4167000361D4.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/8DD45B189853B6E3929F45F67DC2BC89.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/9AC97F3D38C50BEFD2A4D6527B253956.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/26274789E6BAB525DAC59491FE4CECCA.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/33E989EA14BFBBFE320549B05DBFE234.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/A71AE5F81F5D7478E8558EAB5C4D09FF.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/3684A8BAD78B5B6A88754C135E76E057.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/C4A7D5502FEE6522EA2D98E4BC52E1C4.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/09BE15C92066C71F80595F83AA3666B5.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/FD5FB8696612829B790FD0BDA35150AB.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/2447140851D3764B4A8CC3DC10DC77C6.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/BCC6B0BE74931051478C8F29ED21AF6E.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/6343352A91CC3F5B67BC4CAEBABAB8AE.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/6343352A91CC3F5B67BC4CAEBABAB8AE.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/85426D5A68B9314E22E9DB265E33831D.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/612FC4A6EBE0BA50A6792D63D72E22A9.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/5DEE9A3B966065FEC04DE2B42338687C.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/F082DC1DB402B75F6DAC3BCCF731F19F.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/6A65D4A57DEDC3104563D3B524F5E141.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/0A70EB3AED6950E2C8DA88329D26052B.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/C771DF37FD5A91CA4FE863D81F7DD897.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/F5EEB7E74D00A752BD450CE80891A6A2.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/794D482082379ADAEFA5E58C89A9E3DC.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/5BDAABD8649067D44762319217FB99DC.jpg">
-<meta property="og:image" content="http://kevinhero.github.io/resources/A05363C4651ED7B9A7125A916BFD929E.jpg">
+<meta property="og:image" content="http://apanda.club/resources/35C6E464AD6DAF773B756644C64CE853.jpg">
+<meta property="og:image" content="http://apanda.club/resources/907BD199535B7B1A9E9514CEDB57A50C.jpg">
+<meta property="og:image" content="http://apanda.club/resources/4428194A93D3D6F48A4CD58CCDC71D27.jpg">
+<meta property="og:image" content="http://apanda.club/resources/3F37A3F7F9568F2A18DF0981FDF9949E.jpg">
+<meta property="og:image" content="http://apanda.club/resources/AEAB4A2857329873E9A771BB25CB0A54.jpg">
+<meta property="og:image" content="http://apanda.club/resources/A46F24DCE8F31AF97800AC5611BDDCB4.jpg">
+<meta property="og:image" content="http://apanda.club/resources/F9474BCACC131EB758965FF5E7435220.jpg">
+<meta property="og:image" content="http://apanda.club/resources/29322C6F8C312F12749906452BEAB207.jpg">
+<meta property="og:image" content="http://apanda.club/resources/D425CB952322A83CD0366E1B25F45B0F.jpg">
+<meta property="og:image" content="http://apanda.club/resources/B7CA9253D7137C19CC53ACF633665BB7.jpg">
+<meta property="og:image" content="http://apanda.club/resources/C38370AE654C4647548B8D4000F2839D.jpg">
+<meta property="og:image" content="http://apanda.club/resources/903B374C2C0F4F43D176EE35EC804B28.jpg">
+<meta property="og:image" content="http://apanda.club/resources/26BD627FABDF568F28490EB646F96B11.jpg">
+<meta property="og:image" content="http://apanda.club/resources/2834CAFA59771C212293BDF35AE5C796.jpg">
+<meta property="og:image" content="http://apanda.club/resources/4826DC7C52124FEA09D05AB980CA5DBC.jpg">
+<meta property="og:image" content="http://apanda.club/resources/C5FC565503FE750D0997B4DE1622D448.jpg">
+<meta property="og:image" content="http://apanda.club/resources/1EA32CAC57328BE700ED4167000361D4.jpg">
+<meta property="og:image" content="http://apanda.club/resources/8DD45B189853B6E3929F45F67DC2BC89.jpg">
+<meta property="og:image" content="http://apanda.club/resources/9AC97F3D38C50BEFD2A4D6527B253956.jpg">
+<meta property="og:image" content="http://apanda.club/resources/26274789E6BAB525DAC59491FE4CECCA.jpg">
+<meta property="og:image" content="http://apanda.club/resources/33E989EA14BFBBFE320549B05DBFE234.jpg">
+<meta property="og:image" content="http://apanda.club/resources/A71AE5F81F5D7478E8558EAB5C4D09FF.jpg">
+<meta property="og:image" content="http://apanda.club/resources/3684A8BAD78B5B6A88754C135E76E057.jpg">
+<meta property="og:image" content="http://apanda.club/resources/C4A7D5502FEE6522EA2D98E4BC52E1C4.jpg">
+<meta property="og:image" content="http://apanda.club/resources/09BE15C92066C71F80595F83AA3666B5.jpg">
+<meta property="og:image" content="http://apanda.club/resources/FD5FB8696612829B790FD0BDA35150AB.jpg">
+<meta property="og:image" content="http://apanda.club/resources/2447140851D3764B4A8CC3DC10DC77C6.jpg">
+<meta property="og:image" content="http://apanda.club/resources/BCC6B0BE74931051478C8F29ED21AF6E.jpg">
+<meta property="og:image" content="http://apanda.club/resources/6343352A91CC3F5B67BC4CAEBABAB8AE.jpg">
+<meta property="og:image" content="http://apanda.club/resources/6343352A91CC3F5B67BC4CAEBABAB8AE.jpg">
+<meta property="og:image" content="http://apanda.club/resources/85426D5A68B9314E22E9DB265E33831D.jpg">
+<meta property="og:image" content="http://apanda.club/resources/612FC4A6EBE0BA50A6792D63D72E22A9.jpg">
+<meta property="og:image" content="http://apanda.club/resources/5DEE9A3B966065FEC04DE2B42338687C.jpg">
+<meta property="og:image" content="http://apanda.club/resources/F082DC1DB402B75F6DAC3BCCF731F19F.jpg">
+<meta property="og:image" content="http://apanda.club/resources/6A65D4A57DEDC3104563D3B524F5E141.jpg">
+<meta property="og:image" content="http://apanda.club/resources/0A70EB3AED6950E2C8DA88329D26052B.jpg">
+<meta property="og:image" content="http://apanda.club/resources/C771DF37FD5A91CA4FE863D81F7DD897.jpg">
+<meta property="og:image" content="http://apanda.club/resources/F5EEB7E74D00A752BD450CE80891A6A2.jpg">
+<meta property="og:image" content="http://apanda.club/resources/794D482082379ADAEFA5E58C89A9E3DC.jpg">
+<meta property="og:image" content="http://apanda.club/resources/5BDAABD8649067D44762319217FB99DC.jpg">
+<meta property="og:image" content="http://apanda.club/resources/A05363C4651ED7B9A7125A916BFD929E.jpg">
 <meta property="og:updated_time" content="2016-04-10T09:37:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android性能优化典范（二）">
 <meta name="twitter:description" content="来源 http://www.csdn.net/article/2015-04-29/2824583-android-performance-patterns-season-2/4 
 Google前几天刚发布了Android性能优化典范第2季的 课程，一共20个短视频，包括的内容大致有：电量优化、网络优化、Android Wear上如何做优化、使用对象池来提高效率、LRU Cache、Bitmap的">
   
-    <link rel="alternative" href="/atom.xml" title="熊凯的个人博客" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="一只熊猫的个人博客" type="application/atom+xml">
   
   
     <link rel="icon" href="/img/favicon.jpg">
@@ -100,12 +100,12 @@ Google前几天刚发布了Android性能优化典范第2季的 课程，一共20
     <header id="header" class="inner">
         <a href="/" class="profilepic">
             
-            <img lazy-src="/img/header.gif" class="js-avatar">
+            <img lazy-src="/img/head.gif" class="js-avatar">
             
         </a>
 
         <hgroup>
-          <h1 class="header-author"><a href="/">熊凯</a></h1>
+          <h1 class="header-author"><a href="/">一只熊猫</a></h1>
         </hgroup>
 
         
@@ -229,17 +229,17 @@ Google前几天刚发布了Android性能优化典范第2季的 课程，一共20
       <nav id="mobile-nav">
       <div class="overlay">
           <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">熊凯</a></h1>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">一只熊猫</a></h1>
       </div>
     <div class="intrude-less">
         <header id="header" class="inner">
             <a href="/" class="profilepic">
                 
-                    <img lazy-src="/img/header.gif" class="js-avatar">
+                    <img lazy-src="/img/head.gif" class="js-avatar">
                 
             </a>
             <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">熊凯</a></h1>
+              <h1 class="header-author"><a href="/" title="回到主页">一只熊猫</a></h1>
             </hgroup>
             
             <nav class="header-menu">
@@ -523,12 +523,12 @@ Google前几天刚发布了Android性能优化典范第2季的 课程，一共20
     
     <div class="copyright">
         <p><span>本文标题:</span><a href="/2015/09/13/Android性能优化典范/Android性能优化典范（二）/">Android性能优化典范（二）</a></p>
-        <p><span>文章作者:</span><a href="/" title="访问 熊凯 的个人博客">熊凯</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 一只熊猫 的个人博客">一只熊猫</a></p>
         <p><span>发布时间:</span>2015年09月13日 - 15时22分</p>
      
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2015/09/13/Android性能优化典范/Android性能优化典范（二）/" title="Android性能优化典范（二）">http://kevinhero.github.io/2015/09/13/Android性能优化典范/Android性能优化典范（二）/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://kevinhero.github.io/2015/09/13/Android性能优化典范/Android性能优化典范（二）/　　作者: 熊凯" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2015/09/13/Android性能优化典范/Android性能优化典范（二）/" title="Android性能优化典范（二）">http://apanda.club/2015/09/13/Android性能优化典范/Android性能优化典范（二）/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://apanda.club/2015/09/13/Android性能优化典范/Android性能优化典范（二）/　　作者: 一只熊猫" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -672,7 +672,7 @@ Google前几天刚发布了Android性能优化典范第2季的 课程，一共20
     <div class="outer">
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2016 熊凯
+                &copy; 2016 一只熊猫
             </div>
             <div class="footer-right">
                 <a href="http://hexo.io/" target="_blank">Hexo</a> 

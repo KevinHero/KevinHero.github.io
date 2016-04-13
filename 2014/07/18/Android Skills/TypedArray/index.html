@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   
-  <title>解析：TypedArray 为什么需要调用recycle() | 熊凯的个人博客</title>
+  <title>解析：TypedArray 为什么需要调用recycle() | 一只熊猫的个人博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="在 Android 自定义 View 的时候，需要使用 TypedArray 来获取 XML layout 中的属性值，使用完之后，需要调用 recyle() 方法将 TypedArray 回收。
 那么问题来了，这个TypedArray是个什么东西？为什么需要回收呢？TypedArray并没有占用IO，线程，它仅仅是一个变量而已，为什么需要 recycle？为了解开这个谜，首先去找官网的 Docu">
 <meta property="og:type" content="article">
 <meta property="og:title" content="解析：TypedArray 为什么需要调用recycle()">
-<meta property="og:url" content="http://kevinhero.github.io/2014/07/18/Android Skills/TypedArray/index.html">
-<meta property="og:site_name" content="熊凯的个人博客">
+<meta property="og:url" content="http://apanda.club/2014/07/18/Android Skills/TypedArray/index.html">
+<meta property="og:site_name" content="一只熊猫的个人博客">
 <meta property="og:description" content="在 Android 自定义 View 的时候，需要使用 TypedArray 来获取 XML layout 中的属性值，使用完之后，需要调用 recyle() 方法将 TypedArray 回收。
 那么问题来了，这个TypedArray是个什么东西？为什么需要回收呢？TypedArray并没有占用IO，线程，它仅仅是一个变量而已，为什么需要 recycle？为了解开这个谜，首先去找官网的 Docu">
 <meta property="og:image" content="http://i.imgur.com/0YmjniV.png">
@@ -20,7 +20,7 @@
 <meta name="twitter:description" content="在 Android 自定义 View 的时候，需要使用 TypedArray 来获取 XML layout 中的属性值，使用完之后，需要调用 recyle() 方法将 TypedArray 回收。
 那么问题来了，这个TypedArray是个什么东西？为什么需要回收呢？TypedArray并没有占用IO，线程，它仅仅是一个变量而已，为什么需要 recycle？为了解开这个谜，首先去找官网的 Docu">
   
-    <link rel="alternative" href="/atom.xml" title="熊凯的个人博客" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="一只熊猫的个人博客" type="application/atom+xml">
   
   
     <link rel="icon" href="/img/favicon.jpg">
@@ -60,12 +60,12 @@
     <header id="header" class="inner">
         <a href="/" class="profilepic">
             
-            <img lazy-src="/img/header.gif" class="js-avatar">
+            <img lazy-src="/img/head.gif" class="js-avatar">
             
         </a>
 
         <hgroup>
-          <h1 class="header-author"><a href="/">熊凯</a></h1>
+          <h1 class="header-author"><a href="/">一只熊猫</a></h1>
         </hgroup>
 
         
@@ -189,17 +189,17 @@
       <nav id="mobile-nav">
       <div class="overlay">
           <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">熊凯</a></h1>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">一只熊猫</a></h1>
       </div>
     <div class="intrude-less">
         <header id="header" class="inner">
             <a href="/" class="profilepic">
                 
-                    <img lazy-src="/img/header.gif" class="js-avatar">
+                    <img lazy-src="/img/head.gif" class="js-avatar">
                 
             </a>
             <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">熊凯</a></h1>
+              <h1 class="header-author"><a href="/" title="回到主页">一只熊猫</a></h1>
             </hgroup>
             
             <nav class="header-menu">
@@ -352,12 +352,12 @@ public class TypedArray {
     
     <div class="copyright">
         <p><span>本文标题:</span><a href="/2014/07/18/Android Skills/TypedArray/">解析：TypedArray 为什么需要调用recycle()</a></p>
-        <p><span>文章作者:</span><a href="/" title="访问 熊凯 的个人博客">熊凯</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 一只熊猫 的个人博客">一只熊猫</a></p>
         <p><span>发布时间:</span>2014年07月18日 - 02时21分</p>
      
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2014/07/18/Android Skills/TypedArray/" title="解析：TypedArray 为什么需要调用recycle()">http://kevinhero.github.io/2014/07/18/Android Skills/TypedArray/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://kevinhero.github.io/2014/07/18/Android Skills/TypedArray/　　作者: 熊凯" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2014/07/18/Android Skills/TypedArray/" title="解析：TypedArray 为什么需要调用recycle()">http://apanda.club/2014/07/18/Android Skills/TypedArray/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://apanda.club/2014/07/18/Android Skills/TypedArray/　　作者: 一只熊猫" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -501,7 +501,7 @@ public class TypedArray {
     <div class="outer">
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2016 熊凯
+                &copy; 2016 一只熊猫
             </div>
             <div class="footer-right">
                 <a href="http://hexo.io/" target="_blank">Hexo</a> 

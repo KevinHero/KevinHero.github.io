@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title><![CDATA[熊凯的个人博客]]></title>
+  <title><![CDATA[一只熊猫的个人博客]]></title>
   
   <link href="/atom.xml" rel="self"/>
-  <link href="http://kevinhero.github.io/"/>
+  <link href="http://apanda.club/"/>
   <updated>2016-04-10T08:45:45.000Z</updated>
-  <id>http://kevinhero.github.io/</id>
+  <id>http://apanda.club/</id>
   
   <author>
-    <name><![CDATA[熊凯]]></name>
+    <name><![CDATA[一只熊猫]]></name>
     
   </author>
   
@@ -16,8 +16,8 @@
   
   <entry>
     <title><![CDATA[使用AndroidStudio进行NDK开发（一）]]></title>
-    <link href="http://kevinhero.github.io/2016/04/09/Android%20Skills/%E4%BD%BF%E7%94%A8Android%20Studio%E8%BF%9B%E8%A1%8CNDK%E5%BC%80%E5%8F%91%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>http://kevinhero.github.io/2016/04/09/Android Skills/使用Android Studio进行NDK开发（一）/</id>
+    <link href="http://apanda.club/2016/04/09/Android%20Skills/%E4%BD%BF%E7%94%A8Android%20Studio%E8%BF%9B%E8%A1%8CNDK%E5%BC%80%E5%8F%91%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://apanda.club/2016/04/09/Android Skills/使用Android Studio进行NDK开发（一）/</id>
     <published>2016-04-09T05:12:17.000Z</published>
     <updated>2016-04-10T08:45:45.000Z</updated>
     <content type="html"><![CDATA[<p>在AndroidStudio中进行开发比起以往的Eclipse要方便的多，下面来介绍下如何使用AndroidStudio这个IDE工具实现相关开发工作。</p>
@@ -99,16 +99,16 @@
     
     </summary>
     
-      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+      <category term="RxJava" scheme="http://apanda.club/tags/RxJava/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[RxJava & RxAndroid备忘]]></title>
-    <link href="http://kevinhero.github.io/2016/04/06/RxJava/RxJava%20&%20RxAndroid%E5%A4%87%E5%BF%98/"/>
-    <id>http://kevinhero.github.io/2016/04/06/RxJava/RxJava & RxAndroid备忘/</id>
+    <link href="http://apanda.club/2016/04/06/RxJava/RxJava%20&%20RxAndroid%E5%A4%87%E5%BF%98/"/>
+    <id>http://apanda.club/2016/04/06/RxJava/RxJava & RxAndroid备忘/</id>
     <published>2016-04-05T17:14:17.000Z</published>
     <updated>2016-04-10T10:08:43.000Z</updated>
     <content type="html"><![CDATA[<pre><code>来源 &lt;http://chenqichao.me/2015/07/01/119-Mastering-RxAndroid/&gt; 
@@ -133,16 +133,16 @@
     
     </summary>
     
-      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+      <category term="RxJava" scheme="http://apanda.club/tags/RxJava/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[在安卓上使用RxJava]]></title>
-    <link href="http://kevinhero.github.io/2016/04/05/RxJava/%E5%9C%A8%E5%AE%89%E5%8D%93%E4%B8%8A%E4%BD%BF%E7%94%A8RxJava/"/>
-    <id>http://kevinhero.github.io/2016/04/05/RxJava/在安卓上使用RxJava/</id>
+    <link href="http://apanda.club/2016/04/05/RxJava/%E5%9C%A8%E5%AE%89%E5%8D%93%E4%B8%8A%E4%BD%BF%E7%94%A8RxJava/"/>
+    <id>http://apanda.club/2016/04/05/RxJava/在安卓上使用RxJava/</id>
     <published>2016-04-05T15:45:17.000Z</published>
     <updated>2016-04-10T09:47:07.000Z</updated>
     <content type="html"><![CDATA[<p>如果你做过Android（和Java）的开发，很有可能已经听说过RxJava了。RxJava是由Netflix开发的响应式扩展（Reactive Extensions）的Java实现。引用<a href="http://msdn.microsoft.com/en-us/data/gg577609.aspx" target="_blank" rel="external">MSDN上对它的定义</a>，Reactive Extensions是这样一个第三方库：<strong>它结合了可观察集合和LINQ式查询以达到异步和基于事件的编程效果</strong>。Netflix将这个库托管到了Github上，支持Java6以上的版本并且使它可以用于Android App开发。</p>
@@ -308,16 +308,16 @@
     
     </summary>
     
-      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+      <category term="RxJava" scheme="http://apanda.club/tags/RxJava/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[深入浅出RxJava(四：在Android中使用响应式编程)]]></title>
-    <link href="http://kevinhero.github.io/2016/04/05/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava%E5%9B%9B-%E5%9C%A8Android%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    <id>http://kevinhero.github.io/2016/04/05/RxJava/深入浅出RxJava四-在Android中使用响应式编程/</id>
+    <link href="http://apanda.club/2016/04/05/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava%E5%9B%9B-%E5%9C%A8Android%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    <id>http://apanda.club/2016/04/05/RxJava/深入浅出RxJava四-在Android中使用响应式编程/</id>
     <published>2016-04-05T15:12:17.000Z</published>
     <updated>2016-04-10T10:10:02.000Z</updated>
     <content type="html"><![CDATA[<p>在第<a href="http://blog.csdn.net/lzyzsd/article/details/41833541" target="_blank" rel="external">1</a>，<a href="http://blog.csdn.net/lzyzsd/article/details/44094895" target="_blank" rel="external">2</a>，<a href="http://blog.csdn.net/lzyzsd/article/details/44891933" target="_blank" rel="external">3</a>篇中，我大概介绍了RxJava是怎么使用的。下面我会介绍如何在Android中使用RxJava.</p>
@@ -409,16 +409,16 @@
     
     </summary>
     
-      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+      <category term="RxJava" scheme="http://apanda.club/tags/RxJava/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[深入浅出RxJava(三：响应式的好处)]]></title>
-    <link href="http://kevinhero.github.io/2016/04/04/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava%E4%B8%89--%E5%93%8D%E5%BA%94%E5%BC%8F%E7%9A%84%E5%A5%BD%E5%A4%84/"/>
-    <id>http://kevinhero.github.io/2016/04/04/RxJava/深入浅出RxJava三--响应式的好处/</id>
+    <link href="http://apanda.club/2016/04/04/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava%E4%B8%89--%E5%93%8D%E5%BA%94%E5%BC%8F%E7%9A%84%E5%A5%BD%E5%A4%84/"/>
+    <id>http://apanda.club/2016/04/04/RxJava/深入浅出RxJava三--响应式的好处/</id>
     <published>2016-04-04T05:12:17.000Z</published>
     <updated>2016-04-10T10:11:20.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
@@ -494,16 +494,16 @@
     
     </summary>
     
-      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+      <category term="RxJava" scheme="http://apanda.club/tags/RxJava/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[深入浅出RxJava(二：操作符)]]></title>
-    <link href="http://kevinhero.github.io/2016/04/02/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava(%E4%BA%8C%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%AC%A6)/"/>
-    <id>http://kevinhero.github.io/2016/04/02/RxJava/深入浅出RxJava(二：操作符)/</id>
+    <link href="http://apanda.club/2016/04/02/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava(%E4%BA%8C%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%AC%A6)/"/>
+    <id>http://apanda.club/2016/04/02/RxJava/深入浅出RxJava(二：操作符)/</id>
     <published>2016-04-02T15:12:17.000Z</published>
     <updated>2016-04-10T08:45:02.000Z</updated>
     <content type="html"><![CDATA[<p>译文原文 <a href="http://blog.csdn.net/lzyzsd/article/details/44094895" target="_blank" rel="external">http://blog.csdn.net/lzyzsd/article/details/44094895</a> </p>
@@ -604,16 +604,16 @@
     
     </summary>
     
-      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+      <category term="RxJava" scheme="http://apanda.club/tags/RxJava/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Q2季度目标]]></title>
-    <link href="http://kevinhero.github.io/2016/04/01/%E9%9A%8F%E7%AC%94/Q2%E5%AD%A3%E5%BA%A6%E7%9B%AE%E6%A0%87/"/>
-    <id>http://kevinhero.github.io/2016/04/01/随笔/Q2季度目标/</id>
+    <link href="http://apanda.club/2016/04/01/%E9%9A%8F%E7%AC%94/Q2%E5%AD%A3%E5%BA%A6%E7%9B%AE%E6%A0%87/"/>
+    <id>http://apanda.club/2016/04/01/随笔/Q2季度目标/</id>
     <published>2016-04-01T03:33:45.000Z</published>
     <updated>2016-04-06T10:49:36.000Z</updated>
     <content type="html"><![CDATA[<p>1、完成GankAPP，并上线</p>
@@ -642,16 +642,16 @@
     
     </summary>
     
-      <category term="目标" scheme="http://kevinhero.github.io/tags/%E7%9B%AE%E6%A0%87/"/>
+      <category term="目标" scheme="http://apanda.club/tags/%E7%9B%AE%E6%A0%87/"/>
     
-      <category term="随笔" scheme="http://kevinhero.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
+      <category term="随笔" scheme="http://apanda.club/categories/%E9%9A%8F%E7%AC%94/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[深入浅出RxJava(一：基础篇)]]></title>
-    <link href="http://kevinhero.github.io/2016/03/29/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava%EF%BC%88%E4%B8%80%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89/"/>
-    <id>http://kevinhero.github.io/2016/03/29/RxJava/深入浅出RxJava（一：基础篇）/</id>
+    <link href="http://apanda.club/2016/03/29/RxJava/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BARxJava%EF%BC%88%E4%B8%80%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89/"/>
+    <id>http://apanda.club/2016/03/29/RxJava/深入浅出RxJava（一：基础篇）/</id>
     <published>2016-03-29T13:12:17.000Z</published>
     <updated>2016-04-10T08:47:16.000Z</updated>
     <content type="html"><![CDATA[<p><a href="http://blog.danlew.net/2014/09/15/grokking-rxjava-part-1/" target="_blank" rel="external">英文原文</a> </p>
@@ -764,16 +764,16 @@
     
     </summary>
     
-      <category term="RxJava" scheme="http://kevinhero.github.io/tags/RxJava/"/>
+      <category term="RxJava" scheme="http://apanda.club/tags/RxJava/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[谷歌官方出的一套关于 Android 架构的实例参考]]></title>
-    <link href="http://kevinhero.github.io/2016/03/29/%E8%B0%B7%E6%AD%8C%E5%AE%98%E6%96%B9%E5%87%BA%E7%9A%84%E4%B8%80%E5%A5%97%E5%85%B3%E4%BA%8E%20Android%20%E6%9E%B6%E6%9E%84%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%82%E8%80%83/"/>
-    <id>http://kevinhero.github.io/2016/03/29/谷歌官方出的一套关于 Android 架构的实例参考/</id>
+    <link href="http://apanda.club/2016/03/29/%E8%B0%B7%E6%AD%8C%E5%AE%98%E6%96%B9%E5%87%BA%E7%9A%84%E4%B8%80%E5%A5%97%E5%85%B3%E4%BA%8E%20Android%20%E6%9E%B6%E6%9E%84%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%82%E8%80%83/"/>
+    <id>http://apanda.club/2016/03/29/谷歌官方出的一套关于 Android 架构的实例参考/</id>
     <published>2016-03-29T05:12:17.000Z</published>
     <updated>2016-04-10T08:44:24.000Z</updated>
     <content type="html"><![CDATA[<p>原文 <a href="https://github.com/googlesamples/android-architecture" target="_blank" rel="external">github.com</a></p>
@@ -812,16 +812,16 @@
     
     </summary>
     
-      <category term="架构的实例" scheme="http://kevinhero.github.io/tags/%E6%9E%B6%E6%9E%84%E7%9A%84%E5%AE%9E%E4%BE%8B/"/>
+      <category term="架构的实例" scheme="http://apanda.club/tags/%E6%9E%B6%E6%9E%84%E7%9A%84%E5%AE%9E%E4%BE%8B/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[从案例学习RxAndroid]]></title>
-    <link href="http://kevinhero.github.io/2016/03/25/RxJava/RxAndroid/"/>
-    <id>http://kevinhero.github.io/2016/03/25/RxJava/RxAndroid/</id>
+    <link href="http://apanda.club/2016/03/25/RxJava/RxAndroid/"/>
+    <id>http://apanda.club/2016/03/25/RxJava/RxAndroid/</id>
     <published>2016-03-25T13:01:45.000Z</published>
     <updated>2016-04-07T03:37:12.000Z</updated>
     <content type="html"><![CDATA[<p><a herf="https://medium.com/@kurtisnusbaum/rxandroid-basics-part-1-c0d5edcf6850">原文链接</a></p>
@@ -1038,16 +1038,16 @@ public void afterTextChanged(Editable s) { }
     
     </summary>
     
-      <category term="RxAndroid" scheme="http://kevinhero.github.io/tags/RxAndroid/"/>
+      <category term="RxAndroid" scheme="http://apanda.club/tags/RxAndroid/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Android小经验]]></title>
-    <link href="http://kevinhero.github.io/2016/03/23/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/"/>
-    <id>http://kevinhero.github.io/2016/03/23/小知识点/你应该知道的那些Android小经验/</id>
+    <link href="http://apanda.club/2016/03/23/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/"/>
+    <id>http://apanda.club/2016/03/23/小知识点/你应该知道的那些Android小经验/</id>
     <published>2016-03-23T15:33:02.000Z</published>
     <updated>2016-04-10T10:08:20.000Z</updated>
     <content type="html"><![CDATA[<p>原文出处：<a href="http://jayfeng.com/2016/03/18/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E9%82%A3%E4%BA%9BAndroid%E5%B0%8F%E7%BB%8F%E9%AA%8C/" target="_blank" rel="external">http://jayfeng.com/</a> </p>
@@ -1261,16 +1261,16 @@ public void afterTextChanged(Editable s) { }
     
     </summary>
     
-      <category term="知识库" scheme="http://kevinhero.github.io/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
+      <category term="知识库" scheme="http://apanda.club/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Android开发代码片段]]></title>
-    <link href="http://kevinhero.github.io/2016/03/21/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/android%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5/"/>
-    <id>http://kevinhero.github.io/2016/03/21/小知识点/android代码片段/</id>
+    <link href="http://apanda.club/2016/03/21/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/android%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5/"/>
+    <id>http://apanda.club/2016/03/21/小知识点/android代码片段/</id>
     <published>2016-03-21T12:33:02.000Z</published>
     <updated>2016-04-06T04:04:15.000Z</updated>
     <content type="html"><![CDATA[<h3 id="1_u3001_u83B7_u53D6_u7535_u6E90_u9501"><a href="#1_u3001_u83B7_u53D6_u7535_u6E90_u9501" class="headerlink" title="1、获取电源锁"></a>1、获取电源锁</h3><pre><code>public static void acquireWakeLock() {
@@ -1566,16 +1566,16 @@ private static void deleteFilesByDirectory(File directory) {
     
     </summary>
     
-      <category term="写作" scheme="http://kevinhero.github.io/tags/%E5%86%99%E4%BD%9C/"/>
+      <category term="写作" scheme="http://apanda.club/tags/%E5%86%99%E4%BD%9C/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Android开发工作中的细节]]></title>
-    <link href="http://kevinhero.github.io/2016/03/02/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/Android%E5%BC%80%E5%8F%91%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E7%BB%86%E8%8A%82/"/>
-    <id>http://kevinhero.github.io/2016/03/02/小知识点/Android开发工作中的细节/</id>
+    <link href="http://apanda.club/2016/03/02/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/Android%E5%BC%80%E5%8F%91%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E7%BB%86%E8%8A%82/"/>
+    <id>http://apanda.club/2016/03/02/小知识点/Android开发工作中的细节/</id>
     <published>2016-03-01T18:33:45.000Z</published>
     <updated>2016-04-05T06:44:02.000Z</updated>
     <content type="html"><![CDATA[<ol>
@@ -1716,16 +1716,16 @@ private static void deleteFilesByDirectory(File directory) {
     
     </summary>
     
-      <category term="知识库" scheme="http://kevinhero.github.io/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
+      <category term="知识库" scheme="http://apanda.club/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[日常使用到的梯子]]></title>
-    <link href="http://kevinhero.github.io/2016/03/01/%E9%9A%8F%E7%AC%94/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E5%88%B0%E7%9A%84%E6%A2%AF%E5%AD%90/"/>
-    <id>http://kevinhero.github.io/2016/03/01/随笔/日常使用到的梯子/</id>
+    <link href="http://apanda.club/2016/03/01/%E9%9A%8F%E7%AC%94/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E5%88%B0%E7%9A%84%E6%A2%AF%E5%AD%90/"/>
+    <id>http://apanda.club/2016/03/01/随笔/日常使用到的梯子/</id>
     <published>2016-03-01T04:33:45.000Z</published>
     <updated>2016-04-05T08:47:20.000Z</updated>
     <content type="html"><![CDATA[<p>日常生活中,由于天朝的局域网的限制,很多网站都无法进行使用,虽然国内也有替代的网站,但是作为开发人员来讲,这些事远远不够的,现在就讲我个人在生活工作中使用到梯子,进行总结一下</p>
@@ -1752,16 +1752,16 @@ private static void deleteFilesByDirectory(File directory) {
     
     </summary>
     
-      <category term="VPN" scheme="http://kevinhero.github.io/tags/VPN/"/>
+      <category term="VPN" scheme="http://apanda.club/tags/VPN/"/>
     
-      <category term="随笔" scheme="http://kevinhero.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
+      <category term="随笔" scheme="http://apanda.club/categories/%E9%9A%8F%E7%AC%94/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Android小知识库]]></title>
-    <link href="http://kevinhero.github.io/2016/03/01/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/Android%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
-    <id>http://kevinhero.github.io/2016/03/01/小知识点/Android开发中的小知识点汇总/</id>
+    <link href="http://apanda.club/2016/03/01/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/Android%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
+    <id>http://apanda.club/2016/03/01/小知识点/Android开发中的小知识点汇总/</id>
     <published>2016-02-29T18:33:45.000Z</published>
     <updated>2016-04-07T03:26:16.000Z</updated>
     <content type="html"><![CDATA[<p>这份是我工作以来，总结的小知识库，有些知识点现在看来太LOW了，把还觉得有用的分享出来！</p>
@@ -2834,16 +2834,16 @@ android:cycles=&quot;7&quot; /&gt;
     
     </summary>
     
-      <category term="知识库" scheme="http://kevinhero.github.io/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
+      <category term="知识库" scheme="http://apanda.club/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Lambda for Android]]></title>
-    <link href="http://kevinhero.github.io/2016/03/01/Android%20Skills/Lambda%20for%20Android/"/>
-    <id>http://kevinhero.github.io/2016/03/01/Android Skills/Lambda for Android/</id>
+    <link href="http://apanda.club/2016/03/01/Android%20Skills/Lambda%20for%20Android/"/>
+    <id>http://apanda.club/2016/03/01/Android Skills/Lambda for Android/</id>
     <published>2016-02-29T18:33:17.000Z</published>
     <updated>2016-04-06T04:28:28.000Z</updated>
     <content type="html"><![CDATA[<p>Lambda，它让代码看起来更加简洁，但个人认为代码的可读性差了很多，因此一直没有去深入学习。</p>
@@ -2966,16 +2966,16 @@ v -&gt; Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;));
     
     </summary>
     
-      <category term="Lambda" scheme="http://kevinhero.github.io/tags/Lambda/"/>
+      <category term="Lambda" scheme="http://apanda.club/tags/Lambda/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[理解Android编译命令]]></title>
-    <link href="http://kevinhero.github.io/2016/02/25/Android%20Skills/%E7%90%86%E8%A7%A3Android%E7%9A%84%E7%BC%96%E8%AF%91%E5%91%BD%E4%BB%A4/"/>
-    <id>http://kevinhero.github.io/2016/02/25/Android Skills/理解Android的编译命令/</id>
+    <link href="http://apanda.club/2016/02/25/Android%20Skills/%E7%90%86%E8%A7%A3Android%E7%9A%84%E7%BC%96%E8%AF%91%E5%91%BD%E4%BB%A4/"/>
+    <id>http://apanda.club/2016/02/25/Android Skills/理解Android的编译命令/</id>
     <published>2016-02-25T11:33:45.000Z</published>
     <updated>2016-04-06T11:04:55.000Z</updated>
     <content type="html"><![CDATA[<p>工欲善其事，必先利其器，对于想要深入学习Android源码，必须先掌握Android编译命令.</p>
@@ -3156,16 +3156,16 @@ v -&gt; Log.d(&quot;wxl&quot;, &quot;retrolambda test&quot;));
     
     </summary>
     
-      <category term="编译" scheme="http://kevinhero.github.io/tags/%E7%BC%96%E8%AF%91/"/>
+      <category term="编译" scheme="http://apanda.club/tags/%E7%BC%96%E8%AF%91/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Webview上传文件的那些坑]]></title>
-    <link href="http://kevinhero.github.io/2016/02/22/Android%20Skills/Webview%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/"/>
-    <id>http://kevinhero.github.io/2016/02/22/Android Skills/Webview上传文件的那些坑/</id>
+    <link href="http://apanda.club/2016/02/22/Android%20Skills/Webview%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/"/>
+    <id>http://apanda.club/2016/02/22/Android Skills/Webview上传文件的那些坑/</id>
     <published>2016-02-22T13:01:14.000Z</published>
     <updated>2016-02-22T05:35:13.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
@@ -3753,16 +3753,16 @@ public class MainActivity extends Activity {
     
     </summary>
     
-      <category term="Webview" scheme="http://kevinhero.github.io/tags/Webview/"/>
+      <category term="Webview" scheme="http://apanda.club/tags/Webview/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Android源码编译和内核编译]]></title>
-    <link href="http://kevinhero.github.io/2016/02/21/Android%20Skills/Android%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/"/>
-    <id>http://kevinhero.github.io/2016/02/21/Android Skills/Android源码编译/</id>
+    <link href="http://apanda.club/2016/02/21/Android%20Skills/Android%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/"/>
+    <id>http://apanda.club/2016/02/21/Android Skills/Android源码编译/</id>
     <published>2016-02-21T06:33:45.000Z</published>
     <updated>2016-02-26T07:27:49.000Z</updated>
     <content type="html"><![CDATA[<h2 id="u6E90_u7801_u7F16_u8BD1"><a href="#u6E90_u7801_u7F16_u8BD1" class="headerlink" title="源码编译"></a>源码编译</h2><h4 id="1_u3001_u7CFB_u7EDF_uFF1A_Ubuntu14-04_u4EE5_u4E0A__u6216_u8005_Mac"><a href="#1_u3001_u7CFB_u7EDF_uFF1A_Ubuntu14-04_u4EE5_u4E0A__u6216_u8005_Mac" class="headerlink" title="1、系统： Ubuntu14.04以上 或者 Mac"></a>1、系统： Ubuntu14.04以上 或者 Mac</h4><blockquote>
@@ -3906,16 +3906,16 @@ $ sudo apt-get install sun-java8-jdk
     
     </summary>
     
-      <category term="源码" scheme="http://kevinhero.github.io/tags/%E6%BA%90%E7%A0%81/"/>
+      <category term="源码" scheme="http://apanda.club/tags/%E6%BA%90%E7%A0%81/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Kotlin 1.0 正式版发布啦]]></title>
-    <link href="http://kevinhero.github.io/2016/02/18/New%20Lan/Kotlin1.0%E6%AD%A3%E5%BC%8F%E7%89%88%E5%8F%91%E5%B8%83/"/>
-    <id>http://kevinhero.github.io/2016/02/18/New Lan/Kotlin1.0正式版发布/</id>
+    <link href="http://apanda.club/2016/02/18/New%20Lan/Kotlin1.0%E6%AD%A3%E5%BC%8F%E7%89%88%E5%8F%91%E5%B8%83/"/>
+    <id>http://apanda.club/2016/02/18/New Lan/Kotlin1.0正式版发布/</id>
     <published>2016-02-18T15:01:14.000Z</published>
     <updated>2016-04-07T03:45:13.000Z</updated>
     <content type="html"><![CDATA[<p>就在昨天，Android领域的Swift–Kotlin 1.0发布了，详细的新版本发布介绍请「阅读原文」查看官方发行说明。</p>
@@ -4051,9 +4051,9 @@ GitHub，Slack，甚至 Minecraft
     
     </summary>
     
-      <category term="Kotlin" scheme="http://kevinhero.github.io/tags/Kotlin/"/>
+      <category term="Kotlin" scheme="http://apanda.club/tags/Kotlin/"/>
     
-      <category term="技术" scheme="http://kevinhero.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+      <category term="技术" scheme="http://apanda.club/categories/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
